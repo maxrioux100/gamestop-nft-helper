@@ -1,11 +1,16 @@
 {
-  "name": "Gamestop NFT helper",
-  "description": "Add additionnal informations to he NFT pages",
-  "version": "0.1",
-  "manifest_version": 3,
-  "content_scripts": [
-  {
-    "matches": ["https://nft.gamestop.com/token/*"],
-    "js": ["content-script.js"]
-  }]
+	"manifest_version": 3,
+	"name": "Gamestop NFT helper",
+	"description": "Add additionnal informations to he NFT pages",
+	"version": "0.2",
+	"icons": { "16": "icon16.png",
+				"48": "icon48.png",
+				"128": "icon128.png" },
+				
+	"content_scripts": [
+		{
+			"matches": ["https://nft.gamestop.com/token/*"],
+			"js": ["content-script.js"]
+		}
+	]
 }
