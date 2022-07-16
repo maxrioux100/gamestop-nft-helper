@@ -1,10 +1,3 @@
-// content-script.js
-
-/**
- * Wait for an element before resolving a promise
- * @param {String} querySelector - Selector of element to wait for
- * @param {Integer} timeout - Milliseconds to wait before timing out, or 0 for no timeout              
- */
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
 		var timer = false;
@@ -41,57 +34,109 @@ function writeChip(name, value){
 
 function median(values){
   if(values.length ===0) throw new Error("No inputs");
+  
+  let sorted_values = [...values];
+  
 
-  values.sort(function(a,b){
+  sorted_values.sort(function(a,b){
     return a-b;
   });
 
-  var half = Math.floor(values.length / 2);
+  var half = Math.floor(sorted_values.length / 2);
   
-  if (values.length % 2)
-    return values[half];
+  if (sorted_values.length % 2)
+    return sorted_values[half];
   
-  return (values[half - 1] + values[half]) / 2.0;
+  return (sorted_values[half - 1] + sorted_values[half]) / 2.0;
 }
 
-waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000).then(function(){
-	
-    let histories = document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0");
-	let all_transactions = 'No';
-	if (histories[histories.length-1].textContent.split(' ')[1] === 'minted') {
-		histories[histories.length-1].parentNode.removeChild(histories[histories.length-1]);
-		all_transactions = 'Yes';
-	};
-	let total_eth = 0;
-	let total_dollars = 0;
-	let values_eth = [histories.length];
-	let values_dollars = [histories.length];
-	
-	for (let i=0; i < histories.length; i++) {
-		let transaction = histories[i].textContent.replace(")", ") ").split(' ');
-		values_eth[i] = parseFloat(transaction[5]);
-		values_dollars[i] = parseFloat(transaction[7].substring(2,transaction.length-1));
-		total_eth += parseFloat(transaction[5]);
-		total_dollars += parseFloat(transaction[7].substring(2,transaction.length-1));
-	}	
-	
-	let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
-	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
-	let div = document.createElement('div');
-	let ago_index = first_history.findIndex((element) => element === 'ago');
-	
-	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
-						'<p class="sc-bkkeKt vhTUk">History helper</p>' +
-					'</header>' + 
-					'<section class="MetaProperties-sc-17595j9-0 fzGCpU">' +
-						writeChip('Transactions', histories.length) +
-						writeChip('All transactions?', all_transactions) +
-						writeChip('First transaction', `${first_history[ago_index - 2]} ${first_history[ago_index - 1]} ago`) +
-						writeChip('Average', `${bestRound(total_eth/histories.length, 3)} ETH (${bestRound(total_dollars/histories.length, 2)}$)`) +
-						writeChip('Median', `${median(values_eth)} ETH (${median(values_dollars)}$)`) +
-					'</section>';
-	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue'); 
-	container.appendChild(div);	
-});
+function updateGraph() {
+	let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+	if (histories.length > 1) {
+		
+		let all_transactions = 'No';
+		for (let i=0; i < histories.length; i++) {
+			if (histories[i].textContent.split(' ')[1] === 'minted') {
+				histories.splice(i, 1);
+				all_transactions = 'Yes';
+				break;
+			};
+		};
+		let total_eth = 0;
+		let total_dollars = 0;
+		let values_eth = [histories.length];
+		let values_dollars = [histories.length];
+		
+		for (let i=0; i < histories.length; i++) {
+			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
+			values_eth[histories.length - 1 - i] = parseFloat(transaction[5]);
+			values_dollars[i] = parseFloat(transaction[7].substring(2,transaction.length-1));
+			total_eth += parseFloat(transaction[5]);
+			total_dollars += parseFloat(transaction[7].substring(2,transaction.length-1));
+		}	
+		
+		
+		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
+		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
+		let div = document.createElement('div');
+		let ago_index = first_history.findIndex((element) => element === 'ago');
+		
+		div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
+							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
+						'</header>' + 
+						'<section class="MetaProperties-sc-17595j9-0 fzGCpU">' +
+							writeChip('Transactions', histories.length) +
+							writeChip('All transactions?', all_transactions) +
+							writeChip('First transaction', `${first_history[ago_index - 2]} ${first_history[ago_index - 1]} ago`) +
+							writeChip('Average', `${bestRound(total_eth/histories.length, 3)} ETH (${bestRound(total_dollars/histories.length, 2)}$)`) +
+							writeChip('Median', `${median(values_eth)} ETH (${median(values_dollars)}$)`) +
+						'</section>'+
+						'<section>' +
+							'<div id="chart"></div>' +
+						'</section>';
+		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue'); 
+		container.appendChild(div);	
+		
+		var options = {
+			chart: {
+				type: 'line'
+			},
+			series: [{
+				name: 'sales',
+				data: values_eth
+			}],
+			stroke: {
+			  curve: 'smooth',
+			  width: 1
+			},
+			xaxis: {
+				labels: {
+					show: false
+				}
+			}
+		}
+
+		var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+		chart.render();
+	}
+}
+
+let lastUrl = location.href; 
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    onUrlChange();
+  }
+}).observe(document, {subtree: true, childList: true});
+
+function onUrlChange() {
+  if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+	  waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000).then(updateGraph);
+  }
+}
+
+onUrlChange();
 
 
