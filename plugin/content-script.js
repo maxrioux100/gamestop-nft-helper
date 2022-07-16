@@ -66,11 +66,13 @@ function updateGraph() {
 		let total_dollars = 0;
 		let values_eth = [histories.length];
 		let values_dollars = [histories.length];
+		let labels = [histories.length];
 		
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
+			labels[histories.length - 1 - i] = `<b>${transaction[0]}</b> bought from <b>${transaction[3]}</b>`;
 			values_eth[histories.length - 1 - i] = parseFloat(transaction[5]);
-			values_dollars[i] = parseFloat(transaction[7].substring(2,transaction.length-1));
+			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].substring(2,transaction.length-1));
 			total_eth += parseFloat(transaction[5]);
 			total_dollars += parseFloat(transaction[7].substring(2,transaction.length-1));
 		}	
@@ -112,6 +114,18 @@ function updateGraph() {
 			xaxis: {
 				labels: {
 					show: false
+				}
+			},
+			labels: labels,
+			tooltip: {
+				custom: function({ series, seriesIndex, dataPointIndex, w }) {
+					return (
+						'<div class="arrow_box">' +
+							"<span>" +
+								`${series[seriesIndex][dataPointIndex]} ETH (${values_dollars[dataPointIndex]}$)` +
+							"</span>" +
+						"</div>"
+					);
 				}
 			}
 		}

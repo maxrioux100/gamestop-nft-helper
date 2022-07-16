@@ -1,4 +1,4 @@
-# Gamestop NFT helper v0.1
+# Gamestop NFT helper
 
 Add additionnal informations to he NFT pages
 
