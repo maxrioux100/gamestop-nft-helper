@@ -24,11 +24,13 @@ function bestRound(value, decimals){
 }
 
 function writeChip(name, value){
-	return 	'<div class="sc-jcFjpl eXMTzZ">' +
-				'<p class="sc-iUKqMP bhEpyW">' +
-					`<span class="sc-iAKWXU dCLfEr">${name}</span>` + 
-					`<span class="sc-iAKWXU sc-efQSVx dCLfEr jglRDD">${value}</span>` +
-				'</p>' +
+	return 	'<div class="DetailsItem-sc-asex48-1 gyMyxn">' +
+				'<div class="sc-jcFjpl ezpidm">' + 
+					'<p class="sc-iUKqMP fqgUlr">' +
+						`<span class="sc-iAKWXU dCLfEr">${name}</span>` + 
+						`<span class="sc-iAKWXU sc-efQSVx dCLfEr csRHYK">${value}</span>` +
+					'</p>' +
+				'</div>' +
 			'</div>';
 }
 
@@ -47,12 +49,12 @@ function median(values){
   if (sorted_values.length % 2)
     return sorted_values[half];
   
-  return (sorted_values[half - 1] + sorted_values[half]) / 2.0;
+  return bestRound((sorted_values[half - 1] + sorted_values[half]) / 2.0, 6);
 }
 
 function updateGraph() {
 	let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-	if (histories.length > 1) {
+	if (histories.length > 2) {
 		
 		let all_transactions = 'No';
 		for (let i=0; i < histories.length; i++) {
@@ -66,19 +68,28 @@ function updateGraph() {
 		let total_dollars = 0;
 		let values_eth = [histories.length];
 		let values_dollars = [histories.length];
+		let min_eth = 9999999999;
+		let min_dollars = 9999999999;
+		let max_eth = 0;
+		let max_dollars = 0;
 		let labels = [histories.length];
 		
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
 			labels[histories.length - 1 - i] = `<b>${transaction[0]}</b> bought from <b>${transaction[3]}</b>`;
-			values_eth[histories.length - 1 - i] = parseFloat(transaction[5]);
-			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].substring(2,transaction.length-1));
+			values_eth[histories.length - 1 - i] = parseFloat(transaction[5].replace(',', ''));
+			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += parseFloat(transaction[5]);
 			total_dollars += parseFloat(transaction[7].substring(2,transaction.length-1));
+			if (values_eth[histories.length - 1 - i] < min_eth) { min_eth = values_eth[histories.length - 1 - i]; }
+			if (values_dollars[histories.length - 1 - i] < min_dollars) { min_dollars = values_dollars[histories.length - 1 - i]; }
+			if (values_eth[histories.length - 1 - i] > max_eth) { max_eth = values_eth[histories.length - 1 - i]; }
+			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
 		}	
 		
 		
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
+		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
 		let ago_index = first_history.findIndex((element) => element === 'ago');
@@ -86,12 +97,15 @@ function updateGraph() {
 		div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
 							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
 						'</header>' + 
-						'<section class="MetaProperties-sc-17595j9-0 fzGCpU">' +
+						'<section class="Details-sc-asex48-0 ceZikd">' +				
 							writeChip('Transactions', histories.length) +
 							writeChip('All transactions?', all_transactions) +
 							writeChip('First transaction', `${first_history[ago_index - 2]} ${first_history[ago_index - 1]} ago`) +
+							writeChip('Last transaction', `${last_history[ago_index - 2]} ${last_history[ago_index - 1]} ago`) +
 							writeChip('Average', `${bestRound(total_eth/histories.length, 3)} ETH (${bestRound(total_dollars/histories.length, 2)}$)`) +
 							writeChip('Median', `${median(values_eth)} ETH (${median(values_dollars)}$)`) +
+							writeChip('Min', `${min_eth} ETH (${min_dollars}$)`) +
+							writeChip('Max', `${max_eth} ETH (${max_dollars}$)`) +
 						'</section>'+
 						'<section>' +
 							'<div id="chart"></div>' +
@@ -101,11 +115,17 @@ function updateGraph() {
 		
 		var options = {
 			chart: {
-				type: 'line'
+				type: 'line',
+				animations: {
+					enabled: false
+				}
 			},
 			series: [{
-				name: 'sales',
+				name: 'Ethereum',
 				data: values_eth
+			},{
+				name: 'Dollars',
+				data: values_dollars
 			}],
 			stroke: {
 			  curve: 'smooth',
@@ -116,13 +136,37 @@ function updateGraph() {
 					show: false
 				}
 			},
+			yaxis: [
+			    {
+					title: {
+						text: "Ethereum"
+					},
+					min: min_eth,
+					max: max_eth
+				},
+				{
+					opposite: true,
+					title: {
+						text: "Dollars"
+					},
+					min: min_dollars,
+					max: max_dollars,
+					decimalsInFloat: 2
+				}
+			],
 			labels: labels,
+			legend: {
+				show: false
+			},
+			colors: [
+				"#008FFB"
+			],
 			tooltip: {
 				custom: function({ series, seriesIndex, dataPointIndex, w }) {
 					return (
 						'<div class="arrow_box">' +
 							"<span>" +
-								`${series[seriesIndex][dataPointIndex]} ETH (${values_dollars[dataPointIndex]}$)` +
+								`${values_eth[dataPointIndex]} ETH (${values_dollars[dataPointIndex]}$)` +
 							"</span>" +
 						"</div>"
 					);
