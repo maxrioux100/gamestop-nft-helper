@@ -9,7 +9,7 @@ function waitForElement(querySelector, timeout){
 			return resolve();
 		}});
 		observer.observe(document.body, {
-			childList: true, 
+			childList: true,
 			subtree: true
 		});
 		if(timeout) timer = setTimeout(()=>{
@@ -25,9 +25,9 @@ function bestRound(value, decimals){
 
 function writeChip(name, value){
 	return 	'<div class="DetailsItem-sc-asex48-1 gyMyxn">' +
-				'<div class="sc-jcFjpl ezpidm">' + 
+				'<div class="sc-jcFjpl ezpidm">' +
 					'<p class="sc-iUKqMP fqgUlr">' +
-						`<span class="sc-iAKWXU dCLfEr">${name}</span>` + 
+						`<span class="sc-iAKWXU dCLfEr">${name}</span>` +
 						`<span class="sc-iAKWXU sc-efQSVx dCLfEr csRHYK">${value}</span>` +
 					'</p>' +
 				'</div>' +
@@ -36,27 +36,27 @@ function writeChip(name, value){
 
 function median(values){
   if(values.length ===0) throw new Error("No inputs");
-  
+
   let sorted_values = [...values];
-  
+
 
   sorted_values.sort(function(a,b){
     return a-b;
   });
 
   var half = Math.floor(sorted_values.length / 2);
-  
+
   if (sorted_values.length % 2)
     return sorted_values[half];
-  
+
   return bestRound((sorted_values[half - 1] + sorted_values[half]) / 2.0, 6);
 }
 
-function getNoOutliers(someArray) {  
+function getNoOutliers(someArray) {
     var values = [...someArray];
-   
+
     var q1 = values[Math.floor((values.length / 4))];
-    // Likewise for q3. 
+    // Likewise for q3.
     var q3 = values[Math.ceil((values.length * (3 / 4)))];
     var iqr = q3 - q1;
 
@@ -72,26 +72,42 @@ function getNoOutliers(someArray) {
     return filteredValues.length;
 }
 
+function createOffersHelperContainer() {
+	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
+	let div = document.createElement('div');
+
+	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
+						'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
+					'</header>' +
+					'<section>' +
+					  '<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>' +
+						'<div id="chart2"></div>' +
+					'</section>';
+	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
+	container.appendChild(div);
+}
+
 function updateOffers() {
+	document.getElementById("offershelperprompt").remove()
 	let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
-	
+
 	let values_eth = [offers.length];
 	let values_dollars = [offers.length];
 	let quantities = [offers.length];
-	
+
 	for (let i=0; i < offers.length; i++) {
 		let transaction = offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent;
 		values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
 		values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
 		quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
-	}	
-	
+	}
+
 	let noOutliers = getNoOutliers(values_eth);
-	
+
 	var new_values_eth = [];
 	var new_values_dollars = [];
 	var new_quantities = [];
-	
+
 	let lastValue = -1;
 	for (let i=0; i < noOutliers; i++){
 		if (lastValue == values_eth[i]) {
@@ -104,19 +120,7 @@ function updateOffers() {
 			new_values_dollars.push(values_dollars[i]);
 		}
 	}
-	
-	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
-		let div = document.createElement('div');
-		
-		div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
-							'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
-						'</header>' + 
-						'<section>' +
-							'<div id="chart2"></div>' +
-						'</section>';
-		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue'); 
-		container.appendChild(div);	
-		
+
 		var options2 = {
 			chart: {
 				type: 'line',
@@ -183,7 +187,7 @@ function updateOffers() {
 function updateHistory() {
 	let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
 	if (histories.length > 2) {
-		
+
 		let all_transactions = 'No';
 		for (let i=0; i < histories.length; i++) {
 			if (histories[i].textContent.split(' ')[1] === 'minted') {
@@ -201,7 +205,7 @@ function updateHistory() {
 		let max_eth = 0;
 		let max_dollars = 0;
 		let labels = [histories.length];
-		
+
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
 			labels[histories.length - 1 - i] = `<b>${transaction[0]}</b> bought from <b>${transaction[3]}</b>`;
@@ -213,21 +217,21 @@ function updateHistory() {
 			if (values_dollars[histories.length - 1 - i] < min_dollars) { min_dollars = values_dollars[histories.length - 1 - i]; }
 			if (values_eth[histories.length - 1 - i] > max_eth) { max_eth = values_eth[histories.length - 1 - i]; }
 			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
-		}	
-		
-		
+		}
+
+
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
 		let ago_first = first_history.findIndex((element) => element === 'ago');
 		let ago_last = last_history.findIndex((element) => element === 'ago');
-		
+
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
-		
+
 		div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
 							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
-						'</header>' + 
-						'<section class="Details-sc-asex48-0 ceZikd">' +				
+						'</header>' +
+						'<section class="Details-sc-asex48-0 ceZikd">' +
 							writeChip('Transactions', histories.length) +
 							writeChip('All transactions?', all_transactions) +
 							writeChip('First transaction', `${first_history[ago_first - 2]} ${first_history[ago_first - 1]} ago`) +
@@ -240,9 +244,9 @@ function updateHistory() {
 						'<section>' +
 							'<div id="chart"></div>' +
 						'</section>';
-		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue'); 
-		container.appendChild(div);	
-		
+		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
+		container.appendChild(div);
+
 		var options = {
 			chart: {
 				type: 'line',
@@ -310,7 +314,7 @@ function updateHistory() {
 	}
 }
 
-let lastUrl = location.href; 
+let lastUrl = location.href;
 new MutationObserver(() => {
   const url = location.href;
   if (url !== lastUrl) {
@@ -324,7 +328,8 @@ var offers_spawned = false;
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000)
-		.then(updateHistory);
+		.then(updateHistory)
+		.then(createOffersHelperContainer);
 		if (!offers_spawned) {
 			offers_spawned = true
 			waitForElement(".EditionsItem-sc-11cpe2k-7")
