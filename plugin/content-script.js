@@ -72,7 +72,23 @@ function getNoOutliers(someArray) {
     return filteredValues.length;
 }
 
+function createOffersHelperContainer() {
+	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
+	let div = document.createElement('div');
+
+	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
+						'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
+					'</header>' +
+					'<section>' +
+					  '<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>' +
+						'<div id="chart2"></div>' +
+					'</section>';
+	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
+	container.appendChild(div);
+}
+
 function updateOffers() {
+	document.getElementById("offershelperprompt").remove()
 	let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
 
 	let values_eth = [offers.length];
@@ -104,19 +120,6 @@ function updateOffers() {
 			new_values_dollars.push(values_dollars[i]);
 		}
 	}
-
-	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
-		let div = document.createElement('div');
-
-		div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
-							'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
-						'</header>' +
-						'<section>' +
-							'<div id="chart2"></div>' +
-						'</section>';
-		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
-		container.appendChild(div);
-
 		var options2 = {
 			chart: {
 				type: 'line',
@@ -327,7 +330,8 @@ var offers_spawned = false;
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000)
-		.then(updateHistory);
+		.then(updateHistory)
+		.then(createOffersHelperContainer);
 		if (!offers_spawned) {
 			offers_spawned = true
 			waitForElement(".EditionsItem-sc-11cpe2k-7")
