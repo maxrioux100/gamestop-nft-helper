@@ -164,9 +164,6 @@ function updateOffers(offers) {
 			series: [{
 				name: 'Ethereum',
 				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
-			},{
-				name: 'Dollars',
-				data: new_quantities.map(function(e, i) { return [e, new_values_dollars[i]]; })
 			}],
 			stroke: {
 			  curve: 'stepline',
@@ -305,6 +302,8 @@ function updateHistory(histories) {
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
 		let ago_first = first_history.findIndex((element) => element === 'ago');
 		let ago_last = last_history.findIndex((element) => element === 'ago');
+		
+		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
@@ -321,6 +320,7 @@ function updateHistory(histories) {
 							writeChip('Median', `${median(values_eth)} ETH (${median(values_dollars)}$)`) +
 							writeChip('Min', `${min_eth} ETH (${min_dollars}$)`) +
 							writeChip('Max', `${max_eth} ETH (${max_dollars}$)`) +
+							writeChip('Change', `${bestRound(change, 2)}%`) +
 						'</section>'+
 						'<section>' +
 							'<div id="chart"></div>' +
@@ -334,10 +334,13 @@ function updateHistory(histories) {
 			max_eth *= 2;
 			max_dollars *= 2;
 		}
+		
+		let colors = ['#00E396'];
+		if (change < 0) {colors = ["#FF4560"]};
 			
 		var options = {
 			chart: {
-				type: 'line',
+				type: 'area',
 				animations: {
 					enabled: false
 				}
@@ -345,9 +348,6 @@ function updateHistory(histories) {
 			series: [{
 				name: 'Ethereum',
 				data: values_eth
-			},{
-				name: 'Dollars',
-				data: values_dollars
 			}],
 			stroke: {
 			  curve: 'smooth',
@@ -380,9 +380,7 @@ function updateHistory(histories) {
 			legend: {
 				show: false
 			},
-			colors: [
-				"#008FFB"
-			],
+			colors: colors,
 			tooltip: {
 				custom: function({ series, seriesIndex, dataPointIndex, w }) {
 					return (
@@ -392,6 +390,18 @@ function updateHistory(histories) {
 							"</span>" +
 						"</div>"
 					);
+				}
+			},
+			dataLabels: {
+				enabled: false
+			},
+			fill: {
+				type: "gradient",
+				gradient: {
+					shadeIntensity: 1,
+					opacityFrom: 0.5,
+					opacityTo: 0.9,
+					stops: [0, 95, 100]
 				}
 			}
 		}
