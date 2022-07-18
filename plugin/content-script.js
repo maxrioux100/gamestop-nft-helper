@@ -191,8 +191,7 @@ function updateOffers() {
 		chart2.render();
 }
 
-function updateHistory() {
-	let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+function updateHistory(histories) {
 	if (histories.length > 2) {
 
 		let all_transactions = 'No';
@@ -333,13 +332,23 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 var waiting_for_offers = false;
+let lastHistory = '';
 
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000)
-		.then(updateHistory)
-    waitForElement("[class^='ButtonHoverWrapper']", 10000)
-		.then(createOffersHelperContainer);
+		var intervalId = setInterval(function() {
+	  		waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
+			.then( () => {
+				console.log('updatingHistory');
+				let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+				if (histories.toString() != lastHistory){
+					lastHistory = histories.toString();
+					updateHistory(histories);
+				}
+			})
+		}, 1000);
+		waitForElement("[class^='ButtonHoverWrapper']", 1000)
+			.then(createOffersHelperContainer);
 		if (!waiting_for_offers) {
 			waiting_for_offers = true
 			waitForElement(".EditionsItem-sc-11cpe2k-7")
