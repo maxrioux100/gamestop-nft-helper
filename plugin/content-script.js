@@ -106,115 +106,120 @@ function createOffersHelperContainer() {
 function updateOffers() {
 	document.getElementById("offershelperprompt").remove()
 	let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
+	if (offers.length > 0) {
+		let values_eth = [offers.length];
+		let values_dollars = [offers.length];
+		let quantities = [offers.length];
 
-	let values_eth = [offers.length];
-	let values_dollars = [offers.length];
-	let quantities = [offers.length];
-
-	for (let i=0; i < offers.length; i++) {
-		let transaction = offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent;
-		values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
-		values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
-		quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
-	}
-
-	let noOutliers = getNoOutliers(values_eth, quantities);
-
-	var new_values_eth = [];
-	var new_values_dollars = [];
-	var new_quantities = [];
-
-	let lastValue = -1;
-	for (let i=0; i < noOutliers; i++){
-		if (lastValue == values_eth[i]) {
-			new_quantities[new_quantities.length-1] += quantities[i];
-		} else {
-			if (i==0) {new_quantities.push(quantities[i])}
-			else {new_quantities.push(quantities[i] + new_quantities[new_quantities.length-1])};
-			lastValue = values_eth[i];
-			new_values_eth.push(values_eth[i]);
-			new_values_dollars.push(values_dollars[i]);
+		for (let i=0; i < offers.length; i++) {
+			let transaction = offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent;
+			values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
+			values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
+			quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
 		}
-	}
-	
-	let min_eth = new_values_eth[0];
-	let max_eth = new_values_eth[new_values_eth.length-1];
-	let min_dollars = new_values_dollars[0];
-	let max_dollars = new_values_dollars[new_values_dollars.length-1];
-	
-	if (min_eth == max_eth){
-		min_eth = 0;
-		max_eth *= 2;
-		min_dollars = 0;
-		max_eth *= 2;
-	}
-	
-	var options2 = {
-		chart: {
-			type: 'line',
-			animations: {
-				enabled: false
+
+		let noOutliers = getNoOutliers(values_eth, quantities);
+
+		var new_values_eth = [];
+		var new_values_dollars = [];
+		var new_quantities = [];
+
+		let lastValue = -1;
+		for (let i=0; i < noOutliers; i++){
+			if (lastValue == values_eth[i]) {
+				new_quantities[new_quantities.length-1] += quantities[i];
+			} else {
+				if (i==0) {new_quantities.push(quantities[i])}
+				else {new_quantities.push(quantities[i] + new_quantities[new_quantities.length-1])};
+				lastValue = values_eth[i];
+				new_values_eth.push(values_eth[i]);
+				new_values_dollars.push(values_dollars[i]);
 			}
-		},
-		series: [{
-			name: 'Ethereum',
-			data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
-		},{
-			name: 'Dollars',
-			data: new_quantities.map(function(e, i) { return [e, new_values_dollars[i]]; })
-		}],
-		stroke: {
-		  curve: 'stepline',
-		  width: 1
-		},
-		xaxis: {
-			title: {
-				text: "Number of copies to buy"
+		}
+		
+		let min_eth = new_values_eth[0];
+		let max_eth = new_values_eth[new_values_eth.length-1];
+		let min_dollars = new_values_dollars[0];
+		let max_dollars = new_values_dollars[new_values_dollars.length-1];
+		
+		new_values_eth.unshift(new_values_eth[0]);
+		new_values_dollars.unshift(new_values_dollars[0]);
+		new_quantities.unshift(0);
+		
+		if (min_eth == max_eth){
+			min_eth = 0;
+			max_eth *= 2;
+			min_dollars = 0;
+			max_dollars *= 2;
+		}
+		
+		var options2 = {
+			chart: {
+				type: 'line',
+				animations: {
+					enabled: false
+				}
 			},
-			labels: {
+			series: [{
+				name: 'Ethereum',
+				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
+			},{
+				name: 'Dollars',
+				data: new_quantities.map(function(e, i) { return [e, new_values_dollars[i]]; })
+			}],
+			stroke: {
+			  curve: 'stepline',
+			  width: 1
+			},
+			xaxis: {
+				title: {
+					text: "Number of copies to buy"
+				},
+				labels: {
+					show: false
+				}
+			},
+			yaxis: [
+				{
+					title: {
+						text: "Ethereum"
+					},
+					min: min_eth,
+					max: max_eth
+				},
+				{
+					opposite: true,
+					title: {
+						text: "Dollars"
+					},
+					min: min_eth,
+					max: max_eth,
+					decimalsInFloat: 2
+				}
+			],
+			legend: {
 				show: false
-			}
-		},
-		yaxis: [
-			{
-				title: {
-					text: "Ethereum"
-				},
-				min: min_eth,
-				max: max_eth
 			},
-			{
-				opposite: true,
-				title: {
-					text: "Dollars"
-				},
-				min: min_eth,
-				max: max_eth,
-				decimalsInFloat: 2
-			}
-		],
-		legend: {
-			show: false
-		},
-		colors: [
-			"#008FFB"
-		],
-		tooltip: {
-			custom: function({ series, seriesIndex, dataPointIndex, w }) {
-				return (
-					'<div class="arrow_box">' +
-						"<span>" +
-							`${new_values_eth[dataPointIndex]} ETH (${new_values_dollars[dataPointIndex]}$)` +
-						"</span>" +
-					"</div>"
-				);
+			colors: [
+				"#008FFB"
+			],
+			tooltip: {
+				custom: function({ series, seriesIndex, dataPointIndex, w }) {
+					return (
+						'<div class="arrow_box">' +
+							"<span>" +
+								`${new_values_eth[dataPointIndex]} ETH (${new_values_dollars[dataPointIndex]}$)` +
+							"</span>" +
+						"</div>"
+					);
+				}
 			}
 		}
+
+		var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+
+		chart2.render();
 	}
-
-	var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
-
-	chart2.render();
 }
 
 function updateHistory() {
