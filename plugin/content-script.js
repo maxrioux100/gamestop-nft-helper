@@ -258,6 +258,9 @@ function experimental_transactions_splitter(values_eth, values_dollars, labels, 
 
 function updateHistory(histories) {
 	if (histories.length > 2) {
+		let history_helper = document.getElementById("history_helper");
+		if (history_helper != null) {history_helper.remove();};
+		
 		let creator = '';
 		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
 		creator_collections.forEach((creator_collection) => {
@@ -325,6 +328,7 @@ function updateHistory(histories) {
 						'<section>' +
 							'<div id="chart"></div>' +
 						'</section>';
+		div.setAttribute('id', 'history_helper');
 		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 		container.appendChild(div);
 
