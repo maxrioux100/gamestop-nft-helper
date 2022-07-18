@@ -229,15 +229,26 @@ function updateOffers(offers) {
 }
 
 function experimental_transactions_splitter(values_eth, values_dollars, labels, creator){
-	let min_value = 9999999999;
+	let min_value_eth = 9999999999;
+	let min_value_dollars = 999999999;
+	
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		seller = labels[i].split(' ')[3];
 		seller = seller.substring(3, seller.length-4);		
-		if (seller == creator && min_value > values_eth[i]) {
-			min_value = values_eth[i];
+		if (seller == creator && min_value_eth > values_eth[i]) {
+			min_value_eth = values_eth[i];
+			min_value_dollars = values_dollars[i];
 		}
 	}
-	console.log(min_value);
+	
+	for (let i = 0 ; i < values_eth.length ; i++) {
+		seller = labels[i].split(' ')[3];
+		seller = seller.substring(3, seller.length-4);		
+		if (seller == creator && values_eth[i] > min_value_eth) {
+			values_eth[i] = min_value_eth;
+			values_dollars[i] = min_value_dollars;
+		}
+	}
 }
 
 function updateHistory(histories) {
@@ -262,10 +273,6 @@ function updateHistory(histories) {
 		let total_dollars = 0;
 		let values_eth = [histories.length];
 		let values_dollars = [histories.length];
-		let min_eth = 9999999999;
-		let min_dollars = 9999999999;
-		let max_eth = 0;
-		let max_dollars = 0;
 		let labels = [histories.length];
 
 		for (let i=0; i < histories.length; i++) {
@@ -277,13 +284,14 @@ function updateHistory(histories) {
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
-			if (values_eth[histories.length - 1 - i] < min_eth) { min_eth = values_eth[histories.length - 1 - i]; }
-			if (values_dollars[histories.length - 1 - i] < min_dollars) { min_dollars = values_dollars[histories.length - 1 - i]; }
-			if (values_eth[histories.length - 1 - i] > max_eth) { max_eth = values_eth[histories.length - 1 - i]; }
-			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
 		}
 
 		experimental_transactions_splitter(values_eth, values_dollars, labels, creator);
+		
+		let min_eth = Math.min(...values_eth);
+		let min_dollars = Math.min(...values_dollars);
+		let max_eth = Math.max(...values_eth);
+		let max_dollars = Math.max(...values_dollars);
 		
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
