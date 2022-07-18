@@ -73,11 +73,6 @@ function getNoOutliers(someArray) {
 }
 
 function createOffersHelperContainer() {
-  let editions = document.querySelectorAll("[class^='ButtonHoverWrapper']")[1];
-  if (editions == undefined) {
-    return
-  }
-
 	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 	let div = document.createElement('div');
 
@@ -334,7 +329,6 @@ function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000)
 		.then(updateHistory)
-    waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then(createOffersHelperContainer);
 		if (!offers_spawned) {
 			offers_spawned = true
@@ -346,3 +340,5 @@ function onUrlChange() {
 }
 
 onUrlChange();
+
+
