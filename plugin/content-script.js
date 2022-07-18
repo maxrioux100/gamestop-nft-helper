@@ -143,8 +143,8 @@ function updateOffers(offers) {
 		let min_dollars = new_values_dollars[0];
 		let max_dollars = new_values_dollars[new_values_dollars.length-1];
 		
-		new_values_eth.unshift(new_values_eth[0]);
-		new_values_dollars.unshift(new_values_dollars[0]);
+		new_values_eth.push(new_values_eth[new_values_eth.length-1]);
+		new_values_dollars.push(new_values_dollars[new_values_dollars.length-1]);
 		new_quantities.unshift(0);
 		
 		if (min_eth == max_eth){
@@ -228,8 +228,46 @@ function updateOffers(offers) {
 	}
 }
 
+function experimental_transactions_splitter(values_eth, values_dollars, labels, creator){
+	let min_value_eth = 9999999999;
+	let min_value_dollars = 999999999;
+	
+	for (let i = 0 ; i < values_eth.length ; i++) {
+		seller = labels[i].split(' ')[3];
+		seller = seller.substring(3, seller.length-4);		
+		if (seller == creator && min_value_eth > values_eth[i]) {
+			min_value_eth = values_eth[i];
+			min_value_dollars = values_dollars[i];
+		}
+	}
+	
+	for (let i = 0 ; i < values_eth.length ; i++) {
+		seller = labels[i].split(' ')[3];
+		seller = seller.substring(3, seller.length-4);		
+		if (seller == creator && values_eth[i] > min_value_eth) {
+			let factor = values_eth[i]/min_value_eth;
+			values_eth[i] = min_value_eth;
+			values_dollars[i] = min_value_dollars;
+			for (let ii = 1 ; ii < factor ; ii++)
+			{
+				values_eth.splice(i, 0, min_value_eth);
+				values_dollars.splice(i, 0, min_value_dollars);
+				labels.splice(i, 0, labels[i]);
+				i++;
+			}
+		}
+	}
+}
+
 function updateHistory(histories) {
 	if (histories.length > 2) {
+		let creator = '';
+		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
+		creator_collections.forEach((creator_collection) => {
+			if (creator_collection.getElementsByClassName("sc-iAKWXU")[0].textContent == "Creator") {
+				creator = creator_collection.getElementsByClassName("sc-iAKWXU")[1].textContent;
+			}
+		});
 
 		let all_transactions = 'No';
 		for (let i=0; i < histories.length; i++) {
@@ -243,10 +281,6 @@ function updateHistory(histories) {
 		let total_dollars = 0;
 		let values_eth = [histories.length];
 		let values_dollars = [histories.length];
-		let min_eth = 9999999999;
-		let min_dollars = 9999999999;
-		let max_eth = 0;
-		let max_dollars = 0;
 		let labels = [histories.length];
 
 		for (let i=0; i < histories.length; i++) {
@@ -258,12 +292,14 @@ function updateHistory(histories) {
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
-			if (values_eth[histories.length - 1 - i] < min_eth) { min_eth = values_eth[histories.length - 1 - i]; }
-			if (values_dollars[histories.length - 1 - i] < min_dollars) { min_dollars = values_dollars[histories.length - 1 - i]; }
-			if (values_eth[histories.length - 1 - i] > max_eth) { max_eth = values_eth[histories.length - 1 - i]; }
-			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
 		}
 
+		experimental_transactions_splitter(values_eth, values_dollars, labels, creator);
+		
+		let min_eth = Math.min(...values_eth);
+		let min_dollars = Math.min(...values_dollars);
+		let max_eth = Math.max(...values_eth);
+		let max_dollars = Math.max(...values_dollars);
 		
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
@@ -277,11 +313,11 @@ function updateHistory(histories) {
 							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
 						'</header>' +
 						'<section class="Details-sc-asex48-0 ceZikd">' +
-							writeChip('Transactions', histories.length) +
+							writeChip('Transactions', values_eth.length) +
 							writeChip('All transactions?', all_transactions) +
 							writeChip('First transaction', `${first_history[ago_first - 2]} ${first_history[ago_first - 1]} ago`) +
 							writeChip('Last transaction', `${last_history[ago_last - 2]} ${last_history[ago_last - 1]} ago`) +
-							writeChip('Average', `${bestRound(total_eth/histories.length, 3)} ETH (${bestRound(total_dollars/histories.length, 2)}$)`) +
+							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH (${bestRound(total_dollars/values_eth.length, 2)}$)`) +
 							writeChip('Median', `${median(values_eth)} ETH (${median(values_dollars)}$)`) +
 							writeChip('Min', `${min_eth} ETH (${min_dollars}$)`) +
 							writeChip('Max', `${max_eth} ETH (${max_dollars}$)`) +
