@@ -228,7 +228,7 @@ function updateHistory() {
 			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
 		}
 
-
+		
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
 		let ago_first = first_history.findIndex((element) => element === 'ago');
@@ -256,6 +256,13 @@ function updateHistory() {
 		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 		container.appendChild(div);
 
+		if (min_eth == max_eth){
+			min_eth = 0;
+			min_dollars = 0;
+			max_eth *= 2;
+			max_dollars *= 2;
+		}
+			
 		var options = {
 			chart: {
 				type: 'line',
