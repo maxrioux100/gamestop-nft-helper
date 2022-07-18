@@ -50,14 +50,25 @@ function median(values){
     return sorted_values[half];
 
   return bestRound((sorted_values[half - 1] + sorted_values[half]) / 2.0, 6);
+  
 }
 
-function getNoOutliers(someArray) {
-    var values = [...someArray];
+function getRealQ1Q3(values, quantities, index){
+	let realI = 0;
+	for(let i = 0; i < values.length ; i++){
+		realI += quantities[i];
+		if (realI > index) {return values[i];}
+	}
+}
 
-    var q1 = values[Math.floor((values.length / 4))];
+function getNoOutliers(someArray, quantities) {
+    var values = [...someArray];
+	
+	var sums = values.reduce((partialSum, a) => partialSum + a, 0);
+
+    var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
     // Likewise for q3.
-    var q3 = values[Math.ceil((values.length * (3 / 4)))];
+    var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
     var iqr = q3 - q1;
 
     // Then find min and max values
@@ -107,7 +118,7 @@ function updateOffers() {
 		quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
 	}
 
-	let noOutliers = getNoOutliers(values_eth);
+	let noOutliers = getNoOutliers(values_eth, quantities);
 
 	var new_values_eth = [];
 	var new_values_dollars = [];
