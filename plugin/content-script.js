@@ -245,8 +245,16 @@ function experimental_transactions_splitter(values_eth, values_dollars, labels, 
 		seller = labels[i].split(' ')[3];
 		seller = seller.substring(3, seller.length-4);		
 		if (seller == creator && values_eth[i] > min_value_eth) {
+			let factor = values_eth[i]/min_value_eth;
 			values_eth[i] = min_value_eth;
 			values_dollars[i] = min_value_dollars;
+			for (let ii = 1 ; ii < factor ; ii++)
+			{
+				values_eth.splice(i, 0, min_value_eth);
+				values_dollars.splice(i, 0, min_value_dollars);
+				labels.splice(i, 0, labels[i]);
+				i++;
+			}
 		}
 	}
 }
@@ -305,11 +313,11 @@ function updateHistory(histories) {
 							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
 						'</header>' +
 						'<section class="Details-sc-asex48-0 ceZikd">' +
-							writeChip('Transactions', histories.length) +
+							writeChip('Transactions', values_eth.length) +
 							writeChip('All transactions?', all_transactions) +
 							writeChip('First transaction', `${first_history[ago_first - 2]} ${first_history[ago_first - 1]} ago`) +
 							writeChip('Last transaction', `${last_history[ago_last - 2]} ${last_history[ago_last - 1]} ago`) +
-							writeChip('Average', `${bestRound(total_eth/histories.length, 3)} ETH (${bestRound(total_dollars/histories.length, 2)}$)`) +
+							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH (${bestRound(total_dollars/values_eth.length, 2)}$)`) +
 							writeChip('Median', `${median(values_eth)} ETH (${median(values_dollars)}$)`) +
 							writeChip('Min', `${min_eth} ETH (${min_dollars}$)`) +
 							writeChip('Max', `${max_eth} ETH (${max_dollars}$)`) +
