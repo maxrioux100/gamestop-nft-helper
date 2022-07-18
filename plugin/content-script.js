@@ -230,6 +230,13 @@ function updateOffers(offers) {
 
 function updateHistory(histories) {
 	if (histories.length > 2) {
+		let creator = '';
+		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
+		creator_collections.forEach((creator_collection) => {
+			if (creator_collection.getElementsByClassName("sc-iAKWXU")[0].textContent == "Creator") {
+				creator = creator_collection.getElementsByClassName("sc-iAKWXU")[1].textContent;
+			}
+		});
 
 		let all_transactions = 'No';
 		for (let i=0; i < histories.length; i++) {
