@@ -438,6 +438,14 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
 
+
+function array_to_string(array){
+	let output = '';
+	array.forEach((value) => {output += value.textContent});
+	return output
+	
+}
+
 let lastHistory = '';
 let lastOffer = '';
 
@@ -451,8 +459,9 @@ function onUrlChange() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 				.then( () => {
 					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-					if (histories.toString() != lastHistory){
-						lastHistory = histories.toString();
+					let string = array_to_string(histories);
+					if (string != lastHistory){
+						lastHistory = string;
 						updateHistory(histories);
 					}
 				}, () => {} );
@@ -462,8 +471,9 @@ function onUrlChange() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
 				.then( () => { 
 					let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
-					if (offers.toString() != lastOffer){
-						lastOffer = offers.toString();
+					let string = array_to_string(offers);
+					if (string != lastOffer){
+						lastOffer = string;
 						updateOffers(offers);
 					}
 				}, () => {} );
