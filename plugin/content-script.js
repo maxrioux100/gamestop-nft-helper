@@ -93,7 +93,7 @@ function createOffersHelperContainer() {
 }
 
 function updateOffers() {
-	document.getElementById("offershelperprompt").remove()
+	document.getElementById("offershelperprompt").remove();
 	let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
 
 	let values_eth = [offers.length];
@@ -331,30 +331,31 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
 
-var waiting_for_offers = false;
 let lastHistory = '';
 
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		var intervalId = setInterval(function() {
-	  		waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
-			.then( () => {
-				console.log('updatingHistory');
-				let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-				if (histories.toString() != lastHistory){
-					lastHistory = histories.toString();
-					updateHistory(histories);
-				}
-			})
-		}, 1000);
-		waitForElement("[class^='ButtonHoverWrapper']", 1000)
-			.then(createOffersHelperContainer);
-		if (!waiting_for_offers) {
-			waiting_for_offers = true
-			waitForElement(".EditionsItem-sc-11cpe2k-7")
-			.then(updateOffers)
-			.then(() => waiting_for_offers = false);
-		}
+		waitForElement("[class^='ButtonHoverWrapper']", 10000)
+		.then( () => {
+			createOffersHelperContainer();
+			
+			var intervalHistories = setInterval(function() {
+				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000)
+				.then( () => {
+					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+					if (histories.toString() != lastHistory){
+						console.log('updating');
+						lastHistory = histories.toString();
+						updateHistory(histories);
+					}
+				})
+			}, 1000);
+			
+			var intervalOffers = setInterval(function() {
+				waitForElement(".EditionsItem-sc-11cpe2k-7", 10000)
+				.then(updateOffers)
+			}, 1000);
+		});
 	}
 }
 
