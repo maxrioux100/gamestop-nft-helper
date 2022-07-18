@@ -95,19 +95,32 @@ function createOffersHelperContainer() {
 	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
 						'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
 					'</header>' +
-					'<section>' +
-					  '<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>' +
-						'<div id="chart2"></div>' +
-					'</section>';
+					'<div id="offers_helper">' +
+						'<section>' +
+						  '<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>' +
+						'</section>';
+					'</div>' +
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 	container.appendChild(div);
 }
 
 
 function updateOffers(offers) {
-	document.getElementById("offershelperprompt").remove()
+	let offershelperprompt = document.getElementById("offershelperprompt");
+	if (offershelperprompt != null) {offershelperprompt.remove();};
 
 	if (offers.length > 0) {
+		let chart2_elem = document.getElementById("chart2");
+		if (chart2_elem != null) {chart2_elem.remove();};
+		
+		let div = document.createElement('div');
+		div.setAttribute('id', 'chart2');
+		
+		let offers_helper = document.getElementById("offers_helper");
+		
+		offers_helper.appendChild(div);
+		
+		
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
 		let quantities = [offers.length];
