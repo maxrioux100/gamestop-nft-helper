@@ -332,7 +332,7 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
 
-var offers_spawned = false;
+var waiting_for_offers = false;
 
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
@@ -340,11 +340,11 @@ function onUrlChange() {
 		.then(updateHistory)
     waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then(createOffersHelperContainer);
-		if (!offers_spawned) {
-			offers_spawned = true
+		if (!waiting_for_offers) {
+			waiting_for_offers = true
 			waitForElement(".EditionsItem-sc-11cpe2k-7")
 			.then(updateOffers)
-			.then(() => offers_spawned = false);
+			.then(() => waiting_for_offers = false);
 		}
 	}
 }
