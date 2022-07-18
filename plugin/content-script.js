@@ -50,14 +50,25 @@ function median(values){
     return sorted_values[half];
 
   return bestRound((sorted_values[half - 1] + sorted_values[half]) / 2.0, 6);
+  
 }
 
-function getNoOutliers(someArray) {
-    var values = [...someArray];
+function getRealQ1Q3(values, quantities, index){
+	let realI = 0;
+	for(let i = 0; i < values.length ; i++){
+		realI += quantities[i];
+		if (realI > index) {return values[i];}
+	}
+}
 
-    var q1 = values[Math.floor((values.length / 4))];
+function getNoOutliers(someArray, quantities) {
+    var values = [...someArray];
+	
+	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
+
+    var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
     // Likewise for q3.
-    var q3 = values[Math.ceil((values.length * (3 / 4)))];
+    var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
     var iqr = q3 - q1;
 
     // Then find min and max values
@@ -95,36 +106,53 @@ function createOffersHelperContainer() {
 function updateOffers() {
 	document.getElementById("offershelperprompt").remove()
 	let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
+	if (offers.length > 0) {
+		let values_eth = [offers.length];
+		let values_dollars = [offers.length];
+		let quantities = [offers.length];
 
-	let values_eth = [offers.length];
-	let values_dollars = [offers.length];
-	let quantities = [offers.length];
-
-	for (let i=0; i < offers.length; i++) {
-		let transaction = offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent;
-		values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
-		values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
-		quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
-	}
-
-	let noOutliers = getNoOutliers(values_eth);
-
-	var new_values_eth = [];
-	var new_values_dollars = [];
-	var new_quantities = [];
-
-	let lastValue = -1;
-	for (let i=0; i < noOutliers; i++){
-		if (lastValue == values_eth[i]) {
-			new_quantities[new_quantities.length-1] += quantities[i];
-		} else {
-			if (i==0) {new_quantities.push(quantities[i])}
-			else {new_quantities.push(quantities[i] + new_quantities[new_quantities.length-1])};
-			lastValue = values_eth[i];
-			new_values_eth.push(values_eth[i]);
-			new_values_dollars.push(values_dollars[i]);
+		for (let i=0; i < offers.length; i++) {
+			let transaction = offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent;
+			values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
+			values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
+			quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
 		}
-	}
+
+		let noOutliers = getNoOutliers(values_eth, quantities);
+
+		var new_values_eth = [];
+		var new_values_dollars = [];
+		var new_quantities = [];
+
+		let lastValue = -1;
+		for (let i=0; i < noOutliers; i++){
+			if (lastValue == values_eth[i]) {
+				new_quantities[new_quantities.length-1] += quantities[i];
+			} else {
+				if (i==0) {new_quantities.push(quantities[i])}
+				else {new_quantities.push(quantities[i] + new_quantities[new_quantities.length-1])};
+				lastValue = values_eth[i];
+				new_values_eth.push(values_eth[i]);
+				new_values_dollars.push(values_dollars[i]);
+			}
+		}
+		
+		let min_eth = new_values_eth[0];
+		let max_eth = new_values_eth[new_values_eth.length-1];
+		let min_dollars = new_values_dollars[0];
+		let max_dollars = new_values_dollars[new_values_dollars.length-1];
+		
+		new_values_eth.unshift(new_values_eth[0]);
+		new_values_dollars.unshift(new_values_dollars[0]);
+		new_quantities.unshift(0);
+		
+		if (min_eth == max_eth){
+			min_eth = 0;
+			max_eth *= 2;
+			min_dollars = 0;
+			max_dollars *= 2;
+		}
+		
 		var options2 = {
 			chart: {
 				type: 'line',
@@ -144,26 +172,33 @@ function updateOffers() {
 			  width: 1
 			},
 			xaxis: {
+				type: "numeric",
 				title: {
 					text: "Number of copies to buy"
 				},
 				labels: {
-					show: false
+					hideOverlappingLabels: true
+				},
+				decimalsInFloat: 0,
+				tooltip: {
+					enabled: false
 				}
 			},
 			yaxis: [
-			    {
+				{
 					title: {
 						text: "Ethereum"
 					},
-					max: new_values_eth[new_values_eth.length-1]
+					min: min_eth,
+					max: max_eth
 				},
 				{
 					opposite: true,
 					title: {
 						text: "Dollars"
 					},
-					max: new_values_dollars[new_values_dollars.length-1],
+					min: min_dollars,
+					max: max_dollars,
 					decimalsInFloat: 2
 				}
 			],
@@ -189,6 +224,7 @@ function updateOffers() {
 		var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
 
 		chart2.render();
+	}
 }
 
 function updateHistory() {
@@ -228,7 +264,7 @@ function updateHistory() {
 			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
 		}
 
-
+		
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
 		let ago_first = first_history.findIndex((element) => element === 'ago');
@@ -256,6 +292,13 @@ function updateHistory() {
 		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 		container.appendChild(div);
 
+		if (min_eth == max_eth){
+			min_eth = 0;
+			min_dollars = 0;
+			max_eth *= 2;
+			max_dollars *= 2;
+		}
+			
 		var options = {
 			chart: {
 				type: 'line',
