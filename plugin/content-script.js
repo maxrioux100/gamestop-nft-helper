@@ -64,7 +64,7 @@ function getRealQ1Q3(values, quantities, index){
 function getNoOutliers(someArray, quantities) {
     var values = [...someArray];
 	
-	var sums = values.reduce((partialSum, a) => partialSum + a, 0);
+	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
 
     var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
     // Likewise for q3.
@@ -172,11 +172,16 @@ function updateOffers() {
 			  width: 1
 			},
 			xaxis: {
+				type: "numeric",
 				title: {
 					text: "Number of copies to buy"
 				},
 				labels: {
-					show: false
+					hideOverlappingLabels: true
+				},
+				decimalsInFloat: 0,
+				tooltip: {
+					enabled: false
 				}
 			},
 			yaxis: [
@@ -192,8 +197,8 @@ function updateOffers() {
 					title: {
 						text: "Dollars"
 					},
-					min: min_eth,
-					max: max_eth,
+					min: min_dollars,
+					max: max_dollars,
 					decimalsInFloat: 2
 				}
 			],
