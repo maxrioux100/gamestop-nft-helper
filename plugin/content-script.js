@@ -210,7 +210,9 @@ function updateHistory() {
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
-			labels[histories.length - 1 - i] = `<b>${transaction[0]}</b> bought from <b>${transaction[3]}</b>`;
+			buyer_account = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "")
+			seller_account = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "")
+			labels[histories.length - 1 - i] = `<b>${buyer_account}</b> bought from <b>${seller_account}</b>`;
 			values_eth[histories.length - 1 - i] = parseFloat(transaction[5].replace(',', ''));
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
