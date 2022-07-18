@@ -164,9 +164,6 @@ function updateOffers(offers) {
 			series: [{
 				name: 'Ethereum',
 				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
-			},{
-				name: 'Dollars',
-				data: new_quantities.map(function(e, i) { return [e, new_values_dollars[i]]; })
 			}],
 			stroke: {
 			  curve: 'stepline',
@@ -351,9 +348,6 @@ function updateHistory(histories) {
 			series: [{
 				name: 'Ethereum',
 				data: values_eth
-			},{
-				name: 'Dollars',
-				data: values_dollars
 			}],
 			stroke: {
 			  curve: 'smooth',
@@ -396,6 +390,18 @@ function updateHistory(histories) {
 							"</span>" +
 						"</div>"
 					);
+				}
+			},
+			dataLabels: {
+				enabled: false
+			},
+			fill: {
+				type: "gradient",
+				gradient: {
+					shadeIntensity: 1,
+					opacityFrom: 0.5,
+					opacityTo: 0.9,
+					stops: [0, 95, 100]
 				}
 			}
 		}
