@@ -136,70 +136,85 @@ function updateOffers() {
 			new_values_dollars.push(values_dollars[i]);
 		}
 	}
-		var options2 = {
-			chart: {
-				type: 'line',
-				animations: {
-					enabled: false
-				}
+	
+	let min_eth = new_values_eth[0];
+	let max_eth = new_values_eth[new_values_eth.length-1];
+	let min_dollars = new_values_dollars[0];
+	let max_dollars = new_values_dollars[new_values_dollars.length-1];
+	
+	if (min_eth == max_eth){
+		min_eth = 0;
+		max_eth *= 2;
+		min_dollars = 0;
+		max_eth *= 2;
+	}
+	
+	var options2 = {
+		chart: {
+			type: 'line',
+			animations: {
+				enabled: false
+			}
+		},
+		series: [{
+			name: 'Ethereum',
+			data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
+		},{
+			name: 'Dollars',
+			data: new_quantities.map(function(e, i) { return [e, new_values_dollars[i]]; })
+		}],
+		stroke: {
+		  curve: 'stepline',
+		  width: 1
+		},
+		xaxis: {
+			title: {
+				text: "Number of copies to buy"
 			},
-			series: [{
-				name: 'Ethereum',
-				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
-			},{
-				name: 'Dollars',
-				data: new_quantities.map(function(e, i) { return [e, new_values_dollars[i]]; })
-			}],
-			stroke: {
-			  curve: 'stepline',
-			  width: 1
-			},
-			xaxis: {
-				title: {
-					text: "Number of copies to buy"
-				},
-				labels: {
-					show: false
-				}
-			},
-			yaxis: [
-			    {
-					title: {
-						text: "Ethereum"
-					},
-					max: new_values_eth[new_values_eth.length-1]
-				},
-				{
-					opposite: true,
-					title: {
-						text: "Dollars"
-					},
-					max: new_values_dollars[new_values_dollars.length-1],
-					decimalsInFloat: 2
-				}
-			],
-			legend: {
+			labels: {
 				show: false
+			}
+		},
+		yaxis: [
+			{
+				title: {
+					text: "Ethereum"
+				},
+				min: min_eth,
+				max: max_eth
 			},
-			colors: [
-				"#008FFB"
-			],
-			tooltip: {
-				custom: function({ series, seriesIndex, dataPointIndex, w }) {
-					return (
-						'<div class="arrow_box">' +
-							"<span>" +
-								`${new_values_eth[dataPointIndex]} ETH (${new_values_dollars[dataPointIndex]}$)` +
-							"</span>" +
-						"</div>"
-					);
-				}
+			{
+				opposite: true,
+				title: {
+					text: "Dollars"
+				},
+				min: min_eth,
+				max: max_eth,
+				decimalsInFloat: 2
+			}
+		],
+		legend: {
+			show: false
+		},
+		colors: [
+			"#008FFB"
+		],
+		tooltip: {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				return (
+					'<div class="arrow_box">' +
+						"<span>" +
+							`${new_values_eth[dataPointIndex]} ETH (${new_values_dollars[dataPointIndex]}$)` +
+						"</span>" +
+					"</div>"
+				);
 			}
 		}
+	}
 
-		var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+	var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
 
-		chart2.render();
+	chart2.render();
 }
 
 function updateHistory() {
