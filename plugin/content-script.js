@@ -228,6 +228,18 @@ function updateOffers(offers) {
 	}
 }
 
+function experimental_transactions_splitter(values_eth, values_dollars, labels, creator){
+	let min_value = 9999999999;
+	for (let i = 0 ; i < values_eth.length ; i++) {
+		seller = labels[i].split(' ')[3];
+		seller = seller.substring(3, seller.length-4);		
+		if (seller == creator && min_value > values_eth[i]) {
+			min_value = values_eth[i];
+		}
+	}
+	console.log(min_value);
+}
+
 function updateHistory(histories) {
 	if (histories.length > 2) {
 		let creator = '';
@@ -271,6 +283,7 @@ function updateHistory(histories) {
 			if (values_dollars[histories.length - 1 - i] > max_dollars) { max_dollars = values_dollars[histories.length - 1 - i]; }
 		}
 
+		experimental_transactions_splitter(values_eth, values_dollars, labels, creator);
 		
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
