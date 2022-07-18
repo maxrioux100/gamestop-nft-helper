@@ -92,9 +92,8 @@ function createOffersHelperContainer() {
 	container.appendChild(div);
 }
 
-function updateOffers() {
+function updateOffers(offers) {
 	document.getElementById("offershelperprompt").remove();
-	let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
 
 	let values_eth = [offers.length];
 	let values_dollars = [offers.length];
@@ -332,6 +331,7 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 let lastHistory = '';
+let lastOffer = '';
 
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
@@ -340,19 +340,25 @@ function onUrlChange() {
 			createOffersHelperContainer();
 			
 			var intervalHistories = setInterval(function() {
-				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 10000)
+				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 				.then( () => {
 					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
 					if (histories.toString() != lastHistory){
 						lastHistory = histories.toString();
 						updateHistory(histories);
 					}
-				})
+				}, () => {} );
 			}, 1000);
 			
 			var intervalOffers = setInterval(function() {
-				waitForElement(".EditionsItem-sc-11cpe2k-7", 10000)
-				.then(updateOffers)
+				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
+				.then( () => { 
+					let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
+					if (offers.toString() != lastOffer){
+						lastOffer = offers.toString();
+						updateOffers(offers);
+					}
+				}, () => {} );
 			}, 1000);
 		});
 	}
