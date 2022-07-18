@@ -344,7 +344,6 @@ function onUrlChange() {
 				.then( () => {
 					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
 					if (histories.toString() != lastHistory){
-						console.log('updating');
 						lastHistory = histories.toString();
 						updateHistory(histories);
 					}
