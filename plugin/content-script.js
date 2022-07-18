@@ -143,8 +143,8 @@ function updateOffers(offers) {
 		let min_dollars = new_values_dollars[0];
 		let max_dollars = new_values_dollars[new_values_dollars.length-1];
 		
-		new_values_eth.unshift(new_values_eth[0]);
-		new_values_dollars.unshift(new_values_dollars[0]);
+		new_values_eth.push(new_values_eth[new_values_eth.length-1]);
+		new_values_dollars.push(new_values_dollars[new_values_dollars.length-1]);
 		new_quantities.unshift(0);
 		
 		if (min_eth == max_eth){
