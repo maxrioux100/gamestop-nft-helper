@@ -169,11 +169,14 @@ function updateOffers(offers) {
 
 		var options2 = {
 			chart: {
-				type: 'line',
+				type: 'area',
 				animations: {
 					enabled: false
 				}
 			},
+      dataLabels: {
+        enabled: false
+      },
 			series: [{
 				name: 'Ethereum',
 				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
