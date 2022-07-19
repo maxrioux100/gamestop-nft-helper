@@ -275,18 +275,8 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 
 const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
 
-function get_buyer_seller_list(list)
-{
-	var dict = count(list);
-	var filtered = Object.keys(dict).reduce(function (filtered, key) {
-		if (dict[key] > 1) filtered[key] = dict[key];
-		return filtered;
-	}, {});
-	
-	return filtered;
-}
-
 function combine_buyers_sellers(buyers, sellers, creator){
+
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
@@ -300,8 +290,15 @@ function combine_buyers_sellers(buyers, sellers, creator){
 		}
 	}
 	
-	var items = Object.keys(combined).map(function(key) {
-		return [key, combined[key]];
+	
+	var filtered = Object.keys(combined).reduce(function (filtered, key) {
+		if (combined[key] > 1) filtered[key] = combined[key];
+		return filtered;
+	}, {});
+	
+	
+	var items = Object.keys(filtered).map(function(key) {
+		return [key, filtered[key]];
 	});
 	
 	items.sort(function(first, second) {
@@ -404,9 +401,7 @@ function updateHistory(histories) {
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		let buyers_list = get_buyer_seller_list(buyers);
-		let sellers_list = get_buyer_seller_list(sellers);
-		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(buyers_list, sellers_list, creator);
+		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
