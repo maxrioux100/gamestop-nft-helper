@@ -288,7 +288,13 @@ function get_buyer_seller_list(list)
 		return second[1] - first[1];
 	});
 	
-	return items;
+	let data = [];
+	
+	for (let i = 0; i < items.length ; i++){
+		data.push({x: items[i][0], y: items[i][1]});
+	}
+	
+	return data;
 }
 
 function updateHistory(histories) {
@@ -367,6 +373,8 @@ function updateHistory(histories) {
 						'</section>'+
 						'<section>' +
 							'<div id="chart"></div>' +
+							'<div id="chart3"></div>' +
+							'<div id="chart4"></div>' +
 						'</section>';
 		div.setAttribute('id', 'history_helper');
 		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
@@ -453,6 +461,43 @@ function updateHistory(histories) {
 		var chart = new ApexCharts(document.querySelector("#chart"), options);
 
 		chart.render();
+		
+		
+		var options3 = {
+			chart: {
+				type: 'bar'
+			},
+			plotOptions: {
+				bar: {
+					horizontal: true
+				}
+			},
+			series: [{
+				data: get_buyer_seller_list(sellers)
+			}]
+		}
+
+		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+
+		chart3.render();
+		
+		var options4 = {
+			chart: {
+				type: 'bar'
+			},
+			plotOptions: {
+				bar: {
+					horizontal: true
+				}
+			},
+			series: [{
+				data: get_buyer_seller_list(buyers)
+			}]
+		}
+
+		var chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+
+		chart4.render();
 	}
 }
 
