@@ -305,14 +305,14 @@ function combine_buyers_sellers(buyers, sellers){
 		return second[1] - first[1];
 	});
 	
-	console.log(items);
-	
 	let data_sellers = [];
+	let labels = [];
 	
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in sellers) {value = sellers[items[i][0]]};
-		data_sellers.push({x: items[i][0], y: value});
+		data_sellers.push(value);
+		labels.push(items[i][0]);
 	}
 	
 	let data_buyers = [];
@@ -320,16 +320,19 @@ function combine_buyers_sellers(buyers, sellers){
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
-		data_buyers.push({x: items[i][0], y: value});
+		data_buyers.push(value);
 	}
 	
 	let series = [{
+				name: 'Sellers',
 				data: data_sellers
 			}, {
+				name: ' Buyers',
 				data: data_buyers
 			}]
+			
 	
-	return series;
+	return [series, labels];
 	
 }
 
@@ -389,7 +392,7 @@ function updateHistory(histories) {
 		
 		let buyers_list = get_buyer_seller_list(buyers);
 		let sellers_list = get_buyer_seller_list(sellers);
-		let series_sellers_buyers = combine_buyers_sellers(buyers_list, sellers_list);
+		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(buyers_list, sellers_list);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
@@ -510,7 +513,8 @@ function updateHistory(histories) {
 					horizontal: true
 				}
 			},
-			series: series_sellers_buyers
+			series: series_sellers_buyers,
+			labels: labels_sellers_buyers
 		}
 
 		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
