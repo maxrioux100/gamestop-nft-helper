@@ -305,6 +305,8 @@ function combine_buyers_sellers(buyers, sellers, creator){
 		return second[1] - first[1];
 	});
 	
+	items = items.slice(0, 10);
+	
 	let data_sellers = [];
 	let labels = [];
 	
