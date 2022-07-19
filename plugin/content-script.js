@@ -168,15 +168,18 @@ function updateOffers(offers) {
 		}
 
 		var options2 = {
+			title: {
+				text: "Future offers"
+			},
 			chart: {
 				type: 'area',
 				animations: {
 					enabled: false
 				}
 			},
-      dataLabels: {
-        enabled: false
-      },
+			dataLabels: {
+				enabled: false
+			},
 			series: [{
 				name: 'Ethereum',
 				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
@@ -442,6 +445,9 @@ function updateHistory(histories) {
 		if (change < 0) {colors = ["#FF4560"]};
 
 		var options = {
+			title: {
+				text: "Price history"
+			},
 			chart: {
 				type: 'area',
 				animations: {
@@ -515,6 +521,9 @@ function updateHistory(histories) {
 		
 		
 		var options3 = {
+			title: {
+				text: "Recurrent buyers/sellers"
+			},
 			chart: {
 				type: 'bar',
 				stacked: true
