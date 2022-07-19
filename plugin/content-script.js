@@ -227,7 +227,7 @@ function updateOffers(offers) {
 					return (
 						'<div class="arrow_box">' +
 							"<span>" +
-								`${new_values_eth[dataPointIndex]} ETH (${new_values_dollars[dataPointIndex]}$)` +
+								`${new_values_eth[dataPointIndex]} ETH ($${new_values_dollars[dataPointIndex]})` +
 							"</span>" +
 						"</div>"
 					);
@@ -406,7 +406,7 @@ function updateHistory(histories) {
 					return (
 						'<div class="arrow_box">' +
 							"<span>" +
-								`${values_eth[dataPointIndex]} ETH (${values_dollars[dataPointIndex]}$)` +
+								`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
 							"</span>" +
 						"</div>"
 					);
