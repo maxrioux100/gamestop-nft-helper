@@ -241,19 +241,23 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator){
+function experimental_transactions_splitter(values_eth, values_dollars, labels, creator){
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
-		if (sellers[i] == creator && min_value_eth > values_eth[i]) {
+		seller = labels[i].split(' ')[3];
+		seller = seller.substring(3, seller.length-4);
+		if (seller == creator && min_value_eth > values_eth[i]) {
 			min_value_eth = values_eth[i];
 			min_value_dollars = values_dollars[i];
 		}
 	}
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
-		if (sellers[i] == creator && values_eth[i] > min_value_eth) {
+		seller = labels[i].split(' ')[3];
+		seller = seller.substring(3, seller.length-4);
+		if (seller == creator && values_eth[i] > min_value_eth) {
 			let factor = values_eth[i]/min_value_eth;
 			values_eth[i] = min_value_eth;
 			values_dollars[i] = min_value_dollars;
@@ -261,16 +265,12 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 			{
 				values_eth.splice(i, 0, min_value_eth);
 				values_dollars.splice(i, 0, min_value_dollars);
-				sellers.splice(i, 0, sellers[i]);
-				buyers.splice(i, 0, buyers[i]);
 				labels.splice(i, 0, labels[i]);
 				i++;
 			}
 		}
 	}
 }
-
-const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{})
 
 function updateHistory(histories) {
 	if (histories.length > 2) {
@@ -297,22 +297,20 @@ function updateHistory(histories) {
 		let total_dollars = 0;
 		let values_eth = [histories.length];
 		let values_dollars = [histories.length];
-		let buyers = [histories.length];
-		let sellers = [histories.length];
 		let labels = [histories.length];
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
-			buyers[i] = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "")
-			sellers[i] = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "")
-			labels[histories.length - 1 - i] = `<b>${buyers[i]}</b> bought from <b>${sellers[i]}</b>`;
+			buyer_account = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "")
+			seller_account = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "")
+			labels[histories.length - 1 - i] = `<b>${buyer_account}</b> bought from <b>${seller_account}</b>`;
 			values_eth[histories.length - 1 - i] = parseFloat(transaction[5].replace(',', ''));
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
 		}
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator);
+		experimental_transactions_splitter(values_eth, values_dollars, labels, creator);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
@@ -325,8 +323,6 @@ function updateHistory(histories) {
 		let ago_last = last_history.findIndex((element) => element === 'ago');
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
-		
-		console.log(count(sellers));
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
