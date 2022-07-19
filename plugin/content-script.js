@@ -50,7 +50,7 @@ function median(values){
     return sorted_values[half];
 
   return bestRound((sorted_values[half - 1] + sorted_values[half]) / 2.0, 6);
-  
+
 }
 
 function getRealQ1Q3(values, quantities, index){
@@ -63,7 +63,7 @@ function getRealQ1Q3(values, quantities, index){
 
 function getNoOutliers(someArray, quantities) {
     var values = [...someArray];
-	
+
 	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
 
     var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
@@ -112,15 +112,15 @@ function updateOffers(offers) {
 	if (offers.length > 0) {
 		let chart2_elem = document.getElementById("chart2");
 		if (chart2_elem != null) {chart2_elem.remove();};
-		
+
 		let div = document.createElement('div');
 		div.setAttribute('id', 'chart2');
-		
+
 		let offers_helper = document.getElementById("offers_helper");
-		
+
 		offers_helper.appendChild(div);
-		
-		
+
+
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
 		let quantities = [offers.length];
@@ -150,23 +150,23 @@ function updateOffers(offers) {
 				new_values_dollars.push(values_dollars[i]);
 			}
 		}
-		
+
 		let min_eth = new_values_eth[0];
 		let max_eth = new_values_eth[new_values_eth.length-1];
 		let min_dollars = new_values_dollars[0];
 		let max_dollars = new_values_dollars[new_values_dollars.length-1];
-		
+
 		new_values_eth.push(new_values_eth[new_values_eth.length-1]);
 		new_values_dollars.push(new_values_dollars[new_values_dollars.length-1]);
 		new_quantities.unshift(0);
-		
+
 		if (min_eth == max_eth){
 			min_eth = 0;
 			max_eth *= 2;
 			min_dollars = 0;
 			max_dollars *= 2;
 		}
-		
+
 		var options2 = {
 			chart: {
 				type: 'line',
@@ -241,19 +241,19 @@ function updateOffers(offers) {
 function experimental_transactions_splitter(values_eth, values_dollars, labels, creator){
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
-	
+
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		seller = labels[i].split(' ')[3];
-		seller = seller.substring(3, seller.length-4);		
+		seller = seller.substring(3, seller.length-4);
 		if (seller == creator && min_value_eth > values_eth[i]) {
 			min_value_eth = values_eth[i];
 			min_value_dollars = values_dollars[i];
 		}
 	}
-	
+
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		seller = labels[i].split(' ')[3];
-		seller = seller.substring(3, seller.length-4);		
+		seller = seller.substring(3, seller.length-4);
 		if (seller == creator && values_eth[i] > min_value_eth) {
 			let factor = values_eth[i]/min_value_eth;
 			values_eth[i] = min_value_eth;
@@ -273,7 +273,7 @@ function updateHistory(histories) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
 		if (history_helper != null) {history_helper.remove();};
-		
+
 		let creator = '';
 		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
 		creator_collections.forEach((creator_collection) => {
@@ -308,17 +308,17 @@ function updateHistory(histories) {
 		}
 
 		experimental_transactions_splitter(values_eth, values_dollars, labels, creator);
-		
+
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
 		let max_eth = Math.max(...values_eth);
 		let max_dollars = Math.max(...values_dollars);
-		
+
 		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
 		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
 		let ago_first = first_history.findIndex((element) => element === 'ago');
 		let ago_last = last_history.findIndex((element) => element === 'ago');
-		
+
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
@@ -351,10 +351,10 @@ function updateHistory(histories) {
 			max_eth *= 2;
 			max_dollars *= 2;
 		}
-		
+
 		let colors = ['#00E396'];
 		if (change < 0) {colors = ["#FF4560"]};
-			
+
 		var options = {
 			chart: {
 				type: 'area',
@@ -443,7 +443,7 @@ function array_to_string(array){
 	let output = '';
 	array.forEach((value) => {output += value.textContent});
 	return output
-	
+
 }
 
 let lastHistory = '';
@@ -454,7 +454,7 @@ function onUrlChange() {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-			
+
 			var intervalHistories = setInterval(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 				.then( () => {
@@ -466,10 +466,10 @@ function onUrlChange() {
 					}
 				}, () => {} );
 			}, 1000);
-			
+
 			var intervalOffers = setInterval(function() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
-				.then( () => { 
+				.then( () => {
 					let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
 					let string = array_to_string(offers);
 					if (string != lastOffer){
