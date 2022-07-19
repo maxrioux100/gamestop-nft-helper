@@ -270,7 +270,26 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 	}
 }
 
-const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{})
+const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
+
+function get_buyer_seller_list(list)
+{
+	var dict = count(list);
+	var filtered = Object.keys(dict).reduce(function (filtered, key) {
+		if (dict[key] > 1) filtered[key] = dict[key];
+		return filtered;
+	}, {});
+	
+	var items = Object.keys(filtered).map(function(key) {
+		return [key, filtered[key]];
+	});
+	
+	items.sort(function(first, second) {
+		return second[1] - first[1];
+	});
+	
+	return items;
+}
 
 function updateHistory(histories) {
 	if (histories.length > 2) {
@@ -303,9 +322,9 @@ function updateHistory(histories) {
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
-			buyers[i] = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "")
-			sellers[i] = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "")
-			labels[histories.length - 1 - i] = `<b>${buyers[i]}</b> bought from <b>${sellers[i]}</b>`;
+			buyers[histories.length - 1 - i] = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "");
+			sellers[histories.length - 1 - i] = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "");
+			labels[histories.length - 1 - i] = `<b>${buyers[histories.length - 1 - i]}</b> bought from <b>${sellers[histories.length - 1 - i]}</b>`;
 			values_eth[histories.length - 1 - i] = parseFloat(transaction[5].replace(',', ''));
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
@@ -326,7 +345,8 @@ function updateHistory(histories) {
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		console.log(count(sellers));
+		console.log(get_buyer_seller_list(sellers));
+		console.log(get_buyer_seller_list(buyers));
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
