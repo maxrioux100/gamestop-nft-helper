@@ -523,7 +523,10 @@ function updateHistory(histories) {
 			},
 			chart: {
 				type: 'bar',
-				stacked: true
+				stacked: true,
+				animations: {
+					enabled: false
+				}
 			},
 			plotOptions: {
 				bar: {
