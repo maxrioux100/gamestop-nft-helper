@@ -168,15 +168,18 @@ function updateOffers(offers) {
 		}
 
 		var options2 = {
+			title: {
+				text: "Future offers"
+			},
 			chart: {
 				type: 'area',
 				animations: {
 					enabled: false
 				}
 			},
-      dataLabels: {
-        enabled: false
-      },
+			dataLabels: {
+				enabled: false
+			},
 			series: [{
 				name: 'Ethereum',
 				data: new_quantities.map(function(e, i) { return [e, new_values_eth[i]]; })
@@ -241,23 +244,19 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, labels, creator){
+function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator){
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
-		seller = labels[i].split(' ')[3];
-		seller = seller.substring(3, seller.length-4);
-		if (seller == creator && min_value_eth > values_eth[i]) {
+		if (sellers[i] == creator && min_value_eth > values_eth[i]) {
 			min_value_eth = values_eth[i];
 			min_value_dollars = values_dollars[i];
 		}
 	}
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
-		seller = labels[i].split(' ')[3];
-		seller = seller.substring(3, seller.length-4);
-		if (seller == creator && values_eth[i] > min_value_eth) {
+		if (sellers[i] == creator && values_eth[i] > min_value_eth) {
 			let factor = values_eth[i]/min_value_eth;
 			values_eth[i] = min_value_eth;
 			values_dollars[i] = min_value_dollars;
@@ -265,11 +264,89 @@ function experimental_transactions_splitter(values_eth, values_dollars, labels, 
 			{
 				values_eth.splice(i, 0, min_value_eth);
 				values_dollars.splice(i, 0, min_value_dollars);
+				sellers.splice(i, 0, sellers[i]);
+				buyers.splice(i, 0, buyers[i]);
 				labels.splice(i, 0, labels[i]);
 				i++;
 			}
 		}
 	}
+}
+
+const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
+
+function combine_buyers_sellers(buyers, sellers, creator){
+
+	let combined = {};
+	for (let i = 0; i < Object.keys(buyers).length ; i++){
+		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
+	}
+	
+	for (let i = 0; i < Object.keys(sellers).length ; i++){
+		if (Object.keys(sellers)[i] in combined) {
+			combined[Object.keys(sellers)[i]] += sellers[Object.keys(sellers)[i]];
+		} else {
+			combined[Object.keys(sellers)[i]] = sellers[Object.keys(sellers)[i]];
+		}
+	}
+	
+	
+	var filtered = Object.keys(combined).reduce(function (filtered, key) {
+		if (combined[key] > 1) filtered[key] = combined[key];
+		return filtered;
+	}, {});
+	
+	
+	var items = Object.keys(filtered).map(function(key) {
+		return [key, filtered[key]];
+	});
+	
+	items.sort(function(first, second) {
+		return second[1] - first[1];
+	});
+	
+	items = items.slice(0, 10);
+	
+	let data_sellers = [];
+	let labels = [];
+	
+	for (let i = 0; i < items.length ; i++){
+		let value = 0;
+		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
+		data_sellers.push(value);
+		labels.push(items[i][0]);
+	}
+	
+	let data_buyers = [];
+	
+	for (let i = 0; i < items.length ; i++){
+		let value = 0;
+		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
+		data_buyers.push(value);
+	}
+	
+	let data_creators = [];
+	
+	for (let i = 0; i < items.length ; i++){
+		let value = 0;
+		if (items[i][0] == creator) {value = sellers[items[i][0]]};
+		data_creators.push(value);
+	}
+	
+	let series = [{
+				name: 'Creator',
+				data: data_creators
+			},{
+				name: 'Buyers',
+				data: data_buyers
+			},{
+				name: 'Sellers',
+				data: data_sellers
+			}]
+			
+	
+	return [series, labels];
+	
 }
 
 function updateHistory(histories) {
@@ -297,20 +374,22 @@ function updateHistory(histories) {
 		let total_dollars = 0;
 		let values_eth = [histories.length];
 		let values_dollars = [histories.length];
+		let buyers = [histories.length];
+		let sellers = [histories.length];
 		let labels = [histories.length];
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
-			buyer_account = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "")
-			seller_account = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "")
-			labels[histories.length - 1 - i] = `<b>${buyer_account}</b> bought from <b>${seller_account}</b>`;
+			buyers[histories.length - 1 - i] = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "");
+			sellers[histories.length - 1 - i] = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "");
+			labels[histories.length - 1 - i] = `<b>${buyers[histories.length - 1 - i]}</b> bought from <b>${sellers[histories.length - 1 - i]}</b>`;
 			values_eth[histories.length - 1 - i] = parseFloat(transaction[5].replace(',', ''));
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
 		}
 
-		experimental_transactions_splitter(values_eth, values_dollars, labels, creator);
+		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
@@ -323,6 +402,8 @@ function updateHistory(histories) {
 		let ago_last = last_history.findIndex((element) => element === 'ago');
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
+		
+		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 		let div = document.createElement('div');
@@ -343,6 +424,8 @@ function updateHistory(histories) {
 						'</section>'+
 						'<section>' +
 							'<div id="chart"></div>' +
+							'<div id="chart3"></div>' +
+							'<div id="chart4"></div>' +
 						'</section>';
 		div.setAttribute('id', 'history_helper');
 		div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
@@ -359,6 +442,9 @@ function updateHistory(histories) {
 		if (change < 0) {colors = ["#FF4560"]};
 
 		var options = {
+			title: {
+				text: "Price history"
+			},
 			chart: {
 				type: 'area',
 				animations: {
@@ -429,6 +515,35 @@ function updateHistory(histories) {
 		var chart = new ApexCharts(document.querySelector("#chart"), options);
 
 		chart.render();
+		
+		
+		var options3 = {
+			title: {
+				text: "Recurrent buyers/sellers"
+			},
+			chart: {
+				type: 'bar',
+				stacked: true,
+				animations: {
+					enabled: false
+				}
+			},
+			plotOptions: {
+				bar: {
+					horizontal: true
+				}
+			},
+			series: series_sellers_buyers,
+			labels: labels_sellers_buyers,
+			colors: ['#008FFB', '#00E396', '#FF4560'],
+			xaxis: {
+				decimalsInFloat: 0
+			}
+		}
+
+		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+
+		chart3.render();
 	}
 }
 
