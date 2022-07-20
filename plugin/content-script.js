@@ -373,6 +373,7 @@ function updateHistory(histories) {
 		let buyers = [histories.length];
 		let sellers = [histories.length];
 		let labels = [histories.length];
+		let agos = [histories.length];
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
@@ -383,6 +384,9 @@ function updateHistory(histories) {
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
+			
+			let ago_index = transaction.findIndex((element) => element === 'ago');
+			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
 		}
 
 		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator);
@@ -391,11 +395,6 @@ function updateHistory(histories) {
 		let min_dollars = Math.min(...values_dollars);
 		let max_eth = Math.max(...values_eth);
 		let max_dollars = Math.max(...values_dollars);
-
-		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
-		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
-		let ago_first = first_history.findIndex((element) => element === 'ago');
-		let ago_last = last_history.findIndex((element) => element === 'ago');
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
@@ -410,8 +409,8 @@ function updateHistory(histories) {
 						'<section class="Details-sc-asex48-0 ceZikd">' +
 							writeChip('Transactions', values_eth.length) +
 							writeChip('All transactions?', all_transactions) +
-							writeChip('First transaction', `${first_history[ago_first - 2]} ${first_history[ago_first - 1]} ago`) +
-							writeChip('Last transaction', `${last_history[ago_last - 2]} ${last_history[ago_last - 1]} ago`) +
+							writeChip('First transaction', `${agos[0]} ago`) +
+							writeChip('Last transaction', `${agos[agos.length-1]} ago`) +
 							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
 							writeChip('Min', `${min_eth} ETH ($${min_dollars})`) +
