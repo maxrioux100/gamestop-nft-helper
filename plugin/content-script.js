@@ -293,15 +293,15 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	}, {});
 	
 	
-	var items = Object.keys(filtered).map(function(key) {
+	var sorted = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
 	
-	items.sort(function(first, second) {
+	sorted.sort(function(first, second) {
 		return second[1] - first[1];
 	});
 	
-	items = items.slice(0, 10);
+	items = sorted.slice(0, 10);
 	
 	let data_sellers = [];
 	let labels = [];
