@@ -240,7 +240,7 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator){
+function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator){
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
 
@@ -263,6 +263,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 				sellers.splice(i, 0, sellers[i]);
 				buyers.splice(i, 0, buyers[i]);
 				labels.splice(i, 0, labels[i]);
+				agos.splice(i, 0, agos[i]);
 				i++;
 			}
 		}
@@ -389,7 +390,7 @@ function updateHistory(histories) {
 			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
 		}
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator);
+		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
