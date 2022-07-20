@@ -346,22 +346,44 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	
 }
 
+function sortedToDict(sorted){
+	let dict = {};
+	for(let i=0 ; i < sorted.length ; i++) {
+		dict[sorted[i][0]] = sorted[i][1];
+	}
+	return dict;
+}
+
 function get_volume_candle(agos_count){
 
 		var sorted = Object.keys(agos_count).map(function(key) {
 			return [key, agos_count[key]];
 		});
 		
-		time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
+		let time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
 	
 		sorted.sort(function(first, second) {
 			return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
 		});
 		
-		let volume_data = [sorted.length];
-		for (let i=0; i< sorted.length ; i++){
-			volume_data[i] = {x: sorted[i][0], y: sorted[i][1]};
+		let volume_data = [];
+		
+		let [first_prefix, first_suffix] = sorted[0][0].split(' ');
+		
+		let dict = sortedToDict(sorted);
+		
+		for (let i = first_prefix ; i >= 1 ; i--) {
+			let value = 0;
+			let suffix = first_suffix;
+			if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; };
+			volume_data.push({x: `${i} ${suffix} ago`, y: value});
 		}
+		
+		let suffix = first_suffix;
+		if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+		
+		volume_data.push({x: `last ${suffix}`, y: 0});
 		
 		return volume_data;
 }
