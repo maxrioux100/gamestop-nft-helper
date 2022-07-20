@@ -9,7 +9,7 @@
 
 	"content_scripts": [
 		{
-			"matches": ["https://nft.gamestop.com/*"],
+			"matches": ["https://nft.gamestop.com/token/*"],
 			"js": ["apexcharts.js", "content-script.js"]
 		}
 	],

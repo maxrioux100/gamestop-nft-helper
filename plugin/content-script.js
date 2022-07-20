@@ -281,7 +281,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
 	}
-	
+
 	for (let i = 0; i < Object.keys(sellers).length ; i++){
 		if (Object.keys(sellers)[i] in combined) {
 			combined[Object.keys(sellers)[i]] += sellers[Object.keys(sellers)[i]];
@@ -289,50 +289,50 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			combined[Object.keys(sellers)[i]] = sellers[Object.keys(sellers)[i]];
 		}
 	}
-	
-	
+
+
 	var filtered = Object.keys(combined).reduce(function (filtered, key) {
 		if (combined[key] > 1) filtered[key] = combined[key];
 		return filtered;
 	}, {});
-	
-	
+
+
 	var items = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
-	
+
 	items.sort(function(first, second) {
 		return second[1] - first[1];
 	});
-	
+
 	items = items.slice(0, 10);
-	
+
 	let data_sellers = [];
 	let labels = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
 		data_sellers.push(value);
 		labels.push(items[i][0]);
 	}
-	
+
 	let data_buyers = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
 		data_buyers.push(value);
 	}
-	
+
 	let data_creators = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] == creator) {value = sellers[items[i][0]]};
 		data_creators.push(value);
 	}
-	
+
 	let series = [{
 				name: 'Creator',
 				data: data_creators
@@ -343,10 +343,10 @@ function combine_buyers_sellers(buyers, sellers, creator){
 				name: 'Sellers',
 				data: data_sellers
 			}]
-			
-	
+
+
 	return [series, labels];
-	
+
 }
 
 function updateHistory(histories) {
@@ -402,7 +402,7 @@ function updateHistory(histories) {
 		let ago_last = last_history.findIndex((element) => element === 'ago');
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
-		
+
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
@@ -515,8 +515,8 @@ function updateHistory(histories) {
 		var chart = new ApexCharts(document.querySelector("#chart"), options);
 
 		chart.render();
-		
-		
+
+
 		var options3 = {
 			title: {
 				text: "Recurrent buyers/sellers"
@@ -567,11 +567,25 @@ function array_to_string(array){
 let lastHistory = '';
 let lastOffer = '';
 
+function offerHelperContainerMain() {
+  /* Check to see if any apex charts already exists on the page before
+  attempting to create it. */
+  a = document.querySelector("#chart")
+  b = document.querySelector("#chart2")
+  c = document.querySelector("#chart3")
+  if (a || b || c) {
+    // chart exists, perform no operation
+    return
+  } else {
+    createOffersHelperContainer();
+  }
+}
+
 function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
-			createOffersHelperContainer();
+      offerHelperContainerMain();
 
 			var intervalHistories = setInterval(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
