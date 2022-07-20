@@ -593,9 +593,9 @@ function updateHistory(histories) {
 			
 		}
 		
-		//var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
 
-		//chart3.render();
+		chart3.render();
 		
 		var options4 = {
 			title: {
