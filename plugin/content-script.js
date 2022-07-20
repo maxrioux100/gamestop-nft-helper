@@ -61,25 +61,21 @@ function getRealQ1Q3(values, quantities, index){
 	}
 }
 
-function getNoOutliers(someArray, quantities) {
+function getNumberOfNonOutliers(someArray, quantities) {
     var values = [...someArray];
 
 	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
 
     var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
-    // Likewise for q3.
     var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
     var iqr = q3 - q1;
 
-    // Then find min and max values
     maxValue = q3 + iqr*1.5;
 
-    // Then filter anything beyond or beneath these values.
     var filteredValues = values.filter(function(x) {
         return (x <= maxValue);
     });
 
-    // Then return
     return filteredValues.length;
 }
 
@@ -132,7 +128,7 @@ function updateOffers(offers) {
 			quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
 		}
 
-		let noOutliers = getNoOutliers(values_eth, quantities);
+		let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
 
 		var new_values_eth = [];
 		var new_values_dollars = [];
