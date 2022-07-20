@@ -346,6 +346,26 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	
 }
 
+function get_volume_candle(agos_count){
+
+		var sorted = Object.keys(agos_count).map(function(key) {
+			return [key, agos_count[key]];
+		});
+		
+		time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
+	
+		sorted.sort(function(first, second) {
+			return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
+		});
+		
+		let volume_data = [sorted.length];
+		for (let i=0; i< sorted.length ; i++){
+			volume_data[i] = {x: sorted[i][0], y: sorted[i][1]};
+		}
+		
+		return volume_data;
+}
+
 function updateHistory(histories) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
@@ -540,6 +560,19 @@ function updateHistory(histories) {
 		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
 
 		chart3.render();
+		
+		options4 = {
+			chart: {
+				type: 'bar'
+			},
+			series: [{
+				data: get_volume_candle(count(agos))
+			}]
+		}
+		
+		var chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+
+		chart4.render();
 	}
 }
 
