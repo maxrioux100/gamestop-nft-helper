@@ -577,7 +577,10 @@ function updateHistory(histories) {
 		options3 = {
 			chart: {
 				stacked: true,
-				type: 'bar'
+				type: 'bar',
+				animations: {
+					enabled: false
+				}
 			},
 			series: series_volume,
 			labels: labels_volume,
