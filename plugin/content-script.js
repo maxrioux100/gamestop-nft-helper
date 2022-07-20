@@ -388,7 +388,22 @@ function get_volume_candle(agos_count){
 		volume_data.push(0);
 		labels.push(`last ${suffix}`);
 		
-		return [volume_data, labels];
+		let series = [{data:volume_data}];
+		
+		for (const [key, value] of Object.entries(dict)){
+			let suffixes = [key.split(' ')[1]]
+			if (suffixes[0][suffixes[0].length] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
+			if (!(key in suffixes)){
+				let volume_last = [];
+				for (let i=0 ; i < volume_data.length-1 ; i++){
+					volume_last.push(0);
+				}
+				volume_last.push(value);
+				series.push({data:volume_last});
+			}
+		}
+		
+		return [series, labels];
 }
 
 function updateHistory(histories) {
@@ -444,7 +459,7 @@ function updateHistory(histories) {
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		let [volume_data, labels_volume] = get_volume_candle(count(agos));
+		let [series_volume, labels_volume] = get_volume_candle(count(agos));
 		
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
@@ -561,11 +576,10 @@ function updateHistory(histories) {
 		
 		options3 = {
 			chart: {
+				stacked: true,
 				type: 'bar'
 			},
-			series: [{
-				data: volume_data
-			}],
+			series: series_volume,
 			labels: labels_volume
 			
 		}
