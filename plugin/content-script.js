@@ -372,20 +372,23 @@ function get_volume_candle(agos_count){
 		
 		let dict = sortedToDict(sorted);
 		
+		let labels = [];
+		
 		for (let i = first_prefix ; i >= 1 ; i--) {
 			let value = 0;
 			let suffix = first_suffix;
 			if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
 			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; };
-			volume_data.push({x: `${i} ${suffix} ago`, y: value});
+			volume_data.push(value);
+			labels.push(`${i} ${suffix} ago`);
 		}
 		
 		let suffix = first_suffix;
 		if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+		volume_data.push(0);
+		labels.push(`last ${suffix}`);
 		
-		volume_data.push({x: `last ${suffix}`, y: 0});
-		
-		return volume_data;
+		return [volume_data, labels];
 }
 
 function updateHistory(histories) {
@@ -440,6 +443,8 @@ function updateHistory(histories) {
 		let max_dollars = Math.max(...values_dollars);
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
+		
+		let [volume_data, labels_volume] = get_volume_candle(count(agos));
 		
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
@@ -554,8 +559,22 @@ function updateHistory(histories) {
 
 		chart.render();
 		
+		options3 = {
+			chart: {
+				type: 'bar'
+			},
+			series: [{
+				data: volume_data
+			}],
+			labels: labels_volume
+			
+		}
 		
-		var options3 = {
+		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+
+		chart3.render();
+		
+		var options4 = {
 			title: {
 				text: "Recurrent buyers/sellers"
 			},
@@ -579,22 +598,10 @@ function updateHistory(histories) {
 			}
 		}
 
-		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
-
-		chart3.render();
-		
-		options4 = {
-			chart: {
-				type: 'bar'
-			},
-			series: [{
-				data: get_volume_candle(count(agos))
-			}]
-		}
-		
 		var chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
 		chart4.render();
+		
 	}
 }
 
