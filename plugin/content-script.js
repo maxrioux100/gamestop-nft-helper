@@ -580,7 +580,10 @@ function updateHistory(histories) {
 				type: 'bar'
 			},
 			series: series_volume,
-			labels: labels_volume
+			labels: labels_volume,
+			legend: {
+				show: false
+			}
 			
 		}
 		
