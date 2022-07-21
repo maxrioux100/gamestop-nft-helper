@@ -596,7 +596,7 @@ function updateHistory(histories) {
 					let newSeriesIndex = seriesIndex; 
 					if (newSeriesIndex > 1) {newSeriesIndex--;}
 					return '<div class="arrow_box">' +
-							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + '</span>' +
+							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
 							'</div>'
 				}
 			}
