@@ -390,10 +390,11 @@ function get_volume_candle(agos_count){
 		
 		let series = [{data:volume_data}];
 		
+		let suffixes = [Object.keys(dict)[0].split(' ')[1]]
+		if (suffixes[0][suffixes[0].length-1] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
+		
 		for (const [key, value] of Object.entries(dict)){
-			let suffixes = [key.split(' ')[1]]
-			if (suffixes[0][suffixes[0].length] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
-			if (!(key in suffixes)){
+			if (!suffixes.includes(key.split(' ')[1])){
 				let volume_last = [];
 				for (let i=0 ; i < volume_data.length-1 ; i++){
 					volume_last.push(0);
@@ -403,7 +404,7 @@ function get_volume_candle(agos_count){
 			}
 		}
 		
-		return [series, labels];
+		return [series, labels, sorted];
 }
 
 function updateHistory(histories) {
@@ -459,7 +460,7 @@ function updateHistory(histories) {
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		let [series_volume, labels_volume] = get_volume_candle(count(agos));
+		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 		
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
@@ -589,6 +590,15 @@ function updateHistory(histories) {
 			labels: labels_volume,
 			legend: {
 				show: false
+			},
+			tooltip: {
+				custom: function({series, seriesIndex, dataPointIndex, w}) {
+					let newSeriesIndex = seriesIndex; 
+					if (newSeriesIndex > 1) {newSeriesIndex--;}
+					return '<div class="arrow_box">' +
+							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + '</span>' +
+							'</div>'
+				}
 			}
 			
 		}
