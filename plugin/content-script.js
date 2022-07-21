@@ -374,13 +374,16 @@ function get_volume_candle(agos_count){
 		
 		let labels = [];
 		
+		let counter = 0;
 		for (let i = first_prefix ; i >= 1 ; i--) {
 			let value = 0;
 			let suffix = first_suffix;
 			if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
-			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; };
+			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; } 
+			else {sorted.splice(counter, 0, sorted[counter]);}
 			volume_data.push(value);
 			labels.push(`${i} ${suffix} ago`);
+			counter++;
 		}
 		
 		let suffix = first_suffix;
@@ -594,7 +597,7 @@ function updateHistory(histories) {
 			tooltip: {
 				custom: function({series, seriesIndex, dataPointIndex, w}) {
 					let newSeriesIndex = seriesIndex; 
-					if (newSeriesIndex > 1) {newSeriesIndex--;}
+					if (newSeriesIndex > 0) {newSeriesIndex--;}
 					return '<div class="arrow_box">' +
 							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
 							'</div>'
