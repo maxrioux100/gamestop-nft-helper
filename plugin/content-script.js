@@ -599,8 +599,10 @@ function updateHistory(histories) {
 							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
 							'</div>'
 				}
+			},
+			theme: {
+				palette: 'palette3'
 			}
-			
 		}
 		
 		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
