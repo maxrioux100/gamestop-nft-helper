@@ -534,8 +534,6 @@ function updateHistory(histories) {
 							writeChip('All transactions?', all_transactions) +
 							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
-							writeChip('Min', `${min_eth} ETH ($${min_dollars})`) +
-							writeChip('Max', `${max_eth} ETH ($${max_dollars})`) +
 							writeChip('Change', `${bestRound(change, 2)}%`) +
 						'</section>'+
 						'<section>' +
