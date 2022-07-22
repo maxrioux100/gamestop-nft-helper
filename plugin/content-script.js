@@ -533,6 +533,8 @@ function updateHistory(histories) {
 						'<section class="Details-sc-asex48-0 ceZikd">' +
 							writeChip('Transactions', values_eth.length) +
 							writeChip('All transactions?', all_transactions) +
+							writeChip('First transaction', `${agos[0]} ago`) +
+							writeChip('Last transaction', `${agos[agos.length-1]} ago`) +
 							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
 							writeChip('Min', `${min_eth} ETH ($${min_dollars})`) +
