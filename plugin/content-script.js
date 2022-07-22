@@ -283,7 +283,6 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 		if (lastValue) {
 			let factor = values_eth[i]/lastValue;
 			let roundedFactor = bestRound(factor, 0);
-			if (roundedFactor > 1) {console.log(factor/roundedFactor);}
 			if (roundedFactor > 1 && factor/roundedFactor > 0.8 && factor/roundedFactor < 1.2) {
 				values_eth[i] /= roundedFactor;
 				values_dollars[i] /= roundedFactor;
