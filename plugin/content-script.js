@@ -531,7 +531,6 @@ function updateHistory(histories) {
 							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
 						'</header>' +
 						'<section class="Details-sc-asex48-0 ceZikd">' +
-							writeChip('All transactions?', all_transactions) +
 							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
 							writeChip('Change', `${bestRound(change, 2)}%`) +
