@@ -61,25 +61,21 @@ function getRealQ1Q3(values, quantities, index){
 	}
 }
 
-function getNoOutliers(someArray, quantities) {
+function getNumberOfNonOutliers(someArray, quantities) {
     var values = [...someArray];
 
 	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
 
     var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
-    // Likewise for q3.
     var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
     var iqr = q3 - q1;
 
-    // Then find min and max values
     maxValue = q3 + iqr*1.5;
 
-    // Then filter anything beyond or beneath these values.
     var filteredValues = values.filter(function(x) {
         return (x <= maxValue);
     });
 
-    // Then return
     return filteredValues.length;
 }
 
@@ -132,7 +128,7 @@ function updateOffers(offers) {
 			quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
 		}
 
-		let noOutliers = getNoOutliers(values_eth, quantities);
+		let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
 
 		var new_values_eth = [];
 		var new_values_dollars = [];
@@ -244,7 +240,7 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator){
+function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator){
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
 
@@ -267,6 +263,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 				sellers.splice(i, 0, sellers[i]);
 				buyers.splice(i, 0, buyers[i]);
 				labels.splice(i, 0, labels[i]);
+				agos.splice(i, 0, agos[i]);
 				i++;
 			}
 		}
@@ -297,15 +294,15 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	}, {});
 	
 	
-	var items = Object.keys(filtered).map(function(key) {
+	var sorted = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
 	
-	items.sort(function(first, second) {
+	sorted.sort(function(first, second) {
 		return second[1] - first[1];
 	});
 	
-	items = items.slice(0, 10);
+	items = sorted.slice(0, 10);
 	
 	let data_sellers = [];
 	let labels = [];
@@ -349,6 +346,70 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	
 }
 
+function sortedToDict(sorted){
+	let dict = {};
+	for(let i=0 ; i < sorted.length ; i++) {
+		dict[sorted[i][0]] = sorted[i][1];
+	}
+	return dict;
+}
+
+function get_volume_candle(agos_count){
+
+		var sorted = Object.keys(agos_count).map(function(key) {
+			return [key, agos_count[key]];
+		});
+		
+		let time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
+	
+		sorted.sort(function(first, second) {
+			return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
+		});
+		
+		let volume_data = [];
+		
+		let [first_prefix, first_suffix] = sorted[0][0].split(' ');
+		
+		let dict = sortedToDict(sorted);
+		
+		let labels = [];
+		
+		let counter = 0;
+		for (let i = first_prefix ; i >= 1 ; i--) {
+			let value = 0;
+			let suffix = first_suffix;
+			if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; } 
+			else {sorted.splice(counter, 0, sorted[counter]);}
+			volume_data.push(value);
+			labels.push(`${i} ${suffix} ago`);
+			counter++;
+		}
+		
+		let suffix = first_suffix;
+		if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+		volume_data.push(0);
+		labels.push(`last ${suffix}`);
+		
+		let series = [{data:volume_data}];
+		
+		let suffixes = [Object.keys(dict)[0].split(' ')[1]]
+		if (suffixes[0][suffixes[0].length-1] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
+		
+		for (const [key, value] of Object.entries(dict)){
+			if (!suffixes.includes(key.split(' ')[1])){
+				let volume_last = [];
+				for (let i=0 ; i < volume_data.length-1 ; i++){
+					volume_last.push(0);
+				}
+				volume_last.push(value);
+				series.push({data:volume_last});
+			}
+		}
+		
+		return [series, labels, sorted];
+}
+
 function updateHistory(histories) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
@@ -377,6 +438,7 @@ function updateHistory(histories) {
 		let buyers = [histories.length];
 		let sellers = [histories.length];
 		let labels = [histories.length];
+		let agos = [histories.length];
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
@@ -387,21 +449,21 @@ function updateHistory(histories) {
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
+			
+			let ago_index = transaction.findIndex((element) => element === 'ago');
+			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
 		}
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, creator);
+		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
 		let max_eth = Math.max(...values_eth);
 		let max_dollars = Math.max(...values_dollars);
 
-		let first_history = histories[histories.length-1].textContent.replace(")", ") ").split(' ')
-		let last_history = histories[0].textContent.replace(")", ") ").split(' ')
-		let ago_first = first_history.findIndex((element) => element === 'ago');
-		let ago_last = last_history.findIndex((element) => element === 'ago');
-
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
+		
+		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 		
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
@@ -414,8 +476,8 @@ function updateHistory(histories) {
 						'<section class="Details-sc-asex48-0 ceZikd">' +
 							writeChip('Transactions', values_eth.length) +
 							writeChip('All transactions?', all_transactions) +
-							writeChip('First transaction', `${first_history[ago_first - 2]} ${first_history[ago_first - 1]} ago`) +
-							writeChip('Last transaction', `${last_history[ago_last - 2]} ${last_history[ago_last - 1]} ago`) +
+							writeChip('First transaction', `${agos[0]} ago`) +
+							writeChip('Last transaction', `${agos[agos.length-1]} ago`) +
 							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
 							writeChip('Min', `${min_eth} ETH ($${min_dollars})`) +
@@ -516,8 +578,41 @@ function updateHistory(histories) {
 
 		chart.render();
 		
+		options3 = {
+			title: {
+				text: "Volume"
+			},
+			chart: {
+				stacked: true,
+				type: 'bar',
+				animations: {
+					enabled: false
+				}
+			},
+			series: series_volume,
+			labels: labels_volume,
+			legend: {
+				show: false
+			},
+			tooltip: {
+				custom: function({series, seriesIndex, dataPointIndex, w}) {
+					let newSeriesIndex = seriesIndex; 
+					if (newSeriesIndex > 0) {newSeriesIndex--;}
+					return '<div class="arrow_box">' +
+							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
+							'</div>'
+				}
+			},
+			theme: {
+				palette: 'palette3'
+			}
+		}
 		
-		var options3 = {
+		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+
+		chart3.render();
+		
+		var options4 = {
 			title: {
 				text: "Recurrent buyers/sellers"
 			},
@@ -541,9 +636,10 @@ function updateHistory(histories) {
 			}
 		}
 
-		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+		var chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
-		chart3.render();
+		chart4.render();
+		
 	}
 }
 
