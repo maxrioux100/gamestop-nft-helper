@@ -500,6 +500,9 @@ function updateHistory(histories) {
 			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
 		}
 
+		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
+		console.log(maxAvailable);
+
 		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator);
 
 		let min_eth = Math.min(...values_eth);
