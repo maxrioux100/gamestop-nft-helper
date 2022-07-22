@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Gamestop NFT helper",
 	"description": "Add additionnal informations to the NFT pages",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"icons": { "16": "icon16.png",
 				"48": "icon48.png",
 				"128": "icon128.png" },
