@@ -246,6 +246,7 @@ function updateOffers(offers) {
 }
 
 function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator){
+	//split the transactions with the creator as the seller
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
 
@@ -273,6 +274,34 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 			}
 		}
 	}
+	
+	//split the transaction when detecting a very fast change close to an integer factor
+	
+	let lastValue = null;
+	
+	for (let i = 0 ; i < values_eth.length ; i++) {
+		if (lastValue) {
+			let factor = values_eth[i]/lastValue;
+			let roundedFactor = bestRound(factor, 0);
+			if (roundedFactor > 1) {console.log(factor/roundedFactor);}
+			if (roundedFactor > 1 && factor/roundedFactor > 0.8 && factor/roundedFactor < 1.2) {
+				values_eth[i] /= roundedFactor;
+				values_dollars[i] /= roundedFactor;
+				for (let ii = 1 ; ii < roundedFactor ; ii++)
+				{
+					values_eth.splice(i, 0, values_eth[i]);
+					values_dollars.splice(i, 0, values_dollars[i]);
+					sellers.splice(i, 0, sellers[i]);
+					buyers.splice(i, 0, buyers[i]);
+					labels.splice(i, 0, labels[i]);
+					agos.splice(i, 0, agos[i]);
+					i++;
+				}
+			}
+		}
+		lastValue = values_eth[i];
+	}
+	
 }
 
 const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
