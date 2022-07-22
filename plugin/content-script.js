@@ -552,7 +552,8 @@ function updateHistory(histories) {
 		}
 
 		let colors = ['#00E396'];
-		if (change < 0) {colors = ["#FF4560"]};
+		if (change < 0) {colors = ["#FF4560"];}
+		else if (change == 0) {colors = ["#008FFB"];}
 
 		var options = {
 			title: {
