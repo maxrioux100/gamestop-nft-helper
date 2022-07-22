@@ -268,7 +268,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (sellers[i] == creator && values_eth[i] > min_value_eth) {
-			let factor = Math.max(values_eth[i]/min_value_eth, maxAvailable);
+			let factor = Math.min(values_eth[i]/min_value_eth, maxAvailable);
 			values_eth[i] = min_value_eth;
 			values_dollars[i] = min_value_dollars;
 			for (let ii = 1 ; ii < factor ; ii++)
@@ -291,7 +291,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (lastValue) {
 			let factor = values_eth[i]/lastValue;
-			let ceilFactor = Math.max(Math.ceil(factor)+1, maxAvailable);
+			let ceilFactor = Math.min(Math.ceil(factor)+1, maxAvailable);
 			
 			let closestFactor = null;
 			let closestRatio = -1;
