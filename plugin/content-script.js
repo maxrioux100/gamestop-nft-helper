@@ -282,11 +282,25 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (lastValue) {
 			let factor = values_eth[i]/lastValue;
-			let roundedFactor = bestRound(factor, 0);
-			if (roundedFactor > 1 && factor/roundedFactor > 0.8 && factor/roundedFactor < 1.2) {
-				values_eth[i] /= roundedFactor;
-				values_dollars[i] /= roundedFactor;
-				for (let ii = 1 ; ii < roundedFactor ; ii++)
+			let ceilFactor = Math.ceil(factor);
+			
+			let closestFactor = null;
+			let closestRatio = null;
+			
+			for (let j=2 ; j <= ceilFactor ; j++) {
+				let ratio = Math.abs(factor/j-1);
+				if (bestRound(values_eth[i]/j, 6) == values_eth[i]/j) {
+					if (!closestRatio || ratio < closestRatio) {
+						closestRatio = ratio;
+						closestFactor = j;
+					}
+				}
+			}
+			
+			if (closestRatio && closestRatio < 0.2) {
+				values_eth[i] /= closestFactor;
+				values_dollars[i] /= closestFactor;
+				for (let ii = 1 ; ii < closestFactor ; ii++)
 				{
 					values_eth.splice(i, 0, values_eth[i]);
 					values_dollars.splice(i, 0, values_dollars[i]);
