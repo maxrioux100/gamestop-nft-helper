@@ -478,11 +478,11 @@ function updateHistory(histories) {
 			}
 		});
 
-		let all_transactions = 'No';
+		let all_transactions = false;
 		for (let i=0; i < histories.length; i++) {
 			if (histories[i].textContent.split(' ')[1] === 'minted') {
 				histories.splice(i, 1);
-				all_transactions = 'Yes';
+				all_transactions = true;
 				break;
 			};
 		};
@@ -632,8 +632,28 @@ function updateHistory(histories) {
 					opacityTo: 0.9,
 					stops: [0, 95, 100]
 				}
+			},
+			annotations: {
+				xaxis: []
 			}
 		}
+		
+		if (all_transactions) {
+			options.annotations.xaxis.push({
+					x: 0,
+					borderColor: '#999',
+					yAxisIndex: 0,
+					label: {
+						show: true,
+						text: 'Minted',
+						offsetX: 10,
+						style: {
+							color: "#fff",
+							background: '#775DD0'
+						}
+					}
+				});
+			}
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
 
