@@ -176,6 +176,15 @@ function updateOffers(offers) {
 				type: 'area',
 				animations: {
 					enabled: false
+				},
+				toolbar: {
+					tools: {
+						zoom: false,
+						zoomin: false,
+						zoomout: false,
+						pan: false,
+						reset: false
+					}
 				}
 			},
 			dataLabels: {
@@ -559,6 +568,15 @@ function updateHistory(histories) {
 				type: 'area',
 				animations: {
 					enabled: false
+				},
+				toolbar: {
+					tools: {
+						zoom: false,
+						zoomin: false,
+						zoomout: false,
+						pan: false,
+						reset: false
+					}
 				}
 			},
 			series: [{
