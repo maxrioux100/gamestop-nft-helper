@@ -245,7 +245,7 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator){
+function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator, maxAvailable){
 	//split the transactions with the creator as the seller
 	let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
@@ -259,7 +259,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (sellers[i] == creator && values_eth[i] > min_value_eth) {
-			let factor = values_eth[i]/min_value_eth;
+			let factor = Math.max(values_eth[i]/min_value_eth, maxAvailable);
 			values_eth[i] = min_value_eth;
 			values_dollars[i] = min_value_dollars;
 			for (let ii = 1 ; ii < factor ; ii++)
@@ -282,7 +282,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (lastValue) {
 			let factor = values_eth[i]/lastValue;
-			let ceilFactor = Math.ceil(factor)+1;
+			let ceilFactor = Math.max(Math.ceil(factor)+1, maxAvailable);
 			
 			let closestFactor = null;
 			let closestRatio = -1;
@@ -298,7 +298,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 			}
 			if (closestRatio >= 0 && closestRatio < 0.25) {
 				values_eth[i] /= closestFactor;
-				values_dollars[i] /= closestFactor;
+				values_dollars[i] = bestRound(values_dollars[i]/closestFactor, 2);
 				for (let ii = 1 ; ii < closestFactor ; ii++)
 				{
 					values_eth.splice(i, 0, values_eth[i]);
@@ -501,9 +501,8 @@ function updateHistory(histories) {
 		}
 
 		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
-		console.log(maxAvailable);
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator);
+		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator, maxAvailable);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
