@@ -465,6 +465,12 @@ function get_volume_candle(agos_count){
 		return [series, labels, sorted];
 }
 
+function getStandardDeviation (array) {
+  const n = array.length
+  const mean = array.reduce((a, b) => a + b) / n
+  return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)
+}
+
 function updateHistory(histories) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
@@ -533,6 +539,7 @@ function updateHistory(histories) {
 						'<section class="Details-sc-asex48-0 ceZikd">' +
 							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
+							writeChip('Standard deviation', `${bestRound(getStandardDeviation(values_eth), 3)} ETH ($${bestRound(getStandardDeviation(values_dollars), 2)})`) +
 							writeChip('Change', `${bestRound(change, 2)}%`) +
 						'</section>'+
 						'<section>' +
