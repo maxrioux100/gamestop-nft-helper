@@ -1,3 +1,8 @@
+var chart;
+var chart2;
+var chart3;
+var chart4;
+
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
 		var timer = false;
@@ -234,7 +239,7 @@ function updateOffers(offers) {
 			}
 		}
 
-		var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+		chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
 
 		chart2.render();
 	}
@@ -574,7 +579,7 @@ function updateHistory(histories) {
 			}
 		}
 
-		var chart = new ApexCharts(document.querySelector("#chart"), options);
+		chart = new ApexCharts(document.querySelector("#chart"), options);
 
 		chart.render();
 		
@@ -608,7 +613,7 @@ function updateHistory(histories) {
 			}
 		}
 		
-		var chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+		chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
 
 		chart3.render();
 		
@@ -636,7 +641,7 @@ function updateHistory(histories) {
 			}
 		}
 
-		var chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+		chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
 		chart4.render();
 		
@@ -663,31 +668,51 @@ function array_to_string(array){
 let lastHistory = '';
 let lastOffer = '';
 
+
+function clean_chart(chart){
+	if (!(typeof chart === "undefined")) {
+		chart.destroy();
+	}
+}
+var watching4histories = null;
+var watching4offers = null;
+
 function onUrlChange() {
+	clean_chart(chart);
+	clean_chart(chart2);
+	clean_chart(chart3);
+	clean_chart(chart4);
+	if(watching4histories) {clearInterval(watching4histories)};
+	if(watching4offers) {clearInterval(watching4offers)};
+	
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-
-			var intervalHistories = setInterval(function() {
+			
+			watching4histories = setInterval(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 				.then( () => {
 					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
 					let string = array_to_string(histories);
 					if (string != lastHistory){
 						lastHistory = string;
+						clean_chart(chart);
+						clean_chart(chart3);
+						clean_chart(chart4);
 						updateHistory(histories);
 					}
 				}, () => {} );
 			}, 1000);
 
-			var intervalOffers = setInterval(function() {
+			watching4offers = setInterval(function() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
 				.then( () => {
 					let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
 					let string = array_to_string(offers);
 					if (string != lastOffer){
 						lastOffer = string;
+						clean_chart(chart2);
 						updateOffers(offers);
 					}
 				}, () => {} );
