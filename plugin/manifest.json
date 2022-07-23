@@ -13,5 +13,8 @@
 			"js": ["apexcharts.js", "content-script.js"]
 		}
 	],
-	"default_locale": "en"
+	"default_locale": "en",
+  "permissions": [
+    "storage"
+  ],
 }
