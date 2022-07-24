@@ -356,14 +356,6 @@ function combine_buyers_sellers(buyers, sellers, creator){
 
 }
 
-function sortedToDict(sorted){
-	let dict = {};
-	for(let i=0 ; i < sorted.length ; i++) {
-		dict[sorted[i][0]] = sorted[i][1];
-	}
-	return dict;
-}
-
 function get_volume_candle(agos_count){
 	var sorted = Object.keys(agos_count).map(function(key) {
 		return [key, agos_count[key]];
