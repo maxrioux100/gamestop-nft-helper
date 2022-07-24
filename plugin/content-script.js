@@ -687,7 +687,10 @@ function updateHistory(histories) {
       annotations: {
         xaxis: [
           {}
-        ]
+        ],
+      },
+      markers: {
+        discrete: []
       }
 		}
 
@@ -707,9 +710,28 @@ function updateHistory(histories) {
 					}
 				});
 			}
-    console.log("TODO Add points/markers to chart")
-    console.log("Add sale points to following index:", profile_sales_index)
-    console.log("Add sale points to following index:", profile_buys_index)
+    if (profileName) {
+      for (var i = 0; i < profile_sales_index.length; i++) {
+        options.markers.discrete.push({
+          seriesIndex: 0,
+          dataPointIndex: profile_sales_index[i],
+          fillColor: '#000000',
+          strokeColor: '#fff',
+          size: 5,
+          shape: "circle"
+        })
+      }
+      for (var i = 0; i < profile_buys_index.length; i++) {
+        options.markers.discrete.push({
+          seriesIndex: 0,
+          dataPointIndex: profile_buys_index[i],
+          fillColor: '#000000',
+          strokeColor: '#fff',
+          size: 5,
+          shape: "square"
+        })
+      }
+    }
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
 
