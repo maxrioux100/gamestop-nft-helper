@@ -716,7 +716,7 @@ function updateHistory(histories) {
           seriesIndex: 0,
           dataPointIndex: profile_sales_index[i],
           fillColor: '#000000',
-          strokeColor: '#fff',
+          strokeColor: '#7c1760',
           size: 5,
           shape: "circle"
         })
@@ -725,10 +725,10 @@ function updateHistory(histories) {
         options.markers.discrete.push({
           seriesIndex: 0,
           dataPointIndex: profile_buys_index[i],
-          fillColor: '#000000',
-          strokeColor: '#fff',
+          fillColor: '#ffffff',
+          strokeColor: '#7c1760',
           size: 5,
-          shape: "square"
+          shape: "circle"
         })
       }
     }
