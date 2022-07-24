@@ -56,7 +56,6 @@ function createOffersHelperContainer() {
 	container.appendChild(div);
 }
 
-
 function updateOffers(offers) {
 	let offershelperprompt = document.getElementById("offershelperprompt");
 	if (offershelperprompt != null) {offershelperprompt.remove();};
@@ -366,7 +365,6 @@ function sortedToDict(sorted){
 }
 
 function get_volume_candle(agos_count){
-
 		var sorted = Object.keys(agos_count).map(function(key) {
 			return [key, agos_count[key]];
 		});
