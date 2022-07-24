@@ -7,3 +7,10 @@ function sortedToDict(sorted){
 	}
 	return dict;
 }
+
+function array_to_string(array){
+	let output = '';
+	array.forEach((value) => {output += value.textContent});
+	return output
+
+}

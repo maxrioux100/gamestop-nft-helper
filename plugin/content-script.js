@@ -717,13 +717,6 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 
-function array_to_string(array){
-	let output = '';
-	array.forEach((value) => {output += value.textContent});
-	return output
-
-}
-
 let lastHistory = '';
 let lastOffer = '';
 
