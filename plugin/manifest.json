@@ -10,7 +10,11 @@
 	"content_scripts": [
 		{
 			"matches": ["https://nft.gamestop.com/*"],
-			"js": ["apexcharts.js", "content-script.js"]
+			"js": [
+        "apexcharts.js",
+        "math.js",
+        "content-script.js"
+      ]
 		}
 	],
 	"default_locale": "en",

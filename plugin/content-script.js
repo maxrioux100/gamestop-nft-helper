@@ -24,10 +24,6 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
-function bestRound(value, decimals){
-	return Math.round((value + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals);
-}
-
 function writeChip(name, value){
 	return 	'<div class="DetailsItem-sc-asex48-1 gyMyxn">' +
 				'<div class="sc-jcFjpl ezpidm">' +
