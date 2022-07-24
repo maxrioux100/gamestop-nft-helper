@@ -275,8 +275,6 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 
 }
 
-const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
-
 function combine_buyers_sellers(buyers, sellers, creator){
 
 	let combined = {};
