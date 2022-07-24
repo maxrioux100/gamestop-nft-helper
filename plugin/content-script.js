@@ -763,13 +763,11 @@ var watching4profileName = null;
 
 function persistProfileName(profileName) {
   chrome.storage.local.set({profileName: profileName}, function() {
-  console.log('profileName is set to ' + profileName);
 });
 }
 
 function getProfileName() {
   chrome.storage.local.get(['profileName'], function(_profileName) {
-  console.log('profileName currently is ' + _profileName.profileName);
   profileName = _profileName.profileName;
 });
 }
