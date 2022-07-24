@@ -28,3 +28,21 @@ function getRealQ1Q3(values, quantities, index){
 		if (realI > index) {return values[i];}
 	}
 }
+
+function getNumberOfNonOutliers(someArray, quantities) {
+    var values = [...someArray];
+
+	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
+
+    var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
+    var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
+    var iqr = q3 - q1;
+
+    maxValue = q3 + iqr*1.5;
+
+    var filteredValues = values.filter(function(x) {
+        return (x <= maxValue);
+    });
+
+    return filteredValues.length;
+}
