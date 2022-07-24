@@ -415,12 +415,6 @@ function get_volume_candle(agos_count){
 	return [series, labels, sorted];
 }
 
-function getStandardDeviation (array) {
-  const n = array.length
-  const mean = array.reduce((a, b) => a + b) / n
-  return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)
-}
-
 function updateHistory(histories) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
