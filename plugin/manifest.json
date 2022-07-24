@@ -13,6 +13,7 @@
 			"js": [
         "apexcharts.js",
         "math.js",
+        "utility.js",
         "content-script.js"
       ]
 		}
