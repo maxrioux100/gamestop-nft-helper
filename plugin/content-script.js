@@ -360,21 +360,38 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	items = sorted.slice(0, 10);
 
 	let data_sellers = [];
+  let data_profile_sells = [];
 	let labels = [];
 
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
-		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
-		data_sellers.push(value);
-		labels.push(items[i][0]);
+    let user = items[i][0];
+		if (user in sellers && user != creator) {
+      value = sellers[user]
+      data_sellers.push(value);
+      labels.push(user);
+    }
+    if (user in sellers && user != creator && user == profileName){
+      value = sellers[user]
+      data_profile_sells.push(value);
+      labels.push(user);
+    }
 	}
 
 	let data_buyers = [];
+  let data_profile_buys = [];
 
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
-		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
-		data_buyers.push(value);
+    let user = items[i][0];
+		if (user in buyers) {
+      value = buyers[user]
+      data_buyers.push(value);
+    }
+    if (user in buyers && user == profileName){
+      value = buyers[user]
+      data_profile_buys.push(value);
+    }
 	}
 
 	let data_creators = [];
@@ -384,6 +401,12 @@ function combine_buyers_sellers(buyers, sellers, creator){
 		if (items[i][0] == creator) {value = sellers[items[i][0]]};
 		data_creators.push(value);
 	}
+  //
+  // let data_profile_buys = [];
+  // for (let i = 0; i < items.length ; i++){
+  //   let value = 0;
+  //   if (items[i][0] == profileName) {value = }
+  // }
 
 	let series = [{
 				name: 'Creator',
@@ -394,7 +417,13 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			},{
 				name: 'Sellers',
 				data: data_sellers
-			}]
+			},{
+        name: 'Profile Buys',
+        data: data_profile_buys
+      }, {
+        name: 'Profile Sells',
+        data: data_profile_sells
+      }]
 
 
 	return [series, labels];
@@ -528,6 +557,21 @@ function updateHistory(histories) {
 
 		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 
+    let profile_sales_index = [];
+    let profile_buys_index = [];
+
+    for (let i = 0; i < sellers.length; i++) {
+      if (profileName && sellers[i] == profileName) {
+        profile_sales_index.push(i)
+      }
+    }
+    for (let i = 0; i < buyers.length; i++) {
+      if (profileName && buyers[i] == profileName) {
+        profile_buys_index.push(i)
+      }
+    }
+
+    // Used in the recurrent buyers/sellers chart
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
@@ -640,9 +684,11 @@ function updateHistory(histories) {
 					stops: [0, 95, 100]
 				}
 			},
-			annotations: {
-				xaxis: []
-			}
+      annotations: {
+        xaxis: [
+          {}
+        ]
+      }
 		}
 
 		if (all_transactions) {
@@ -661,6 +707,9 @@ function updateHistory(histories) {
 					}
 				});
 			}
+    console.log("TODO Add points/markers to chart")
+    console.log("Add sale points to following index:", profile_sales_index)
+    console.log("Add sale points to following index:", profile_buys_index)
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
 
