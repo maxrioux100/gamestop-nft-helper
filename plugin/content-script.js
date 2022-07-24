@@ -759,6 +759,7 @@ function clean_chart(chart){
 }
 var watching4histories = null;
 var watching4offers = null;
+var watching4profileName = null;
 
 function persistProfileName(profileName) {
   chrome.storage.local.set({profileName: profileName}, function() {
@@ -767,8 +768,9 @@ function persistProfileName(profileName) {
 }
 
 function getProfileName() {
-  chrome.storage.local.get(['profileName'], function(profileName) {
-  console.log('profileName currently is ' + profileName.key);
+  chrome.storage.local.get(['profileName'], function(_profileName) {
+  console.log('profileName currently is ' + _profileName.profileName);
+  profileName = _profileName.profileName;
 });
 }
 
@@ -779,6 +781,7 @@ function onUrlChange() {
 	clean_chart(chart4);
 	if(watching4histories) {clearInterval(watching4histories)};
 	if(watching4offers) {clearInterval(watching4offers)};
+  if(watching4profileName) {clearInterval(watching4profileName)};
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
@@ -815,15 +818,17 @@ function onUrlChange() {
 		});
 	}
   if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-    if (!profileName) {
-      waitForElement("[class^='EditionsWrapper']", 10000)
-      .then( () => {
-        let profileName = document.getElementsByClassName("sc-dcgwPl")[0].innerText
-        persistProfileName(profileName)
-      });
-    }
+    watching4profileName = setInterval(function() {
+      if (!profileName) {
+        waitForElement("[class^='sc-egiyK']", 10000)
+        .then( () => {
+          let profileName = document.getElementsByClassName("sc-dcgwPl")[0].innerText
+          persistProfileName(profileName)
+        });
+      }
+    }, 1000);
   }
-
+}
 
 let profileName = getProfileName();
 onUrlChange();
