@@ -360,6 +360,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	items = sorted.slice(0, 10);
 
 	let data_sellers = [];
+  let data_profile_sells = [];
 	let labels = [];
 
 	for (let i = 0; i < items.length ; i++){
@@ -370,9 +371,15 @@ function combine_buyers_sellers(buyers, sellers, creator){
       data_sellers.push(value);
       labels.push(user);
     }
+    if (user in sellers && user != creator && user == profileName){
+      value = sellers[user]
+      data_profile_sells.push(value);
+      labels.push(user);
+    }
 	}
 
 	let data_buyers = [];
+  let data_profile_buys = [];
 
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
@@ -380,6 +387,10 @@ function combine_buyers_sellers(buyers, sellers, creator){
 		if (user in buyers) {
       value = buyers[user]
       data_buyers.push(value);
+    }
+    if (user in buyers && user == profileName){
+      value = buyers[user]
+      data_profile_buys.push(value);
     }
 	}
 
@@ -390,6 +401,12 @@ function combine_buyers_sellers(buyers, sellers, creator){
 		if (items[i][0] == creator) {value = sellers[items[i][0]]};
 		data_creators.push(value);
 	}
+  //
+  // let data_profile_buys = [];
+  // for (let i = 0; i < items.length ; i++){
+  //   let value = 0;
+  //   if (items[i][0] == profileName) {value = }
+  // }
 
 	let series = [{
 				name: 'Creator',
@@ -400,7 +417,14 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			},{
 				name: 'Sellers',
 				data: data_sellers
-			}]
+			},{
+        name: 'Profile Buys',
+        data: data_profile_buys
+      }, {
+        name: 'Profile Sells',
+        data: data_profile_sells
+      }]
+
 
 	return [series, labels];
 
