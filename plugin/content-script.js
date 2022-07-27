@@ -802,9 +802,9 @@ var watching4histories = null;
 var watching4offers = null;
 var watching4profileName = null;
 
-function persistProfileName(profileName) {
-	chrome.storage.local.set({profileName: profileName}, function() {
-		profileName = profileName;
+function persistProfileName(tempProfileName) {
+	chrome.storage.local.set({profileName: tempProfileName}, function() {
+		profileName = tempProfileName;
 	});
 }
 
@@ -859,11 +859,13 @@ function onUrlChange() {
 	}
 	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
 		watching4profileName = setInterval(function() {
-			waitForElement(".sc-hBUSln", 10000)
+			waitForElement(".sc-hBUSln", 1000)
 			.then( () => {
-				let profileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
-				persistProfileName(profileName);
-				clearInterval(watching4profileName)
+				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
+				if (tempProfileName != '') {
+					persistProfileName(tempProfileName);
+					clearInterval(watching4profileName);
+				}
 			});
 		}, 1000);
 	}
