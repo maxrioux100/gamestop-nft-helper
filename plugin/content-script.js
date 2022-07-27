@@ -826,7 +826,7 @@ function onUrlChange() {
 	clean_chart(chart4);
 	if(watching4histories) {clearInterval(watching4histories)};
 	if(watching4offers) {clearInterval(watching4offers)};
-  if(watching4profileName) {clearInterval(watching4profileName)};
+	if(watching4profileName) {clearInterval(watching4profileName)};
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
@@ -862,17 +862,16 @@ function onUrlChange() {
 			}, 1000);
 		});
 	}
-  if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-    watching4profileName = setInterval(function() {
-      if (!profileName) {
-        waitForElement("[class^='sc-egiyK']", 10000)
-        .then( () => {
-          let profileName = document.getElementsByClassName("sc-dcgwPl")[0].innerText
-          persistProfileName(profileName)
-        });
-      }
-    }, 1000);
-  }
+	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+		watching4profileName = setInterval(function() {
+			waitForElement("[class^='sc-egiyK']", 10000)
+			.then( () => {
+				let profileName = document.getElementsByClassName("sc-dcgwPl")[0].innerText;
+				persistProfileName(profileName);
+				clearInterval(watching4profileName)
+			});
+		}, 1000);
+	}
 }
 
 let profileName = getProfileName();
