@@ -24,10 +24,6 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
-function bestRound(value, decimals){
-	return Math.round((value + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals);
-}
-
 function writeChip(name, value){
 	return 	'<div class="DetailsItem-sc-asex48-1 gyMyxn">' +
 				'<div class="sc-jcFjpl ezpidm">' +
@@ -37,51 +33,6 @@ function writeChip(name, value){
 					'</p>' +
 				'</div>' +
 			'</div>';
-}
-
-function median(values){
-  if(values.length ===0) throw new Error("No inputs");
-
-  let sorted_values = [...values];
-
-
-  sorted_values.sort(function(a,b){
-    return a-b;
-  });
-
-  var half = Math.floor(sorted_values.length / 2);
-
-  if (sorted_values.length % 2)
-    return sorted_values[half];
-
-  return bestRound((sorted_values[half - 1] + sorted_values[half]) / 2.0, 6);
-
-}
-
-function getRealQ1Q3(values, quantities, index){
-	let realI = 0;
-	for(let i = 0; i < values.length ; i++){
-		realI += quantities[i];
-		if (realI > index) {return values[i];}
-	}
-}
-
-function getNumberOfNonOutliers(someArray, quantities) {
-    var values = [...someArray];
-
-	var sums = quantities.reduce((partialSum, a) => partialSum + a, 0);
-
-    var q1 = getRealQ1Q3(values, quantities, Math.floor((sums/ 4)));
-    var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
-    var iqr = q3 - q1;
-
-    maxValue = q3 + iqr*1.5;
-
-    var filteredValues = values.filter(function(x) {
-        return (x <= maxValue);
-    });
-
-    return filteredValues.length;
 }
 
 function createOffersHelperContainer() {
@@ -104,7 +55,6 @@ function createOffersHelperContainer() {
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 	container.appendChild(div);
 }
-
 
 function updateOffers(offers) {
 	let offershelperprompt = document.getElementById("offershelperprompt");
@@ -325,8 +275,6 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 
 }
 
-const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
-
 function combine_buyers_sellers(buyers, sellers, creator){
 
 	let combined = {};
@@ -400,74 +348,55 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	return [series, labels];
 }
 
-function sortedToDict(sorted){
-	let dict = {};
-	for(let i=0 ; i < sorted.length ; i++) {
-		dict[sorted[i][0]] = sorted[i][1];
-	}
-	return dict;
-}
-
 function get_volume_candle(agos_count){
+	var sorted = Object.keys(agos_count).map(function(key) {
+		return [key, agos_count[key]];
+	});
 
-		var sorted = Object.keys(agos_count).map(function(key) {
-			return [key, agos_count[key]];
-		});
+	let time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
 
-		let time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
+	sorted.sort(function(first, second) {
+		return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
+	});
 
-		sorted.sort(function(first, second) {
-			return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
-		});
+	let volume_data = [];
+	let [first_prefix, first_suffix] = sorted[0][0].split(' ');
+	let dict = sortedToDict(sorted);
+	let labels = [];
+	let counter = 0;
 
-		let volume_data = [];
-
-		let [first_prefix, first_suffix] = sorted[0][0].split(' ');
-
-		let dict = sortedToDict(sorted);
-
-		let labels = [];
-
-		let counter = 0;
-		for (let i = first_prefix ; i >= 1 ; i--) {
-			let value = 0;
-			let suffix = first_suffix;
-			if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
-			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; }
-			else {sorted.splice(counter, 0, sorted[counter]);}
-			volume_data.push(value);
-			labels.push(`${i} ${suffix} ago`);
-			counter++;
-		}
-
+	for (let i = first_prefix ; i >= 1 ; i--) {
+		let value = 0;
 		let suffix = first_suffix;
-		if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
-		volume_data.push(0);
-		labels.push(`last ${suffix}`);
+		if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+		if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; }
+		else {sorted.splice(counter, 0, sorted[counter]);}
+		volume_data.push(value);
+		labels.push(`${i} ${suffix} ago`);
+		counter++;
+	}
 
-		let series = [{data:volume_data}];
+	let suffix = first_suffix;
+	if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+	volume_data.push(0);
+	labels.push(`last ${suffix}`);
 
-		let suffixes = [Object.keys(dict)[0].split(' ')[1]]
-		if (suffixes[0][suffixes[0].length-1] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
+	let series = [{data:volume_data}];
 
-		for (const [key, value] of Object.entries(dict)){
-			if (!suffixes.includes(key.split(' ')[1])){
-				let volume_last = [];
-				for (let i=0 ; i < volume_data.length-1 ; i++){
-					volume_last.push(0);
-				}
-				volume_last.push(value);
-				series.push({data:volume_last});
+	let suffixes = [Object.keys(dict)[0].split(' ')[1]]
+	if (suffixes[0][suffixes[0].length-1] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
+
+	for (const [key, value] of Object.entries(dict)){
+		if (!suffixes.includes(key.split(' ')[1])){
+			let volume_last = [];
+			for (let i=0 ; i < volume_data.length-1 ; i++){
+				volume_last.push(0);
 			}
+			volume_last.push(value);
+			series.push({data:volume_last});
 		}
-
-		return [series, labels, sorted];
-}
-
-function getStandardDeviation (array) {
-  const n = array.length
-  const mean = array.reduce((a, b) => a + b) / n
-  return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n)
+	}
+	return [series, labels, sorted];
 }
 
 function updateHistory(histories) {
@@ -781,13 +710,6 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
 
-
-function array_to_string(array){
-	let output = '';
-	array.forEach((value) => {output += value.textContent});
-	return output
-
-}
 
 let lastHistory = '';
 let lastOffer = '';
