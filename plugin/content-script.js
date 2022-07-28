@@ -281,7 +281,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
 	}
-
+	
 	for (let i = 0; i < Object.keys(sellers).length ; i++){
 		if (Object.keys(sellers)[i] in combined) {
 			combined[Object.keys(sellers)[i]] += sellers[Object.keys(sellers)[i]];
@@ -289,56 +289,50 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			combined[Object.keys(sellers)[i]] = sellers[Object.keys(sellers)[i]];
 		}
 	}
-
-
+	
+	
 	var filtered = Object.keys(combined).reduce(function (filtered, key) {
 		if (combined[key] > 1) filtered[key] = combined[key];
 		return filtered;
 	}, {});
-
-
+	
+	
 	var sorted = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
-
+	
 	sorted.sort(function(first, second) {
 		return second[1] - first[1];
 	});
-
+	
 	items = sorted.slice(0, 10);
-
+	
 	let data_sellers = [];
 	let labels = [];
-
+	
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
-    let user = items[i][0];
-		if (user in sellers && user != creator) {
-      value = sellers[user]
-      data_sellers.push(value);
-      labels.push(user);
-    }
+		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
+		data_sellers.push(value);
+		labels.push(items[i][0]);
 	}
-
+	
 	let data_buyers = [];
-
+	
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
-    let user = items[i][0];
-		if (user in buyers) {
-      value = buyers[user]
-      data_buyers.push(value);
-    }
+		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
+		data_buyers.push(value);
 	}
-
+	
 	let data_creators = [];
-
+	
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] == creator) {value = sellers[items[i][0]]};
 		data_creators.push(value);
 	}
-
+	
 	let series = [{
 				name: 'Creator',
 				data: data_creators
@@ -349,9 +343,9 @@ function combine_buyers_sellers(buyers, sellers, creator){
 				name: 'Sellers',
 				data: data_sellers
 			}]
-
+			
+	
 	return [series, labels];
-
 }
 
 function get_volume_candle(agos_count){
@@ -462,21 +456,21 @@ function updateHistory(histories) {
 
 		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 
-    let profile_sales_index = [];
-    let profile_buys_index = [];
+		let profile_sales_index = [];
+		let profile_buys_index = [];
 
-    for (let i = 0; i < sellers.length; i++) {
-      if (profileName && sellers[i] == profileName) {
-        profile_sales_index.push(i)
-      }
-    }
-    for (let i = 0; i < buyers.length; i++) {
-      if (profileName && buyers[i] == profileName) {
-        profile_buys_index.push(i)
-      }
-    }
+		for (let i = 0; i < sellers.length; i++) {
+		  if (profileName && sellers[i] == profileName) {
+			profile_sales_index.push(i)
+		  }
+		}
+		for (let i = 0; i < buyers.length; i++) {
+		  if (profileName && buyers[i] == profileName) {
+			profile_buys_index.push(i)
+		  }
+		}
 
-    // Used in the recurrent buyers/sellers chart
+		// Used in the recurrent buyers/sellers chart
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
@@ -730,15 +724,16 @@ var watching4histories = null;
 var watching4offers = null;
 var watching4profileName = null;
 
-function persistProfileName(profileName) {
-  chrome.storage.local.set({profileName: profileName}, function() {
-});
+function persistProfileName(tempProfileName) {
+	chrome.storage.local.set({profileName: tempProfileName}, function() {
+		profileName = tempProfileName;
+	});
 }
 
 function getProfileName() {
-  chrome.storage.local.get(['profileName'], function(_profileName) {
-  profileName = _profileName.profileName;
-});
+	chrome.storage.local.get(['profileName'], function(_profileName) {
+		profileName = _profileName.profileName;
+	});
 }
 
 function onUrlChange() {
@@ -748,7 +743,7 @@ function onUrlChange() {
 	clean_chart(chart4);
 	if(watching4histories) {clearInterval(watching4histories)};
 	if(watching4offers) {clearInterval(watching4offers)};
-  if(watching4profileName) {clearInterval(watching4profileName)};
+	if(watching4profileName) {clearInterval(watching4profileName)};
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
@@ -784,17 +779,18 @@ function onUrlChange() {
 			}, 1000);
 		});
 	}
-  if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-    watching4profileName = setInterval(function() {
-      if (!profileName) {
-        waitForElement("[class^='sc-egiyK']", 10000)
-        .then( () => {
-          let profileName = document.getElementsByClassName("sc-dcgwPl")[0].innerText
-          persistProfileName(profileName)
-        });
-      }
-    }, 1000);
-  }
+	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+		watching4profileName = setInterval(function() {
+			waitForElement(".sc-hBUSln", 1000)
+			.then( () => {
+				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
+				if (tempProfileName != '') {
+					persistProfileName(tempProfileName);
+					clearInterval(watching4profileName);
+				}
+			});
+		}, 1000);
+	}
 }
 
 let profileName = getProfileName();
