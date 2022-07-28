@@ -204,9 +204,30 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
-	
-	console.log(amounts);
+function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
+	for (let i = 0 ; i < amounts.length ; i++) {
+		if (amounts[i] > 1) {
+			let amount = amounts[i]
+			let value_eth = bestRound(values_eth[i]/amount, 4);
+			let value_dollars = bestRound(values_dollars[i]/amount, 2);
+			
+			values_eth[i] = value_eth;
+			values_dollars[i] = value_dollars;
+			amounts[i] = 1;
+			
+			for (let ii = 1 ; ii < amounts[i] ; ii++)
+			{
+				values_eth.splice(i, 0, value_eth);
+				values_dollars.splice(i, 0, value_dollars);
+				sellers.splice(i, 0, sellers[i]);
+				buyers.splice(i, 0, buyers[i]);
+				labels.splice(i, 0, labels[i]);
+				agos.splice(i, 0, agos[i]);
+				amounts.splice(i, 0, 1);
+				i++;
+			}
+		}
+	}
 	
 	//split the transactions with the creator as the seller
 	/* let min_value_eth = 9999999999;
@@ -458,7 +479,7 @@ function updateHistory(histories, transactions) {
 
 		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts);
+		transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
