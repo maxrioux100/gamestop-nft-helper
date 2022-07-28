@@ -759,15 +759,13 @@ function onUrlChange() {
 	if(watching4profileName) {clearInterval(watching4profileName)};
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		let splitted_url = lastUrl.split('/');
-		
-
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
 				watching4histories = setInterval(function() {
 					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 					.then( () => {
+						let splitted_url = lastUrl.split('/');
 						fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
 						.then((response) => response.json())
 						.then((data) => {
