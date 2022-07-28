@@ -204,9 +204,12 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator, maxAvailable){
+function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
+	
+	console.log(amounts);
+	
 	//split the transactions with the creator as the seller
-	let min_value_eth = 9999999999;
+	/* let min_value_eth = 9999999999;
 	let min_value_dollars = 999999999;
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
@@ -232,11 +235,11 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 				i++;
 			}
 		}
-	}
+	} */
 
 	//split the transaction when detecting a very fast change close to an integer factor
 
-	let lastValue = null;
+	/* let lastValue = null;
 
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (lastValue) {
@@ -271,7 +274,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 			}
 		}
 		lastValue = values_eth[i];
-	}
+	} */
 
 }
 
@@ -399,7 +402,12 @@ function get_volume_candle(agos_count){
 	return [series, labels, sorted];
 }
 
-function updateHistory(histories) {
+function removeUnknownTransactions(transactions) {
+	console.log(transactions[0]['txType']);
+	return transactions.filter( item => (item['txType'] != "SpotTrade") );
+}
+
+function updateHistory(histories, transactions) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
 		if (history_helper != null) {history_helper.remove();};
@@ -428,6 +436,9 @@ function updateHistory(histories) {
 		let sellers = [histories.length];
 		let labels = [histories.length];
 		let agos = [histories.length];
+		let amounts = [histories.length];
+		
+		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
@@ -441,11 +452,13 @@ function updateHistory(histories) {
 
 			let ago_index = transaction.findIndex((element) => element === 'ago');
 			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
+			
+			amounts[histories.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
 
 		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator, maxAvailable);
+		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
@@ -748,34 +761,34 @@ function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		let splitted_url = lastUrl.split('/');
 		
-		fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
-			.then((response) => response.json())
-			.then((data) => {
-				fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/history?nftData=${data['loopringNftInfo']['nftData'][0]}`)
-					.then((response) => response.json())
-					.then((data) => {
-						console.log(data);
-					});
-			});
 
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
+			
+			fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
+				.then((response) => response.json())
+				.then((data) => {
+					fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/history?nftData=${data['loopringNftInfo']['nftData'][0]}`)
+						.then((response) => response.json())
+						.then((transactions) => {
+							watching4histories = setInterval(function() {
+								waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
+								.then( () => {
+									let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+									let string = array_to_string(histories);
+									if (string != lastHistory){
+										lastHistory = string;
+										clean_chart(chart);
+										clean_chart(chart3);
+										clean_chart(chart4);
+										updateHistory(histories, transactions);
+									}
+								}, () => {} );
+							}, 1000);
+						});
+				});
 
-			watching4histories = setInterval(function() {
-				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
-				.then( () => {
-					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-					let string = array_to_string(histories);
-					if (string != lastHistory){
-						lastHistory = string;
-						clean_chart(chart);
-						clean_chart(chart3);
-						clean_chart(chart4);
-						updateHistory(histories);
-					}
-				}, () => {} );
-			}, 1000);
 
 			watching4offers = setInterval(function() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
