@@ -746,6 +746,18 @@ function onUrlChange() {
 	if(watching4profileName) {clearInterval(watching4profileName)};
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		let splitted_url = lastUrl.split('/');
+		
+		fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
+			.then((response) => response.json())
+			.then((data) => {
+				fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/history?nftData=${data['loopringNftInfo']['nftData'][0]}`)
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data);
+					});
+			});
+
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
@@ -795,3 +807,4 @@ function onUrlChange() {
 
 let profileName = getProfileName();
 onUrlChange();
+
