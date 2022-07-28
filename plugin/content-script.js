@@ -765,16 +765,15 @@ function onUrlChange() {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-			
-			fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
-				.then((response) => response.json())
-				.then((data) => {
-					fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/history?nftData=${data['loopringNftInfo']['nftData'][0]}`)
+				watching4histories = setInterval(function() {
+					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
+					.then( () => {
+						fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
 						.then((response) => response.json())
-						.then((transactions) => {
-							watching4histories = setInterval(function() {
-								waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
-								.then( () => {
+						.then((data) => {
+							fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/history?nftData=${data['loopringNftInfo']['nftData'][0]}`)
+								.then((response) => response.json())
+								.then((transactions) => {
 									let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
 									let string = array_to_string(histories);
 									if (string != lastHistory){
@@ -785,8 +784,8 @@ function onUrlChange() {
 										updateHistory(histories, transactions);
 									}
 								}, () => {} );
-							}, 1000);
-						});
+						}, 1000);
+					});
 				});
 
 
