@@ -283,19 +283,19 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 			}
 		}
 	}
-	
+
 	//split the transaction when detecting a very fast change close to an integer factor
-	
+
 	let lastValue = null;
-	
+
 	for (let i = 0 ; i < values_eth.length ; i++) {
 		if (lastValue) {
 			let factor = values_eth[i]/lastValue;
 			let ceilFactor = Math.min(Math.ceil(factor)+1, maxAvailable);
-			
+
 			let closestFactor = null;
 			let closestRatio = -1;
-			
+
 			for (let j=2 ; j <= ceilFactor ; j++) {
 				let ratio = Math.abs(factor/j-1);
 				if (bestRound(values_eth[i]/j, 6) == values_eth[i]/j) {
@@ -322,7 +322,7 @@ function experimental_transactions_splitter(values_eth, values_dollars, sellers,
 		}
 		lastValue = values_eth[i];
 	}
-	
+
 }
 
 const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
@@ -398,7 +398,6 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			
 	
 	return [series, labels];
-	
 }
 
 function sortedToDict(sorted){
@@ -414,43 +413,43 @@ function get_volume_candle(agos_count){
 		var sorted = Object.keys(agos_count).map(function(key) {
 			return [key, agos_count[key]];
 		});
-		
+
 		let time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
-	
+
 		sorted.sort(function(first, second) {
 			return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
 		});
-		
+
 		let volume_data = [];
-		
+
 		let [first_prefix, first_suffix] = sorted[0][0].split(' ');
-		
+
 		let dict = sortedToDict(sorted);
-		
+
 		let labels = [];
-		
+
 		let counter = 0;
 		for (let i = first_prefix ; i >= 1 ; i--) {
 			let value = 0;
 			let suffix = first_suffix;
 			if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
-			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; } 
+			if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; }
 			else {sorted.splice(counter, 0, sorted[counter]);}
 			volume_data.push(value);
 			labels.push(`${i} ${suffix} ago`);
 			counter++;
 		}
-		
+
 		let suffix = first_suffix;
 		if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
 		volume_data.push(0);
 		labels.push(`last ${suffix}`);
-		
+
 		let series = [{data:volume_data}];
-		
+
 		let suffixes = [Object.keys(dict)[0].split(' ')[1]]
 		if (suffixes[0][suffixes[0].length-1] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
-		
+
 		for (const [key, value] of Object.entries(dict)){
 			if (!suffixes.includes(key.split(' ')[1])){
 				let volume_last = [];
@@ -461,7 +460,7 @@ function get_volume_candle(agos_count){
 				series.push({data:volume_last});
 			}
 		}
-		
+
 		return [series, labels, sorted];
 }
 
@@ -510,7 +509,7 @@ function updateHistory(histories) {
 			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
 			total_eth += values_eth[histories.length - 1 - i];
 			total_dollars += values_dollars[histories.length - 1 - i];
-			
+
 			let ago_index = transaction.findIndex((element) => element === 'ago');
 			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
 		}
@@ -525,9 +524,24 @@ function updateHistory(histories) {
 		let max_dollars = Math.max(...values_dollars);
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
-		
+
 		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-		
+
+		let profile_sales_index = [];
+		let profile_buys_index = [];
+
+		for (let i = 0; i < sellers.length; i++) {
+		  if (profileName && sellers[i] == profileName) {
+			profile_sales_index.push(i)
+		  }
+		}
+		for (let i = 0; i < buyers.length; i++) {
+		  if (profileName && buyers[i] == profileName) {
+			profile_buys_index.push(i)
+		  }
+		}
+
+		// Used in the recurrent buyers/sellers chart
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
@@ -640,11 +654,16 @@ function updateHistory(histories) {
 					stops: [0, 95, 100]
 				}
 			},
-			annotations: {
-				xaxis: []
-			}
+      annotations: {
+        xaxis: [
+          {}
+        ],
+      },
+      markers: {
+        discrete: []
+      }
 		}
-		
+
 		if (all_transactions) {
 			options.annotations.xaxis.push({
 					x: 0,
@@ -661,11 +680,33 @@ function updateHistory(histories) {
 					}
 				});
 			}
+    if (profileName) {
+      for (var i = 0; i < profile_sales_index.length; i++) {
+        options.markers.discrete.push({
+          seriesIndex: 0,
+          dataPointIndex: profile_sales_index[i],
+          fillColor: '#000000',
+          strokeColor: '#7c1760',
+          size: 5,
+          shape: "circle"
+        })
+      }
+      for (var i = 0; i < profile_buys_index.length; i++) {
+        options.markers.discrete.push({
+          seriesIndex: 0,
+          dataPointIndex: profile_buys_index[i],
+          fillColor: '#ffffff',
+          strokeColor: '#7c1760',
+          size: 5,
+          shape: "circle"
+        })
+      }
+    }
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
 
 		chart.render();
-		
+
 		options3 = {
 			title: {
 				text: `Volume (Total : ${values_eth.length})`
@@ -684,7 +725,7 @@ function updateHistory(histories) {
 			},
 			tooltip: {
 				custom: function({series, seriesIndex, dataPointIndex, w}) {
-					let newSeriesIndex = seriesIndex; 
+					let newSeriesIndex = seriesIndex;
 					if (newSeriesIndex > 0) {newSeriesIndex--;}
 					return '<div class="arrow_box">' +
 							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
@@ -695,11 +736,11 @@ function updateHistory(histories) {
 				palette: 'palette3'
 			}
 		}
-		
+
 		chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
 
 		chart3.render();
-		
+
 		var options4 = {
 			title: {
 				text: "Recurrent buyers/sellers"
@@ -727,7 +768,7 @@ function updateHistory(histories) {
 		chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
 		chart4.render();
-		
+
 	}
 }
 
@@ -759,6 +800,19 @@ function clean_chart(chart){
 }
 var watching4histories = null;
 var watching4offers = null;
+var watching4profileName = null;
+
+function persistProfileName(tempProfileName) {
+	chrome.storage.local.set({profileName: tempProfileName}, function() {
+		profileName = tempProfileName;
+	});
+}
+
+function getProfileName() {
+	chrome.storage.local.get(['profileName'], function(_profileName) {
+		profileName = _profileName.profileName;
+	});
+}
 
 function onUrlChange() {
 	clean_chart(chart);
@@ -767,12 +821,13 @@ function onUrlChange() {
 	clean_chart(chart4);
 	if(watching4histories) {clearInterval(watching4histories)};
 	if(watching4offers) {clearInterval(watching4offers)};
-	
+	if(watching4profileName) {clearInterval(watching4profileName)};
+
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-			
+
 			watching4histories = setInterval(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 				.then( () => {
@@ -802,6 +857,19 @@ function onUrlChange() {
 			}, 1000);
 		});
 	}
+	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+		watching4profileName = setInterval(function() {
+			waitForElement(".sc-hBUSln", 1000)
+			.then( () => {
+				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
+				if (tempProfileName != '') {
+					persistProfileName(tempProfileName);
+					clearInterval(watching4profileName);
+				}
+			});
+		}, 1000);
+	}
 }
 
+let profileName = getProfileName();
 onUrlChange();
