@@ -373,28 +373,28 @@ function updateHistory(histories, transactions) {
 					}
 				});
 			}
-    if (profileName) {
-      for (var i = 0; i < profile_sales_index.length; i++) {
-        options.markers.discrete.push({
-          seriesIndex: 0,
-          dataPointIndex: profile_sales_index[i],
-          fillColor: '#000000',
-          strokeColor: '#7c1760',
-          size: 5,
-          shape: "circle"
-        })
-      }
-      for (var i = 0; i < profile_buys_index.length; i++) {
-        options.markers.discrete.push({
-          seriesIndex: 0,
-          dataPointIndex: profile_buys_index[i],
-          fillColor: '#ffffff',
-          strokeColor: '#7c1760',
-          size: 5,
-          shape: "circle"
-        })
-      }
-    }
+		if (profileName) {
+		  for (var i = 0; i < profile_sales_index.length; i++) {
+			options.markers.discrete.push({
+			  seriesIndex: 0,
+			  dataPointIndex: profile_sales_index[i],
+			  fillColor: '#000000',
+			  strokeColor: '#7c1760',
+			  size: 5,
+			  shape: "circle"
+			})
+		  }
+		  for (var i = 0; i < profile_buys_index.length; i++) {
+			options.markers.discrete.push({
+			  seriesIndex: 0,
+			  dataPointIndex: profile_buys_index[i],
+			  fillColor: '#ffffff',
+			  strokeColor: '#7c1760',
+			  size: 5,
+			  shape: "circle"
+			})
+		  }
+		}
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
 
