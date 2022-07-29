@@ -1,3 +1,8 @@
+var chart;
+var chart2;
+var chart3;
+var chart4;
+
 function combine_buyers_sellers(buyers, sellers, creator){
 
 	let combined = {};

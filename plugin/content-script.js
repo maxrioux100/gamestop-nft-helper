@@ -1,8 +1,3 @@
-var chart;
-var chart2;
-var chart3;
-var chart4;
-
 function updateOffers(offers, rateAndFees) {
 	
 	let sorted = Object.keys(offers).map(function(key) {
