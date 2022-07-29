@@ -216,7 +216,7 @@ function transactions_splitter(values_eth, values_dollars, sellers, buyers, labe
 			values_dollars[i] = value_dollars;
 			amounts[i] = 1;
 
-			for (let ii = 1 ; ii < amounts[i] ; ii++)
+			for (let ii = 1 ; ii < amount ; ii++)
 			{
 				values_eth.splice(i, 0, value_eth);
 				values_dollars.splice(i, 0, value_dollars);
