@@ -1,6 +1,10 @@
 {
-  "offershelperprompt": {
-    "message": "Click the 'Editions' button above to load chart data.",
-    "description": "Inform the user to open the 'Editions' side tray before chart data is available."
-  }
+	"offershelperprompt": {
+		"message": "Click the 'Editions' button above to load chart data.",
+		"description": "Inform the user to open the 'Editions' side tray before chart data is available."
+	},
+	"historyhelperprompt": {
+		"message": "Click the 'Editions' button above to load chart data.",
+		"description": "Inform the user to open the 'Editions' side tray before chart data is available."
+	}
 }
