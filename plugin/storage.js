@@ -1,3 +1,5 @@
+var profileName = getProfileName();
+
 function persistProfileName(tempProfileName) {
 	chrome.storage.local.set({profileName: tempProfileName}, function() {
 		profileName = tempProfileName;

@@ -224,8 +224,9 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 	}
 }
 
-function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, profile_sales_index, profile_buys_index){
-	return {
+function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index){
+	
+	let options = {
 		title: {
 			text: "Price history"
 		},
@@ -315,20 +316,20 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 
 		if (all_transactions) {
 			options.annotations.xaxis.push({
-					x: 0,
-					borderColor: '#999',
-					yAxisIndex: 0,
-					label: {
-						show: true,
-						text: 'Minted',
-						offsetX: 10,
-						style: {
-							color: "#fff",
-							background: '#775DD0'
-						}
+				x: 0,
+				borderColor: '#999',
+				yAxisIndex: 0,
+				label: {
+					show: true,
+					text: 'Minted',
+					offsetX: 10,
+					style: {
+						color: "#fff",
+						background: '#775DD0'
 					}
-				});
-			}
+				}
+			});
+		}
 		if (profileName) {
 			for (var i = 0; i < profile_sales_index.length; i++) {
 				options.markers.discrete.push({
@@ -351,6 +352,7 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 				})
 			}
 		}
+		return options;
 }
 
 function get_options_volume(values_eth, series_volume, labels_volume, all_data_volume) {

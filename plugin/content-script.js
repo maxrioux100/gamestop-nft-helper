@@ -150,8 +150,8 @@ function updateHistory(histories, transactions) {
 		let colors = ['#00E396'];
 		if (change < 0) {colors = ["#FF4560"];}
 		else if (change == 0) {colors = ["#008FFB"];}
-
-		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, profile_sales_index, profile_buys_index));
+    
+		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
 
 		charts['price_history'].render();
 		
@@ -245,5 +245,4 @@ function onUrlChange() {
 	}
 }
 
-let profileName = getProfileName();
 onUrlChange();
