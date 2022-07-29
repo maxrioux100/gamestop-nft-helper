@@ -56,7 +56,16 @@ function createOffersHelperContainer() {
 	container.appendChild(div);
 }
 
-function updateOffers(offers) {
+function updateOffers(offers, rateAndFees) {
+	
+	let sorted = Object.keys(offers).map(function(key) {
+		return [key, offers[key]];
+	});
+
+	sorted.sort(function(first, second) {
+		return second['pricePerNft'] - first['pricePerNft'];
+	});
+	
 	let offershelperprompt = document.getElementById("offershelperprompt");
 	if (offershelperprompt != null) {offershelperprompt.remove();};
 
@@ -77,9 +86,9 @@ function updateOffers(offers) {
 		let quantities = [offers.length];
 
 		for (let i=0; i < offers.length; i++) {
-			values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
-			values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
-			quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
+			values_eth[i] = bestRound(sorted[i][1]['pricePerNft']/Math.pow(10, 18), 4);
+			values_dollars[i] = bestRound(sorted[i][1]['pricePerNft']/Math.pow(10, 18)*rateAndFees['rates'][0]['quotes'][0]['rate'], 2);
+			quantities[i] = sorted[i][1]['amount'];
 		}
 
 		let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
@@ -735,10 +744,10 @@ async function updateOffersWithApiData() {
 		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
 		let string = array_to_string(offers);
 		if (string != lastOffer){
-			console.log('updating offers');
+			let rateAndFees = await makeApiCall('ratesAndFees');
 			lastOffer = string;
 			clean_chart(chart2);
-			//updateOffers(offers);
+			updateOffers(offers, rateAndFees);
 		}
 	}
 }
