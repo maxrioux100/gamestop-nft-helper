@@ -58,9 +58,9 @@ function updateOffers(offers, rateAndFees) {
 			max_dollars *= 2;
 		}
 
-		chart2 = new ApexCharts(document.querySelector("#chart2"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
+		charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
 
-		chart2.render();
+		charts['offers'].render();
 	}
 }
 
@@ -151,21 +151,21 @@ function updateHistory(histories, transactions) {
 		if (change < 0) {colors = ["#FF4560"];}
 		else if (change == 0) {colors = ["#008FFB"];}
 
-		chart = new ApexCharts(document.querySelector("#chart"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, profile_sales_index, profile_buys_index));
+		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, profile_sales_index, profile_buys_index));
 
-		chart.render();
+		charts['price_history'].render();
 		
 		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 
-		chart3 = new ApexCharts(document.querySelector("#chart3"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
+		charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
 
-		chart3.render();
+		charts['volume'].render();
 		
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
-		chart4 = new ApexCharts(document.querySelector("#chart4"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
+		charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 
-		chart4.render();
+		charts['recurrent'].render();
 	}
 }
 
@@ -179,9 +179,9 @@ async function updateHistoryWithApiData() {
   let string = array_to_string(histories);
   if (string != lastHistory){
     lastHistory = string;
-    clean_chart(chart);
-    clean_chart(chart3);
-    clean_chart(chart4);
+    clean_chart('price_history');
+    clean_chart('volume');
+    clean_chart('recurrent');
     updateHistory(histories, transactions);
   }
 }
@@ -194,7 +194,7 @@ async function updateOffersWithApiData() {
 		if (string != lastOffer){
 			let rateAndFees = await makeApiCall('ratesAndFees');
 			lastOffer = string;
-			clean_chart(chart2);
+			clean_chart('offers');
 			updateOffers(offers, rateAndFees);
 		}
 	}
@@ -217,10 +217,10 @@ var watching4offers = null;
 var watching4profileName = null;
 
 function onUrlChange() {
-	clean_chart(chart);
-	clean_chart(chart2);
-	clean_chart(chart3);
-	clean_chart(chart4);
+	clean_chart('price_history');
+	clean_chart('offers');
+	clean_chart('volume');
+	clean_chart('recurrent');
 	if(watching4histories) {clearInterval(watching4histories)};
 	if(watching4offers) {clearInterval(watching4offers)};
 	if(watching4profileName) {clearInterval(watching4profileName)};

@@ -1,7 +1,8 @@
-var chart;
-var chart2;
-var chart3;
-var chart4;
+var charts = {};
+charts['price_history'] = null;
+charts['offers'] = null;
+charts['volume'] = null;
+charts['recurrent'] = null;
 
 function combine_buyers_sellers(buyers, sellers, creator){
 
@@ -127,9 +128,9 @@ function get_volume_candle(agos_count){
 	return [series, labels, sorted];
 }
 
-function clean_chart(chart){
-	if (!(typeof chart === "undefined")) {
-		chart.destroy();
+function clean_chart(name){
+	if (charts[name] != null) {
+		charts[name].destroy();
 	}
 }
 
