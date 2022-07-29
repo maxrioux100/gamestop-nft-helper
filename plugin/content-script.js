@@ -196,31 +196,7 @@ function updateHistory(histories, transactions) {
 
 		chart3.render();
 
-		var options4 = {
-			title: {
-				text: "Recurrent buyers/sellers"
-			},
-			chart: {
-				type: 'bar',
-				stacked: true,
-				animations: {
-					enabled: false
-				}
-			},
-			plotOptions: {
-				bar: {
-					horizontal: true
-				}
-			},
-			series: series_sellers_buyers,
-			labels: labels_sellers_buyers,
-			colors: ['#008FFB', '#00E396', '#FF4560'],
-			xaxis: {
-				decimalsInFloat: 0
-			}
-		}
-
-		chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
+		chart4 = new ApexCharts(document.querySelector("#chart4"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 
 		chart4.render();
 	}

@@ -370,3 +370,29 @@ function get_options_volume(values_eth, series_volume, labels_volume, all_data_v
 		}
 	}
 }
+
+function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
+	return {
+		title: {
+			text: "Recurrent buyers/sellers"
+		},
+		chart: {
+			type: 'bar',
+			stacked: true,
+			animations: {
+				enabled: false
+			}
+		},
+		plotOptions: {
+			bar: {
+				horizontal: true
+			}
+		},
+		series: series_sellers_buyers,
+		labels: labels_sellers_buyers,
+		colors: ['#008FFB', '#00E396', '#FF4560'],
+		xaxis: {
+			decimalsInFloat: 0
+		}
+	}
+}
