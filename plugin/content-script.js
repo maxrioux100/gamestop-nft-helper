@@ -2,7 +2,6 @@ var chart;
 var chart2;
 var chart3;
 var chart4;
-var firstUpdateHistAttemptOccurred;
 
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
