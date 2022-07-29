@@ -18,8 +18,8 @@ function clean_watchers(){
 }
 
 function setIntervalImmediately(func, interval) {
-  func();
-  return setInterval(func, interval);
+	func();
+	return setInterval(func, interval);
 }
 
 const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
