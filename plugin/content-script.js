@@ -2,7 +2,6 @@ var chart;
 var chart2;
 var chart3;
 var chart4;
-var firstUpdateHistAttemptOccurred;
 
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
@@ -57,7 +56,16 @@ function createOffersHelperContainer() {
 	container.appendChild(div);
 }
 
-function updateOffers(offers) {
+function updateOffers(offers, rateAndFees) {
+	
+	let sorted = Object.keys(offers).map(function(key) {
+		return [key, offers[key]];
+	});
+
+	sorted.sort(function(first, second) {
+		return first[1]['pricePerNft'] - second[1]['pricePerNft'];
+	});
+	
 	let offershelperprompt = document.getElementById("offershelperprompt");
 	if (offershelperprompt != null) {offershelperprompt.remove();};
 
@@ -72,23 +80,21 @@ function updateOffers(offers) {
 
 		offers_helper.appendChild(div);
 
-
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
 		let quantities = [offers.length];
 
 		for (let i=0; i < offers.length; i++) {
-			let transaction = offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent;
-			values_eth[i] = parseFloat(offers[i].getElementsByClassName("EthPriceLabel-sc-1c1tt50-1")[0].textContent.split(' ')[0].replace(',', ''));
-			values_dollars[i] = parseFloat(offers[i].getElementsByClassName("UsdPriceLabel-sc-1c1tt50-2")[0].textContent.split(' ')[0].slice(1,).replace(',', ''));
-			quantities[i] = parseInt(offers[i].getElementsByClassName("EditionsQuantity-sc-11cpe2k-11")[0].textContent);
+			values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
+			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*rateAndFees['rates'][0]['quotes'][0]['rate'], 2);
+			quantities[i] = parseInt(sorted[i][1]['amount']);
 		}
 
 		let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
 
-		var new_values_eth = [];
-		var new_values_dollars = [];
-		var new_quantities = [];
+		let new_values_eth = [];
+		let new_values_dollars = [];
+		let new_quantities = [];
 
 		let lastValue = -1;
 		for (let i=0; i < noOutliers; i++){
@@ -102,7 +108,7 @@ function updateOffers(offers) {
 				new_values_dollars.push(values_dollars[i]);
 			}
 		}
-
+		
 		let min_eth = new_values_eth[0];
 		let max_eth = new_values_eth[new_values_eth.length-1];
 		let min_dollars = new_values_dollars[0];
@@ -157,7 +163,7 @@ function updateOffers(offers) {
 				labels: {
 					hideOverlappingLabels: true
 				},
-				decimalsInFloat: 0,
+				decimalsInFloat: 2,
 				tooltip: {
 					enabled: false
 				}
@@ -714,10 +720,12 @@ async function makeApiCall(apiMethod, urlParameter, urlParameterValue){
   return data
 }
 
+let nft;
+
 async function updateHistoryWithApiData() {
   let splitted_url = lastUrl.split('/');
-  data = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
-  transactions = await makeApiCall('history', 'nftData', `${data['loopringNftInfo']['nftData'][0]}`)
+  nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+  transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`)
   let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
   let string = array_to_string(histories);
   if (string != lastHistory){
@@ -727,6 +735,20 @@ async function updateHistoryWithApiData() {
     clean_chart(chart4);
     updateHistory(histories, transactions);
   }
+}
+
+async function updateOffersWithApiData() {
+	if (nft !== undefined)
+	{
+		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
+		let string = array_to_string(offers);
+		if (string != lastOffer){
+			let rateAndFees = await makeApiCall('ratesAndFees');
+			lastOffer = string;
+			clean_chart(chart2);
+			updateOffers(offers, rateAndFees);
+		}
+	}
 }
 
 function onUrlChange() {
@@ -749,16 +771,7 @@ function onUrlChange() {
 					}, () => {} );
 				}, 1000);
 			watching4offers = setInterval(function() {
-				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
-				.then( () => {
-					let offers = Array.prototype.slice.call(document.getElementsByClassName("EditionsItem-sc-11cpe2k-7")).splice(1, );
-					let string = array_to_string(offers);
-					if (string != lastOffer){
-						lastOffer = string;
-						clean_chart(chart2);
-						updateOffers(offers);
-					}
-				}, () => {} );
+				updateOffersWithApiData();
 			}, 1000);
 		});
 	}
