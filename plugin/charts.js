@@ -121,3 +121,9 @@ function get_volume_candle(agos_count){
 	}
 	return [series, labels, sorted];
 }
+
+function clean_chart(chart){
+	if (!(typeof chart === "undefined")) {
+		chart.destroy();
+	}
+}

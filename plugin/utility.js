@@ -66,3 +66,4 @@ function transactions_splitter(values_eth, values_dollars, sellers, buyers, labe
 		}
 	}
 }
+
