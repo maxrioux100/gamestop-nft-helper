@@ -163,7 +163,7 @@ function updateOffers(offers, rateAndFees) {
 				labels: {
 					hideOverlappingLabels: true
 				},
-				decimalsInFloat: 0,
+				decimalsInFloat: 2,
 				tooltip: {
 					enabled: false
 				}
