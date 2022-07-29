@@ -12,6 +12,7 @@
 			"matches": ["https://nft.gamestop.com/*"],
 			"js": [
 				"apexcharts.js",
+				"storage.js",
 				"math.js",
 				"utility.js",
 				"html_writer.js",
