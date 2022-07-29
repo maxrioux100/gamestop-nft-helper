@@ -745,10 +745,9 @@ function onUrlChange() {
 				watching4histories = setInterval(function() {
 					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 					.then( () => {
-						if (!firstUpdateHistAttemptOccurred) {updateHistoryWithApiData()}
-						firstUpdateHistAttemptOccurred = true;
+						updateHistoryWithApiData();
 					}, () => {} );
-				}, 250);
+				}, 1000);
 			watching4offers = setInterval(function() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
 				.then( () => {
