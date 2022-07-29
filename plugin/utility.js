@@ -1,3 +1,22 @@
+var watchers = {};
+watchers['history'] = null;
+watchers['offers'] = null;
+watchers['profileName'] = null;
+
+function clean_watcher(name){
+	if (watchers[name] != null) {
+		clearInterval(watchers[name]);
+	}
+}
+
+function clean_watchers(){
+	for (const [key, value] of Object.entries(watchers)) {
+		if (value != null) {
+			clearInterval(value);
+		}
+	}
+}
+
 const count = (arr) => arr.reduce((ac,a) => (ac[a] = ac[a] + 1 || 1,ac),{});
 
 function sortedToDict(sorted){

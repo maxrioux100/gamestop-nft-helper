@@ -44,9 +44,9 @@ function createHistoryHelper(total_eth, values_eth, total_dollars, values_dollar
 						writeChip('Change', `${bestRound(change, 2)}%`) +
 					'</section>'+
 					'<section>' +
-						'<div id="chart"></div>' +
-						'<div id="chart3"></div>' +
-						'<div id="chart4"></div>' +
+						'<div id="chart_price_history"></div>' +
+						'<div id="chart_volume"></div>' +
+						'<div id="chart_recurrent"></div>' +
 					'</section>';
 	div.setAttribute('id', 'history_helper');
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
@@ -54,11 +54,11 @@ function createHistoryHelper(total_eth, values_eth, total_dollars, values_dollar
 }
 
 function createOffersChart() {
-	let chart2_elem = document.getElementById("chart2");
-	if (chart2_elem != null) {chart2_elem.remove();};
+	let chart_offers_elem = document.getElementById("chart_offers");
+	if (chart_offers_elem != null) {chart_offers_elem.remove();};
 
 	let div = document.createElement('div');
-	div.setAttribute('id', 'chart2');
+	div.setAttribute('id', 'chart_offers');
 
 	let offers_helper = document.getElementById("offers_helper");
 

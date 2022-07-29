@@ -1,7 +1,22 @@
-var chart;
-var chart2;
-var chart3;
-var chart4;
+var charts = {};
+charts['price_history'] = null;
+charts['offers'] = null;
+charts['volume'] = null;
+charts['recurrent'] = null;
+
+function clean_chart(name){
+	if (charts[name] != null) {
+		charts[name].destroy();
+	}
+}
+
+function clean_charts(){
+	for (const [key, value] of Object.entries(charts)) {
+		if (value != null) {
+			value.destroy();
+		}
+	}
+}
 
 function combine_buyers_sellers(buyers, sellers, creator){
 
@@ -125,12 +140,6 @@ function get_volume_candle(agos_count){
 		}
 	}
 	return [series, labels, sorted];
-}
-
-function clean_chart(chart){
-	if (!(typeof chart === "undefined")) {
-		chart.destroy();
-	}
 }
 
 function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars){
