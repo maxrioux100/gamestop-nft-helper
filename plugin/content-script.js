@@ -197,23 +197,6 @@ function updateHistory(histories, transactions) {
 	}
 }
 
-let lastUrl = location.href;
-new MutationObserver(() => {
-  const url = location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
-    onUrlChange();
-  }
-}).observe(document, {subtree: true, childList: true});
-
-
-let lastHistory = '';
-let lastOffer = '';
-
-var watching4histories = null;
-var watching4offers = null;
-var watching4profileName = null;
-
 function persistProfileName(tempProfileName) {
 	chrome.storage.local.set({profileName: tempProfileName}, function() {
 		profileName = tempProfileName;
@@ -256,6 +239,22 @@ async function updateOffersWithApiData() {
 		}
 	}
 }
+
+let lastUrl = location.href;
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    onUrlChange();
+  }
+}).observe(document, {subtree: true, childList: true});
+
+let lastHistory = '';
+let lastOffer = '';
+
+var watching4histories = null;
+var watching4offers = null;
+var watching4profileName = null;
 
 function onUrlChange() {
 	clean_chart(chart);
