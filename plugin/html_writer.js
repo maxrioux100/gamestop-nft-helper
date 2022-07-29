@@ -52,3 +52,20 @@ function createHistoryHelper(total_eth, values_eth, total_dollars, values_dollar
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 	container.appendChild(div);
 }
+
+function createOffersChart() {
+	let chart2_elem = document.getElementById("chart2");
+	if (chart2_elem != null) {chart2_elem.remove();};
+
+	let div = document.createElement('div');
+	div.setAttribute('id', 'chart2');
+
+	let offers_helper = document.getElementById("offers_helper");
+
+	offers_helper.appendChild(div);
+}
+
+function removeOffersHelperPrompt() {
+	let offershelperprompt = document.getElementById("offershelperprompt");
+	if (offershelperprompt != null) {offershelperprompt.remove();};
+}

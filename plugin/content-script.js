@@ -8,19 +8,10 @@ function updateOffers(offers, rateAndFees) {
 		return first[1]['pricePerNft'] - second[1]['pricePerNft'];
 	});
 	
-	let offershelperprompt = document.getElementById("offershelperprompt");
-	if (offershelperprompt != null) {offershelperprompt.remove();};
+	removeOffersHelperPrompt();
 
 	if (offers.length > 0) {
-		let chart2_elem = document.getElementById("chart2");
-		if (chart2_elem != null) {chart2_elem.remove();};
-
-		let div = document.createElement('div');
-		div.setAttribute('id', 'chart2');
-
-		let offers_helper = document.getElementById("offers_helper");
-
-		offers_helper.appendChild(div);
+		createOffersChart();
 
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
