@@ -15,6 +15,7 @@
 				"math.js",
 				"utility.js",
 				"html_writer.js",
+				"graphs.js",
 				"content-script.js"
 			]
 		}
