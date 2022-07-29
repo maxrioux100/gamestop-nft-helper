@@ -2,6 +2,7 @@ var chart;
 var chart2;
 var chart3;
 var chart4;
+var firstUpdateHistAttemptOccurred;
 
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
@@ -662,7 +663,7 @@ function updateHistory(histories, transactions) {
 		chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
 		chart4.render();
-
+		clearInterval(watching4histories)
 	}
 }
 
@@ -703,20 +704,20 @@ function getProfileName() {
 
 async function makeApiCall(apiMethod, urlParameter, urlParameterValue){
   let baseUrl = 'https://api.nft.gamestop.com/nft-svc-marketplace/'
-  let res = await fetch(url);
-  let response = await fetch(`${baseUrl} + ${apiMethod}?${urlParameter}=${urlParameterValue}`)
+  let response = await fetch(`${baseUrl}${apiMethod}?${urlParameter}=${urlParameterValue}`)
   if (response.status == 200) {}
   else {
     console.log('unknown err');
     return
   }
-  return response.json()
+  let data = await response.json()
+  return data
 }
 
-function updateHistoryWithApiData() {
+async function updateHistoryWithApiData() {
   let splitted_url = lastUrl.split('/');
-  data = makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
-  transactions = makeApiCall('history', 'nftData', `${data['loopringNftInfo']['nftData'][0]}`)
+  data = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+  transactions = await makeApiCall('history', 'nftData', `${data['loopringNftInfo']['nftData'][0]}`)
   let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
   let string = array_to_string(histories);
   if (string != lastHistory){
@@ -744,28 +745,10 @@ function onUrlChange() {
 				watching4histories = setInterval(function() {
 					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
 					.then( () => {
-						let splitted_url = lastUrl.split('/');
-						fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/getNft?tokenIdAndContractAddress=${splitted_url[5]}_${splitted_url[4]}`)
-						.then((response) => response.json())
-						.then((data) => {
-							fetch(`https://api.nft.gamestop.com/nft-svc-marketplace/history?nftData=${data['loopringNftInfo']['nftData'][0]}`)
-								.then((response) => response.json())
-								.then((transactions) => {
-									let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-									let string = array_to_string(histories);
-									if (string != lastHistory){
-										lastHistory = string;
-										clean_chart(chart);
-										clean_chart(chart3);
-										clean_chart(chart4);
-										updateHistory(histories, transactions);
-									}
-								}, () => {} );
-						}, 1000);
-					});
-				});
-
-
+						if (!firstUpdateHistAttemptOccurred) {updateHistoryWithApiData()}
+						firstUpdateHistAttemptOccurred = true;
+					}, () => {} );
+				}, 250);
 			watching4offers = setInterval(function() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
 				.then( () => {
