@@ -14,6 +14,7 @@
 				"apexcharts.js",
 				"math.js",
 				"utility.js",
+				"html_writer.js",
 				"content-script.js"
 			]
 		}
