@@ -223,7 +223,6 @@ function updateHistory(histories, transactions) {
 		chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
 		chart4.render();
-		clearInterval(watching4histories)
 	}
 }
 
