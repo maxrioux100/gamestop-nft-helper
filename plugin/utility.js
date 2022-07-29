@@ -15,6 +15,11 @@ function array_to_string(array){
 
 }
 
+function removeUnknownTransactions(transactions) {
+	console.log(transactions[0]['txType']);
+	return transactions.filter( item => (item['txType'] != "SpotTrade") );
+}
+
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
 		var timer = false;

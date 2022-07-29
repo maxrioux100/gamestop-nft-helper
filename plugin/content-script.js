@@ -158,11 +158,6 @@ function updateOffers(offers, rateAndFees) {
 	}
 }
 
-function removeUnknownTransactions(transactions) {
-	console.log(transactions[0]['txType']);
-	return transactions.filter( item => (item['txType'] != "SpotTrade") );
-}
-
 function updateHistory(histories, transactions) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
