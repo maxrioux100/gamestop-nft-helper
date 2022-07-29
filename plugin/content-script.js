@@ -63,7 +63,7 @@ function updateOffers(offers, rateAndFees) {
 	});
 
 	sorted.sort(function(first, second) {
-		return second['pricePerNft'] - first['pricePerNft'];
+		return first[1]['pricePerNft'] - second[1]['pricePerNft'];
 	});
 	
 	let offershelperprompt = document.getElementById("offershelperprompt");
@@ -86,16 +86,16 @@ function updateOffers(offers, rateAndFees) {
 		let quantities = [offers.length];
 
 		for (let i=0; i < offers.length; i++) {
-			values_eth[i] = bestRound(sorted[i][1]['pricePerNft']/Math.pow(10, 18), 4);
-			values_dollars[i] = bestRound(sorted[i][1]['pricePerNft']/Math.pow(10, 18)*rateAndFees['rates'][0]['quotes'][0]['rate'], 2);
-			quantities[i] = sorted[i][1]['amount'];
+			values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
+			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*rateAndFees['rates'][0]['quotes'][0]['rate'], 2);
+			quantities[i] = parseInt(sorted[i][1]['amount']);
 		}
 
 		let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
 
-		var new_values_eth = [];
-		var new_values_dollars = [];
-		var new_quantities = [];
+		let new_values_eth = [];
+		let new_values_dollars = [];
+		let new_quantities = [];
 
 		let lastValue = -1;
 		for (let i=0; i < noOutliers; i++){
@@ -109,7 +109,9 @@ function updateOffers(offers, rateAndFees) {
 				new_values_dollars.push(values_dollars[i]);
 			}
 		}
-
+		
+		console.log(noOutliers);
+		console.log(new_quantities);
 		let min_eth = new_values_eth[0];
 		let max_eth = new_values_eth[new_values_eth.length-1];
 		let min_dollars = new_values_dollars[0];
