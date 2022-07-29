@@ -80,7 +80,6 @@ function updateOffers(offers, rateAndFees) {
 
 		offers_helper.appendChild(div);
 
-
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
 		let quantities = [offers.length];
@@ -110,8 +109,6 @@ function updateOffers(offers, rateAndFees) {
 			}
 		}
 		
-		console.log(noOutliers);
-		console.log(new_quantities);
 		let min_eth = new_values_eth[0];
 		let max_eth = new_values_eth[new_values_eth.length-1];
 		let min_dollars = new_values_dollars[0];
