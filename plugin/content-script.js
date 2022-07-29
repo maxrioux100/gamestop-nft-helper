@@ -192,37 +192,7 @@ function updateHistory(histories, transactions) {
 
 		chart.render();
 
-		options3 = {
-			title: {
-				text: `Volume (Total : ${values_eth.length})`
-			},
-			chart: {
-				stacked: true,
-				type: 'bar',
-				animations: {
-					enabled: false
-				}
-			},
-			series: series_volume,
-			labels: labels_volume,
-			legend: {
-				show: false
-			},
-			tooltip: {
-				custom: function({series, seriesIndex, dataPointIndex, w}) {
-					let newSeriesIndex = seriesIndex;
-					if (newSeriesIndex > 0) {newSeriesIndex--;}
-					return '<div class="arrow_box">' +
-							'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
-							'</div>'
-				}
-			},
-			theme: {
-				palette: 'palette3'
-			}
-		}
-
-		chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+		chart3 = new ApexCharts(document.querySelector("#chart3"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
 
 		chart3.render();
 

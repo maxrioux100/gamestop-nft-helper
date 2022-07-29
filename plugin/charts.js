@@ -338,3 +338,35 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 			}
 		}
 }
+
+function get_options_volume(values_eth, series_volume, labels_volume, all_data_volume) {
+	return {
+		title: {
+			text: `Volume (Total : ${values_eth.length})`
+		},
+		chart: {
+			stacked: true,
+			type: 'bar',
+			animations: {
+				enabled: false
+			}
+		},
+		series: series_volume,
+		labels: labels_volume,
+		legend: {
+			show: false
+		},
+		tooltip: {
+			custom: function({series, seriesIndex, dataPointIndex, w}) {
+				let newSeriesIndex = seriesIndex;
+				if (newSeriesIndex > 0) {newSeriesIndex--;}
+				return '<div class="arrow_box">' +
+						'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
+						'</div>'
+			}
+		},
+		theme: {
+			palette: 'palette3'
+		}
+	}
+}
