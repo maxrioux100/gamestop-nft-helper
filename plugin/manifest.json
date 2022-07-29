@@ -11,15 +11,18 @@
 		{
 			"matches": ["https://nft.gamestop.com/*"],
 			"js": [
-        "apexcharts.js",
-        "math.js",
-        "utility.js",
-        "content-script.js"
-      ]
+				"apexcharts.js",
+				"math.js",
+				"utility.js",
+				"content-script.js"
+			]
 		}
 	],
 	"default_locale": "en",
 	"permissions": [
 		"storage"
-	]
+	],
+	"host_permissions": [
+        "https://api.nft.gamestop.com/*"
+    ]
 }
