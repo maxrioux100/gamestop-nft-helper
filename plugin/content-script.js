@@ -210,11 +210,11 @@ function transactions_splitter(values_eth, values_dollars, sellers, buyers, labe
 			let amount = amounts[i]
 			let value_eth = bestRound(values_eth[i]/amount, 4);
 			let value_dollars = bestRound(values_dollars[i]/amount, 2);
-			
+
 			values_eth[i] = value_eth;
 			values_dollars[i] = value_dollars;
 			amounts[i] = 1;
-			
+
 			for (let ii = 1 ; ii < amounts[i] ; ii++)
 			{
 				values_eth.splice(i, 0, value_eth);
@@ -236,7 +236,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
 	}
-	
+
 	for (let i = 0; i < Object.keys(sellers).length ; i++){
 		if (Object.keys(sellers)[i] in combined) {
 			combined[Object.keys(sellers)[i]] += sellers[Object.keys(sellers)[i]];
@@ -244,50 +244,50 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			combined[Object.keys(sellers)[i]] = sellers[Object.keys(sellers)[i]];
 		}
 	}
-	
-	
+
+
 	var filtered = Object.keys(combined).reduce(function (filtered, key) {
 		if (combined[key] > 1) filtered[key] = combined[key];
 		return filtered;
 	}, {});
-	
-	
+
+
 	var sorted = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
-	
+
 	sorted.sort(function(first, second) {
 		return second[1] - first[1];
 	});
-	
+
 	items = sorted.slice(0, 10);
-	
+
 	let data_sellers = [];
 	let labels = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
 		data_sellers.push(value);
 		labels.push(items[i][0]);
 	}
-	
+
 	let data_buyers = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
 		data_buyers.push(value);
 	}
-	
+
 	let data_creators = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] == creator) {value = sellers[items[i][0]]};
 		data_creators.push(value);
 	}
-	
+
 	let series = [{
 				name: 'Creator',
 				data: data_creators
@@ -298,8 +298,8 @@ function combine_buyers_sellers(buyers, sellers, creator){
 				name: 'Sellers',
 				data: data_sellers
 			}]
-			
-	
+
+
 	return [series, labels];
 }
 
@@ -389,7 +389,7 @@ function updateHistory(histories, transactions) {
 		let labels = [histories.length];
 		let agos = [histories.length];
 		let amounts = [histories.length];
-		
+
 		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
 
 		for (let i=0; i < histories.length; i++) {
@@ -404,7 +404,7 @@ function updateHistory(histories, transactions) {
 
 			let ago_index = transaction.findIndex((element) => element === 'ago');
 			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
-			
+
 			amounts[histories.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
 
@@ -769,4 +769,3 @@ function onUrlChange() {
 
 let profileName = getProfileName();
 onUrlChange();
-
