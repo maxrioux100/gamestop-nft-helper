@@ -3,27 +3,6 @@ var chart2;
 var chart3;
 var chart4;
 
-function createOffersHelperContainer() {
-  let editions = document.querySelectorAll("[class^='ButtonHoverWrapper']")[1];
-  if (editions == undefined) {
-    return
-  }
-
-	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
-	let div = document.createElement('div');
-
-	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
-						'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
-					'</header>' +
-					'<div id="offers_helper">' +
-						'<section>' +
-						  '<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>' +
-						'</section>';
-					'</div>' +
-	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
-	container.appendChild(div);
-}
-
 function updateOffers(offers, rateAndFees) {
 	
 	let sorted = Object.keys(offers).map(function(key) {
@@ -176,32 +155,6 @@ function updateOffers(offers, rateAndFees) {
 		chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
 
 		chart2.render();
-	}
-}
-
-function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
-	for (let i = 0 ; i < amounts.length ; i++) {
-		if (amounts[i] > 1) {
-			let amount = amounts[i]
-			let value_eth = bestRound(values_eth[i]/amount, 4);
-			let value_dollars = bestRound(values_dollars[i]/amount, 2);
-
-			values_eth[i] = value_eth;
-			values_dollars[i] = value_dollars;
-			amounts[i] = 1;
-
-			for (let ii = 1 ; ii < amount ; ii++)
-			{
-				values_eth.splice(i, 0, value_eth);
-				values_dollars.splice(i, 0, value_dollars);
-				sellers.splice(i, 0, sellers[i]);
-				buyers.splice(i, 0, buyers[i]);
-				labels.splice(i, 0, labels[i]);
-				agos.splice(i, 0, agos[i]);
-				amounts.splice(i, 0, 1);
-				i++;
-			}
-		}
 	}
 }
 

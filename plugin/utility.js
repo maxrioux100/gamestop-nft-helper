@@ -35,3 +35,29 @@ function waitForElement(querySelector, timeout){
 		}, timeout);
 	});
 }
+
+function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
+	for (let i = 0 ; i < amounts.length ; i++) {
+		if (amounts[i] > 1) {
+			let amount = amounts[i]
+			let value_eth = bestRound(values_eth[i]/amount, 4);
+			let value_dollars = bestRound(values_dollars[i]/amount, 2);
+
+			values_eth[i] = value_eth;
+			values_dollars[i] = value_dollars;
+			amounts[i] = 1;
+
+			for (let ii = 1 ; ii < amount ; ii++)
+			{
+				values_eth.splice(i, 0, value_eth);
+				values_dollars.splice(i, 0, value_dollars);
+				sellers.splice(i, 0, sellers[i]);
+				buyers.splice(i, 0, buyers[i]);
+				labels.splice(i, 0, labels[i]);
+				agos.splice(i, 0, agos[i]);
+				amounts.splice(i, 0, 1);
+				i++;
+			}
+		}
+	}
+}

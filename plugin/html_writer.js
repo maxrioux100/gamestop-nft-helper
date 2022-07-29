@@ -8,3 +8,24 @@ function writeChip(name, value){
 				'</div>' +
 			'</div>';
 }
+
+function createOffersHelperContainer() {
+  let editions = document.querySelectorAll("[class^='ButtonHoverWrapper']")[1];
+  if (editions == undefined) {
+    return
+  }
+
+	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
+	let div = document.createElement('div');
+
+	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
+						'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
+					'</header>' +
+					'<div id="offers_helper">' +
+						'<section>' +
+						  '<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>' +
+						'</section>';
+					'</div>' +
+	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
+	container.appendChild(div);
+}
