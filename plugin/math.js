@@ -38,8 +38,8 @@ function getNumberOfNonOutliers(someArray, quantities) {
     var q3 = getRealQ1Q3(values, quantities, Math.ceil((sums * (3 / 4))));
     var iqr = q3 - q1;
 
-    maxValue = q3 + iqr*1.5;
-
+    maxValue = Math.min(q3 + iqr*1.5, values[0]*5);
+	
     var filteredValues = values.filter(function(x) {
         return (x <= maxValue);
     });
