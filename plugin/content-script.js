@@ -132,8 +132,8 @@ function updateHistory(histories, transactions) {
 		let max_dollars = Math.max(...values_dollars);
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
-
-		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+		
+		createHistoryHelper(total_eth, values_eth, total_dollars, values_dollars, change)
 
 		let profile_sales_index = [];
 		let profile_buys_index = [];
@@ -149,10 +149,6 @@ function updateHistory(histories, transactions) {
 		  }
 		}
 
-		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
-
-		createHistoryHelper(total_eth, values_eth, total_dollars, values_dollars, change)
-
 		if (min_eth == max_eth){
 			min_eth = 0;
 			min_dollars = 0;
@@ -167,10 +163,14 @@ function updateHistory(histories, transactions) {
 		chart = new ApexCharts(document.querySelector("#chart"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, profile_sales_index, profile_buys_index));
 
 		chart.render();
+		
+		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 
 		chart3 = new ApexCharts(document.querySelector("#chart3"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
 
 		chart3.render();
+		
+		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		chart4 = new ApexCharts(document.querySelector("#chart4"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 
