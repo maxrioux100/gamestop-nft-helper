@@ -19,13 +19,13 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	}
 
 
-	var filtered = Object.keys(combined).reduce(function (filtered, key) {
+	let filtered = Object.keys(combined).reduce(function (filtered, key) {
 		if (combined[key] > 1) filtered[key] = combined[key];
 		return filtered;
 	}, {});
 
 
-	var sorted = Object.keys(filtered).map(function(key) {
+	let sorted = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
 
@@ -77,7 +77,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 }
 
 function get_volume_candle(agos_count){
-	var sorted = Object.keys(agos_count).map(function(key) {
+	let sorted = Object.keys(agos_count).map(function(key) {
 		return [key, agos_count[key]];
 	});
 
