@@ -209,3 +209,132 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 		}
 	}
 }
+
+function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, profile_sales_index, profile_buys_index){
+	return {
+		title: {
+			text: "Price history"
+		},
+		chart: {
+			type: 'area',
+			animations: {
+				enabled: false
+			},
+			toolbar: {
+				tools: {
+					zoom: false,
+					zoomin: false,
+					zoomout: false,
+					pan: false,
+					reset: false
+				}
+			}
+		},
+		series: [{
+			name: 'Ethereum',
+			data: values_eth
+		}],
+		stroke: {
+		  curve: 'smooth',
+		  width: 1
+		},
+		xaxis: {
+			labels: {
+				show: false
+			}
+		},
+		yaxis: [
+			{
+				title: {
+					text: "Ethereum"
+				},
+				min: min_eth,
+				max: max_eth
+			},
+			{
+				opposite: true,
+				title: {
+					text: "Dollars"
+				},
+				min: min_dollars,
+				max: max_dollars,
+				decimalsInFloat: 2
+			}
+		],
+		labels: labels,
+		legend: {
+			show: false
+		},
+		colors: colors,
+		tooltip: {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				return (
+					'<div class="arrow_box">' +
+						"<span>" +
+							`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
+						"</span>" +
+					"</div>"
+				);
+			}
+		},
+		dataLabels: {
+			enabled: false
+		},
+		fill: {
+			type: "gradient",
+			gradient: {
+				shadeIntensity: 1,
+				opacityFrom: 0.5,
+				opacityTo: 0.9,
+				stops: [0, 95, 100]
+			}
+		},
+		annotations: {
+			xaxis: [
+				{}
+			],
+		},
+			markers: {
+				discrete: []
+			}
+		}
+
+		if (all_transactions) {
+			options.annotations.xaxis.push({
+					x: 0,
+					borderColor: '#999',
+					yAxisIndex: 0,
+					label: {
+						show: true,
+						text: 'Minted',
+						offsetX: 10,
+						style: {
+							color: "#fff",
+							background: '#775DD0'
+						}
+					}
+				});
+			}
+		if (profileName) {
+			for (var i = 0; i < profile_sales_index.length; i++) {
+				options.markers.discrete.push({
+					seriesIndex: 0,
+					dataPointIndex: profile_sales_index[i],
+					fillColor: '#000000',
+					strokeColor: '#7c1760',
+					size: 5,
+					shape: "circle"
+				})
+			}
+			for (var i = 0; i < profile_buys_index.length; i++) {
+				options.markers.discrete.push({
+					seriesIndex: 0,
+					dataPointIndex: profile_buys_index[i],
+					fillColor: '#ffffff',
+					strokeColor: '#7c1760',
+					size: 5,
+					shape: "circle"
+				})
+			}
+		}
+}
