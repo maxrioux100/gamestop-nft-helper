@@ -220,19 +220,19 @@ function onUrlChange() {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-				watchers['history'] = setIntervalImmediately(function interval_history() {
+				watchers['history'] = setIntervalImmediately(function() {
 					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
 					.then( () => {
 						updateHistoryWithApiData();
 					}, () => {} );
 				}, 3000);
-			watchers['offers'] = setIntervalImmediately(function interval_offers() {
+			watchers['offers'] = setIntervalImmediately(function() {
 				updateOffersWithApiData();
 			}, 1000);
 		});
 	}
 	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-		watchers['profileName'] = setIntervalImmediately(function interval_profileName() {
+		watchers['profileName'] = setIntervalImmediately(function() {
 			waitForElement(".sc-hBUSln", 3000)
 			.then( () => {
 				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
