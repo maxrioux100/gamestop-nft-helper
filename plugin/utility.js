@@ -67,3 +67,14 @@ function transactions_splitter(values_eth, values_dollars, sellers, buyers, labe
 	}
 }
 
+async function makeApiCall(apiMethod, urlParameter, urlParameterValue){
+  let baseUrl = 'https://api.nft.gamestop.com/nft-svc-marketplace/'
+  let response = await fetch(`${baseUrl}${apiMethod}?${urlParameter}=${urlParameterValue}`)
+  if (response.status == 200) {}
+  else {
+    console.log('unknown err');
+    return
+  }
+  let data = await response.json()
+  return data
+}
