@@ -70,3 +70,54 @@ function combine_buyers_sellers(buyers, sellers, creator){
 
 	return [series, labels];
 }
+
+function get_volume_candle(agos_count){
+	var sorted = Object.keys(agos_count).map(function(key) {
+		return [key, agos_count[key]];
+	});
+
+	let time_sort = {'days': 301, 'day': 300, 'hours': 201, 'hour': 200, 'minutes': 101, 'minute':100};
+
+	sorted.sort(function(first, second) {
+		return (time_sort[second[0]] + second[1]) - (time_sort[first[0]] + first[1]);
+	});
+
+	let volume_data = [];
+	let [first_prefix, first_suffix] = sorted[0][0].split(' ');
+	let dict = sortedToDict(sorted);
+	let labels = [];
+	let counter = 0;
+
+	for (let i = first_prefix ; i >= 1 ; i--) {
+		let value = 0;
+		let suffix = first_suffix;
+		if (i==1 && suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+		if (`${i} ${suffix}` in dict) { value = dict[`${i} ${suffix}`]; }
+		else {sorted.splice(counter, 0, sorted[counter]);}
+		volume_data.push(value);
+		labels.push(`${i} ${suffix} ago`);
+		counter++;
+	}
+
+	let suffix = first_suffix;
+	if (suffix[suffix.length-1] == 's') {suffix = suffix.slice(0, suffix.length-1);}
+	volume_data.push(0);
+	labels.push(`last ${suffix}`);
+
+	let series = [{data:volume_data}];
+
+	let suffixes = [Object.keys(dict)[0].split(' ')[1]]
+	if (suffixes[0][suffixes[0].length-1] == 's') { suffixes.push(suffixes[0].slice(0, suffixes[0].length-1)) };
+
+	for (const [key, value] of Object.entries(dict)){
+		if (!suffixes.includes(key.split(' ')[1])){
+			let volume_last = [];
+			for (let i=0 ; i < volume_data.length-1 ; i++){
+				volume_last.push(0);
+			}
+			volume_last.push(value);
+			series.push({data:volume_last});
+		}
+	}
+	return [series, labels, sorted];
+}
