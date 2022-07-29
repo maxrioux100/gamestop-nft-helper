@@ -478,12 +478,6 @@ new MutationObserver(() => {
 let lastHistory = '';
 let lastOffer = '';
 
-
-function clean_chart(chart){
-	if (!(typeof chart === "undefined")) {
-		chart.destroy();
-	}
-}
 var watching4histories = null;
 var watching4offers = null;
 var watching4profileName = null;
