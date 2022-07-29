@@ -701,6 +701,33 @@ function getProfileName() {
 	});
 }
 
+async function makeApiCall(apiMethod, urlParameter, urlParameterValue){
+  let baseUrl = 'https://api.nft.gamestop.com/nft-svc-marketplace/'
+  let res = await fetch(url);
+  let response = await fetch(`${baseUrl} + ${apiMethod}?${urlParameter}=${urlParameterValue}`)
+  if (response.status == 200) {}
+  else {
+    console.log('unknown err');
+    return
+  }
+  return response.json()
+}
+
+function updateHistoryWithApiData() {
+  let splitted_url = lastUrl.split('/');
+  data = makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+  transactions = makeApiCall('history', 'nftData', `${data['loopringNftInfo']['nftData'][0]}`)
+  let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+  let string = array_to_string(histories);
+  if (string != lastHistory){
+    lastHistory = string;
+    clean_chart(chart);
+    clean_chart(chart3);
+    clean_chart(chart4);
+    updateHistory(histories, transactions);
+  }
+}
+
 function onUrlChange() {
 	clean_chart(chart);
 	clean_chart(chart2);
