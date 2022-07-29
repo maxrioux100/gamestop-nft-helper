@@ -197,8 +197,6 @@ async function updateOffersWithApiData() {
 			clean_chart('offers');
 			updateOffers(offers, rateAndFees);
 		}
-	} else {
-		return null;
 	}
 }
 
