@@ -134,6 +134,14 @@ function clean_chart(name){
 	}
 }
 
+function clean_charts(){
+	for (const [key, value] of Object.entries(charts)) {
+		if (value != null) {
+			value.destroy();
+		}
+	}
+}
+
 function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars){
 	return {
 		title: {

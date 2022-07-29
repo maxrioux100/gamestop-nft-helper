@@ -217,10 +217,7 @@ var watching4offers = null;
 var watching4profileName = null;
 
 function onUrlChange() {
-	clean_chart('price_history');
-	clean_chart('offers');
-	clean_chart('volume');
-	clean_chart('recurrent');
+	clean_charts();
 	if(watching4histories) {clearInterval(watching4histories)};
 	if(watching4offers) {clearInterval(watching4offers)};
 	if(watching4profileName) {clearInterval(watching4profileName)};
