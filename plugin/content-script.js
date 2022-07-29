@@ -2,6 +2,7 @@ var chart;
 var chart2;
 var chart3;
 var chart4;
+var firstUpdateHistAttemptOccurred;
 
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
@@ -204,75 +205,30 @@ function updateOffers(offers) {
 	}
 }
 
-function experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator, maxAvailable){
-	//split the transactions with the creator as the seller
-	let min_value_eth = 9999999999;
-	let min_value_dollars = 999999999;
+function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
+	for (let i = 0 ; i < amounts.length ; i++) {
+		if (amounts[i] > 1) {
+			let amount = amounts[i]
+			let value_eth = bestRound(values_eth[i]/amount, 4);
+			let value_dollars = bestRound(values_dollars[i]/amount, 2);
 
-	for (let i = 0 ; i < values_eth.length ; i++) {
-		if (sellers[i] == creator && min_value_eth > values_eth[i]) {
-			min_value_eth = values_eth[i];
-			min_value_dollars = values_dollars[i];
-		}
-	}
+			values_eth[i] = value_eth;
+			values_dollars[i] = value_dollars;
+			amounts[i] = 1;
 
-	for (let i = 0 ; i < values_eth.length ; i++) {
-		if (sellers[i] == creator && values_eth[i] > min_value_eth) {
-			let factor = Math.min(values_eth[i]/min_value_eth, maxAvailable);
-			values_eth[i] = min_value_eth;
-			values_dollars[i] = min_value_dollars;
-			for (let ii = 1 ; ii < factor ; ii++)
+			for (let ii = 1 ; ii < amount ; ii++)
 			{
-				values_eth.splice(i, 0, min_value_eth);
-				values_dollars.splice(i, 0, min_value_dollars);
+				values_eth.splice(i, 0, value_eth);
+				values_dollars.splice(i, 0, value_dollars);
 				sellers.splice(i, 0, sellers[i]);
 				buyers.splice(i, 0, buyers[i]);
 				labels.splice(i, 0, labels[i]);
 				agos.splice(i, 0, agos[i]);
+				amounts.splice(i, 0, 1);
 				i++;
 			}
 		}
 	}
-
-	//split the transaction when detecting a very fast change close to an integer factor
-
-	let lastValue = null;
-
-	for (let i = 0 ; i < values_eth.length ; i++) {
-		if (lastValue) {
-			let factor = values_eth[i]/lastValue;
-			let ceilFactor = Math.min(Math.ceil(factor)+1, maxAvailable);
-
-			let closestFactor = null;
-			let closestRatio = -1;
-
-			for (let j=2 ; j <= ceilFactor ; j++) {
-				let ratio = Math.abs(factor/j-1);
-				if (bestRound(values_eth[i]/j, 6) == values_eth[i]/j) {
-					if (closestRatio < 0 || ratio < closestRatio) {
-						closestRatio = ratio;
-						closestFactor = j;
-					}
-				}
-			}
-			if (closestRatio >= 0 && closestRatio < 0.25) {
-				values_eth[i] /= closestFactor;
-				values_dollars[i] = bestRound(values_dollars[i]/closestFactor, 2);
-				for (let ii = 1 ; ii < closestFactor ; ii++)
-				{
-					values_eth.splice(i, 0, values_eth[i]);
-					values_dollars.splice(i, 0, values_dollars[i]);
-					sellers.splice(i, 0, sellers[i]);
-					buyers.splice(i, 0, buyers[i]);
-					labels.splice(i, 0, labels[i]);
-					agos.splice(i, 0, agos[i]);
-					i++;
-				}
-			}
-		}
-		lastValue = values_eth[i];
-	}
-
 }
 
 function combine_buyers_sellers(buyers, sellers, creator){
@@ -281,7 +237,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
 	}
-	
+
 	for (let i = 0; i < Object.keys(sellers).length ; i++){
 		if (Object.keys(sellers)[i] in combined) {
 			combined[Object.keys(sellers)[i]] += sellers[Object.keys(sellers)[i]];
@@ -289,50 +245,50 @@ function combine_buyers_sellers(buyers, sellers, creator){
 			combined[Object.keys(sellers)[i]] = sellers[Object.keys(sellers)[i]];
 		}
 	}
-	
-	
+
+
 	var filtered = Object.keys(combined).reduce(function (filtered, key) {
 		if (combined[key] > 1) filtered[key] = combined[key];
 		return filtered;
 	}, {});
-	
-	
+
+
 	var sorted = Object.keys(filtered).map(function(key) {
 		return [key, filtered[key]];
 	});
-	
+
 	sorted.sort(function(first, second) {
 		return second[1] - first[1];
 	});
-	
+
 	items = sorted.slice(0, 10);
-	
+
 	let data_sellers = [];
 	let labels = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
 		data_sellers.push(value);
 		labels.push(items[i][0]);
 	}
-	
+
 	let data_buyers = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
 		data_buyers.push(value);
 	}
-	
+
 	let data_creators = [];
-	
+
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
 		if (items[i][0] == creator) {value = sellers[items[i][0]]};
 		data_creators.push(value);
 	}
-	
+
 	let series = [{
 				name: 'Creator',
 				data: data_creators
@@ -343,8 +299,8 @@ function combine_buyers_sellers(buyers, sellers, creator){
 				name: 'Sellers',
 				data: data_sellers
 			}]
-			
-	
+
+
 	return [series, labels];
 }
 
@@ -399,7 +355,12 @@ function get_volume_candle(agos_count){
 	return [series, labels, sorted];
 }
 
-function updateHistory(histories) {
+function removeUnknownTransactions(transactions) {
+	console.log(transactions[0]['txType']);
+	return transactions.filter( item => (item['txType'] != "SpotTrade") );
+}
+
+function updateHistory(histories, transactions) {
 	if (histories.length > 2) {
 		let history_helper = document.getElementById("history_helper");
 		if (history_helper != null) {history_helper.remove();};
@@ -428,6 +389,9 @@ function updateHistory(histories) {
 		let sellers = [histories.length];
 		let labels = [histories.length];
 		let agos = [histories.length];
+		let amounts = [histories.length];
+
+		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
 
 		for (let i=0; i < histories.length; i++) {
 			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
@@ -441,11 +405,13 @@ function updateHistory(histories) {
 
 			let ago_index = transaction.findIndex((element) => element === 'ago');
 			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
+
+			amounts[histories.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
 
 		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
 
-		experimental_transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, creator, maxAvailable);
+		transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
@@ -697,7 +663,7 @@ function updateHistory(histories) {
 		chart4 = new ApexCharts(document.querySelector("#chart4"), options4);
 
 		chart4.render();
-
+		clearInterval(watching4histories)
 	}
 }
 
@@ -736,6 +702,33 @@ function getProfileName() {
 	});
 }
 
+async function makeApiCall(apiMethod, urlParameter, urlParameterValue){
+  let baseUrl = 'https://api.nft.gamestop.com/nft-svc-marketplace/'
+  let response = await fetch(`${baseUrl}${apiMethod}?${urlParameter}=${urlParameterValue}`)
+  if (response.status == 200) {}
+  else {
+    console.log('unknown err');
+    return
+  }
+  let data = await response.json()
+  return data
+}
+
+async function updateHistoryWithApiData() {
+  let splitted_url = lastUrl.split('/');
+  data = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+  transactions = await makeApiCall('history', 'nftData', `${data['loopringNftInfo']['nftData'][0]}`)
+  let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+  let string = array_to_string(histories);
+  if (string != lastHistory){
+    lastHistory = string;
+    clean_chart(chart);
+    clean_chart(chart3);
+    clean_chart(chart4);
+    updateHistory(histories, transactions);
+  }
+}
+
 function onUrlChange() {
 	clean_chart(chart);
 	clean_chart(chart2);
@@ -749,22 +742,12 @@ function onUrlChange() {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-
-			watching4histories = setInterval(function() {
-				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
-				.then( () => {
-					let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-					let string = array_to_string(histories);
-					if (string != lastHistory){
-						lastHistory = string;
-						clean_chart(chart);
-						clean_chart(chart3);
-						clean_chart(chart4);
-						updateHistory(histories);
-					}
-				}, () => {} );
-			}, 1000);
-
+				watching4histories = setInterval(function() {
+					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
+					.then( () => {
+						updateHistoryWithApiData();
+					}, () => {} );
+				}, 1000);
 			watching4offers = setInterval(function() {
 				waitForElement(".EditionsItem-sc-11cpe2k-7", 1000)
 				.then( () => {
