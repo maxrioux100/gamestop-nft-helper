@@ -212,15 +212,9 @@ new MutationObserver(() => {
 let lastHistory = '';
 let lastOffer = '';
 
-var watching4histories = null;
-var watching4offers = null;
-var watching4profileName = null;
-
 function onUrlChange() {
 	clean_charts();
-	if(watching4histories) {clearInterval(watching4histories)};
-	if(watching4offers) {clearInterval(watching4offers)};
-	if(watching4profileName) {clearInterval(watching4profileName)};
+	clean_watchers();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
@@ -244,7 +238,7 @@ function onUrlChange() {
 				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
 				if (tempProfileName != '') {
 					persistProfileName(tempProfileName);
-					clearInterval(watching4profileName);
+					clean_watcher('profileName');
 				}
 			});
 		}, 1000);
