@@ -10,11 +10,6 @@ function writeChip(name, value){
 }
 
 function createOffersHelperContainer() {
-  let editions = document.querySelectorAll("[class^='ButtonHoverWrapper']")[1];
-  if (editions == undefined) {
-    return
-  }
-
 	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 	let div = document.createElement('div');
 

@@ -190,12 +190,14 @@ async function updateOffersWithApiData() {
 	if (nft != null)
 	{
 		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
-		let string = array_to_string(offers);
-		if (string != lastOffer){
-			lastOffer = string;
-			let rateAndFees = await makeApiCall('ratesAndFees');
-			clean_chart('offers');
-			updateOffers(offers, rateAndFees);
+		if (offers.length > 1){	
+			let string = array_to_string(offers);
+			if (string != lastOffer){
+				lastOffer = string;
+				let rateAndFees = await makeApiCall('ratesAndFees');
+				clean_chart('offers');
+				updateOffers(offers, rateAndFees);
+			}
 		}
 	}
 }
@@ -217,7 +219,7 @@ function onUrlChange() {
 	clean_watchers();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		waitForElement("[class^='ButtonHoverWrapper']", 10000)
+		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
 			createOffersHelperContainer();
 				watchers['history'] = setIntervalImmediately(function() {
