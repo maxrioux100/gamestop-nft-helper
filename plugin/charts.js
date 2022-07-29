@@ -127,3 +127,85 @@ function clean_chart(chart){
 		chart.destroy();
 	}
 }
+
+function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars){
+	return {
+		title: {
+			text: "Future offers"
+		},
+		chart: {
+			type: 'area',
+			animations: {
+				enabled: false
+			},
+			toolbar: {
+				tools: {
+					zoom: false,
+					zoomin: false,
+					zoomout: false,
+					pan: false,
+					reset: false
+				}
+			}
+		},
+		dataLabels: {
+			enabled: false
+		},
+		series: [{
+			name: 'Ethereum',
+			data: quantities.map(function(e, i) { return [e, values_eth[i]]; })
+		}],
+		stroke: {
+		  curve: 'stepline',
+		  width: 1
+		},
+		xaxis: {
+			type: "numeric",
+			title: {
+				text: "Number of copies to buy"
+			},
+			labels: {
+				hideOverlappingLabels: true
+			},
+			decimalsInFloat: 2,
+			tooltip: {
+				enabled: false
+			}
+		},
+		yaxis: [
+			{
+				title: {
+					text: "Ethereum"
+				},
+				min: min_eth,
+				max: max_eth
+			},
+			{
+				opposite: true,
+				title: {
+					text: "Dollars"
+				},
+				min: min_dollars,
+				max: max_dollars,
+				decimalsInFloat: 2
+			}
+		],
+		legend: {
+			show: false
+		},
+		colors: [
+			"#008FFB"
+		],
+		tooltip: {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				return (
+					'<div class="arrow_box">' +
+						"<span>" +
+							`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
+						"</span>" +
+					"</div>"
+				);
+			}
+		}
+	}
+}
