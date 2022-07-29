@@ -446,9 +446,9 @@ function updateHistory(histories, transactions) {
 							'<p class="sc-bkkeKt vhTUk">History helper</p>' +
 						'</header>' +
 						'<section class="Details-sc-asex48-0 ceZikd">' +
-							writeChip('Average', `${bestRound(total_eth/values_eth.length, 3)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
+							writeChip('Average', `${bestRound(total_eth/values_eth.length, 4)} ETH ($${bestRound(total_dollars/values_eth.length, 2)})`) +
 							writeChip('Median', `${median(values_eth)} ETH ($${median(values_dollars)})`) +
-							writeChip('Standard deviation', `${bestRound(getStandardDeviation(values_eth), 3)} ETH ($${bestRound(getStandardDeviation(values_dollars), 2)})`) +
+							writeChip('Standard deviation', `${bestRound(getStandardDeviation(values_eth), 4)} ETH ($${bestRound(getStandardDeviation(values_dollars), 2)})`) +
 							writeChip('Change', `${bestRound(change, 2)}%`) +
 						'</section>'+
 						'<section>' +
