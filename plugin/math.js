@@ -44,7 +44,7 @@ function getNumberOfNonOutliers(someArray, quantities) {
         return (x <= maxValue);
     });
 
-    return filteredValues.length;
+    return Math.max(filteredValues.length, 2);
 }
 
 function getStandardDeviation(array) {
