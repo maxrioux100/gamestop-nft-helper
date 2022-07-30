@@ -65,7 +65,8 @@ function updateOffers(offers, rateAndFees) {
 
 function updateHistory(histories, transactions) {
 
-	if (histories.length > 1) {
+	// Add 1 because of the mint
+	if (histories.length > 2) {
 		removeHistoryHelperPrompt();
 		createHistoryStatsCharts();
 
