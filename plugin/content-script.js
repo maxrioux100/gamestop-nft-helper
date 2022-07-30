@@ -221,7 +221,7 @@ stickies['bar'] = null;
 stickies['likes'] = null;
 
 function clean_stickies(){
-	let bars = document.getElementsByClassName("sc-FNXRL")//.style.backgroundColor = "#121212";
+	let bars = document.getElementsByClassName("sc-FNXRL");
 	for (let i = 0 ; i < bars.length ; i++) {
 		bars[i].style.backgroundColor = null;
 	}
