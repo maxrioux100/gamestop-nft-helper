@@ -211,22 +211,52 @@ new MutationObserver(() => {
 
 let lastHistory = '';
 let lastOffer = '';
+let stickies = {};
+stickies['nft'] = null;
+stickies['price'] = null
+
+function clean_stickies(){
+	for(var key in stickies) {
+		stickies[key] = null;
+	}
+}
+
+function sticker() {
+	for(var key in stickies) {
+		if (stickies[key]) {	
+			if (window.innerWidth > 1281){
+				stickies[key].active();
+			} else {
+				stickies[key].inactive();
+			};
+		}			
+	}
+	stickies.forEach((sticky) => {if (sticky) {
+
+	}});
+	
+}
+
+window.onresize = sticker;
 
 function onUrlChange() {
 	clean_charts();
 	clean_watchers();
+	clean_stickies();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		if (window.innerWidth > 1280){
-			waitForElement(".MediaContainer-sc-1p3n06p-2", 10000)
-			.then( () => {
-				new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both', stickyOffset: 160, stickyDelay: 50});
-			});
-			waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 10000)
-			.then( () => {
-				new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyDelay: -80});
-			});
-		}
+		
+		waitForElement(".MediaContainer-sc-1p3n06p-2", 10000)
+		.then( () => {
+			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both', stickyOffset: 160, stickyDelay: 50});
+			sticker();
+		});
+		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 10000)
+		.then( () => {
+			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyDelay: -80});
+			sticker();
+		});
+
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
 			createOffersHelperContainer();
