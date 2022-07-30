@@ -169,7 +169,7 @@ function updateHistory(histories, transactions) {
 	}
 }
 
-let nft;
+let nft=null;
 
 async function updateHistoryWithApiData() {
   let splitted_url = lastUrl.split('/');
@@ -187,13 +187,13 @@ async function updateHistoryWithApiData() {
 }
 
 async function updateOffersWithApiData() {
-	if (nft !== undefined)
+	if (nft != null)
 	{
 		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
 		let string = array_to_string(offers);
 		if (string != lastOffer){
-			let rateAndFees = await makeApiCall('ratesAndFees');
 			lastOffer = string;
+			let rateAndFees = await makeApiCall('ratesAndFees');
 			clean_chart('offers');
 			updateOffers(offers, rateAndFees);
 		}
@@ -220,20 +220,20 @@ function onUrlChange() {
 		waitForElement("[class^='ButtonHoverWrapper']", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-				watching4histories = setInterval(function() {
-					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 1000)
+				watchers['history'] = setIntervalImmediately(function() {
+					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
 					.then( () => {
 						updateHistoryWithApiData();
 					}, () => {} );
-				}, 1000);
-			watching4offers = setInterval(function() {
+				}, 3000);
+			watchers['offers'] = setIntervalImmediately(function() {
 				updateOffersWithApiData();
 			}, 1000);
 		});
 	}
 	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-		watching4profileName = setInterval(function() {
-			waitForElement(".sc-hBUSln", 1000)
+		watchers['profileName'] = setIntervalImmediately(function() {
+			waitForElement(".sc-hBUSln", 3000)
 			.then( () => {
 				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
 				if (tempProfileName != '') {
@@ -241,7 +241,7 @@ function onUrlChange() {
 					clean_watcher('profileName');
 				}
 			});
-		}, 1000);
+		}, 3000);
 	}
 }
 
