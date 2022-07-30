@@ -213,8 +213,9 @@ let lastHistory = '';
 let lastOffer = '';
 let stickies = {};
 stickies['nft'] = null;
-stickies['price'] = null
-stickies['bar'] = null
+stickies['price'] = null;
+stickies['bar'] = null;
+stickies['likes'] = null
 
 function clean_stickies(){
 	for(var key in stickies) {
@@ -250,13 +251,19 @@ function onUrlChange() {
 		});
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 10000)
 		.then( () => {
-			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyOffset: 70, stickyDelay: -10});
+			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyOffset: 110, stickyDelay: 30});
 			sticker();
 		});
 		waitForElement(".sc-FNXRL", 10000)
 		.then( () => {
 			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
 			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both', stickyDelay: 20});
+			sticker();
+		});
+		waitForElement(".Actions-sc-kdlg0e-0", 10000)
+		.then( () => {
+			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
+			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both', stickyOffset: 70});
 			sticker();
 		});
 
