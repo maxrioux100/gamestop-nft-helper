@@ -241,6 +241,7 @@ function onUrlChange() {
 	clean_charts();
 	clean_watchers();
 	clean_stickies();
+	
 	if (lastUrl.startsWith("https://nft.gamestop.com/")){
 		waitForElement(".sc-FNXRL", 1000)
 		.then( () => {
@@ -248,7 +249,6 @@ function onUrlChange() {
 			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
 		});
 	}
-
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
