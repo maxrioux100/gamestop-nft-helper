@@ -231,10 +231,6 @@ function sticker() {
 			};
 		}			
 	}
-	stickies.forEach((sticky) => {if (sticky) {
-
-	}});
-	
 }
 
 window.onresize = sticker;
