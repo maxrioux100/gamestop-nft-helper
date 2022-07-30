@@ -214,6 +214,7 @@ let lastOffer = '';
 let stickies = {};
 stickies['nft'] = null;
 stickies['price'] = null
+stickies['bar'] = null
 
 function clean_stickies(){
 	for(var key in stickies) {
@@ -249,7 +250,13 @@ function onUrlChange() {
 		});
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 10000)
 		.then( () => {
-			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyDelay: -80});
+			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyOffset: 70, stickyDelay: -10});
+			sticker();
+		});
+		waitForElement(".sc-FNXRL", 10000)
+		.then( () => {
+			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
+			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both'});
 			sticker();
 		});
 
