@@ -256,7 +256,7 @@ function onUrlChange() {
 		waitForElement(".sc-FNXRL", 10000)
 		.then( () => {
 			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
-			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both'});
+			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both', stickyDelay: 20});
 			sticker();
 		});
 
