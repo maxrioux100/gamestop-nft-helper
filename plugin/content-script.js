@@ -223,7 +223,7 @@ function onUrlChange() {
 		});
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 10000)
 		.then( () => {
-			new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyDelay: -100});
+			new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyDelay: -80});
 		});
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
