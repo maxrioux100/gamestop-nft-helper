@@ -220,7 +220,7 @@ function onUrlChange() {
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 10000)
 		.then( () => {
 			const sticky = document.querySelector('.MediaContainer-sc-1p3n06p-2');
-			const stickyInstance = new mdb.Sticky(sticky);
+			const stickyInstance = new mdb.Sticky(sticky, {stickyDirection : 'both'});
 		});
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
