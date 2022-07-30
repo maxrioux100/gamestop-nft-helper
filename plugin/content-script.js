@@ -68,8 +68,6 @@ function updateHistory(histories, transactions) {
 	if (histories.length > 2) {
 		removeHistoryHelperPrompt();
 		createHistoryStatsCharts();
-		let history_helper = document.getElementById("history_helper");
-		if (history_helper != null) {history_helper.remove();};
 
 		let creator = '';
 		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
@@ -126,7 +124,7 @@ function updateHistory(histories, transactions) {
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		//updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
+		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
 
 		let profile_sales_index = [];
 		let profile_buys_index = [];
@@ -155,19 +153,19 @@ function updateHistory(histories, transactions) {
     
 		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
 
-		//charts['price_history'].render();
+		charts['price_history'].render();
 		
 		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
 
 		charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
 
-		//charts['volume'].render();
+		charts['volume'].render();
 		
 		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 
 		charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 
-		//charts['recurrent'].render();
+		charts['recurrent'].render(); 
 	}
 }
 
