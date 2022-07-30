@@ -1,6 +1,10 @@
 {
-  "offershelperprompt": {
-    "message": "Click the 'Editions' button above to load chart data.",
-    "description": "Inform the user to open the 'Editions' side tray before chart data is available."
-  }
+	"offershelperprompt": {
+		"message": "Chart should appears automatically if there is at least 2 listings",
+		"description": "Inform the user of the condition for the chart to appears"
+	},
+	"historyhelperprompt": {
+		"message": "Stats and charts should appears automatically if there is at least 2 previous selling",
+		"description": "Inform the user of the condition for the stats and charts to appears"
+	}
 }

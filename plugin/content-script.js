@@ -7,10 +7,9 @@ function updateOffers(offers, rateAndFees) {
 	sorted.sort(function(first, second) {
 		return first[1]['pricePerNft'] - second[1]['pricePerNft'];
 	});
-	
-	removeOffersHelperPrompt();
 
-	if (offers.length > 0) {
+	if (offers.length > 1) {
+		removeOffersHelperPrompt();
 		createOffersChart();
 
 		let values_eth = [offers.length];
@@ -65,9 +64,11 @@ function updateOffers(offers, rateAndFees) {
 }
 
 function updateHistory(histories, transactions) {
+
+	// Add 1 because of the mint
 	if (histories.length > 2) {
-		let history_helper = document.getElementById("history_helper");
-		if (history_helper != null) {history_helper.remove();};
+		removeHistoryHelperPrompt();
+		createHistoryStatsCharts();
 
 		let creator = '';
 		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
@@ -124,7 +125,7 @@ function updateHistory(histories, transactions) {
 
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		createHistoryHelper(total_eth, values_eth, total_dollars, values_dollars, change)
+		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
 
 		let profile_sales_index = [];
 		let profile_buys_index = [];
@@ -165,7 +166,7 @@ function updateHistory(histories, transactions) {
 
 		charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 
-		charts['recurrent'].render();
+		charts['recurrent'].render(); 
 	}
 }
 
@@ -222,15 +223,16 @@ function onUrlChange() {
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
 			createOffersHelperContainer();
-				watchers['history'] = setIntervalImmediately(function() {
-					waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
-					.then( () => {
-						updateHistoryWithApiData();
-					}, () => {} );
-				}, 3000);
+			createHistoryHelperContainer();
+ 			watchers['history'] = setIntervalImmediately(function() {
+				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
+				.then( () => {
+					updateHistoryWithApiData();
+				}, () => {} );
+			}, 3000);
 			watchers['offers'] = setIntervalImmediately(function() {
 				updateOffersWithApiData();
-			}, 1000);
+			}, 1000); 
 		});
 	}
 	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
