@@ -8,7 +8,7 @@ function updateOffers(offers, rateAndFees) {
 		return first[1]['pricePerNft'] - second[1]['pricePerNft'];
 	});
 
-	if (offers.length > 0) {
+	if (offers.length > 1) {
 		removeOffersHelperPrompt();
 		createOffersChart();
 
