@@ -65,7 +65,7 @@ function updateOffers(offers, rateAndFees) {
 
 function updateHistory(histories, transactions) {
 
-	if (histories.length > 2) {
+	if (histories.length > 1) {
 		removeHistoryHelperPrompt();
 		createHistoryStatsCharts();
 
