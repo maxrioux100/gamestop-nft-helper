@@ -221,7 +221,12 @@ stickies['bar'] = null;
 stickies['likes'] = null;
 
 function clean_stickies(){
+	let bars = document.getElementsByClassName("sc-FNXRL")//.style.backgroundColor = "#121212";
+	for (let i = 0 ; i < bars.length ; i++) {
+		bars[i].style.backgroundColor = null;
+	}
 	for(var key in stickies) {
+		if (stickies[key]){stickies[key].inactive()};
 		stickies[key] = null;
 	}
 }
@@ -244,19 +249,16 @@ function onUrlChange() {
 	clean_charts();
 	clean_watchers();
 	clean_stickies();
-	
-	if (lastUrl.startsWith("https://nft.gamestop.com/")){
+
+	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
+		.then( () => {
+			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
+		});
 		waitForElement(".sc-FNXRL", 1000)
 		.then( () => {
 			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
 			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
-		});
-	}
-	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		
-		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
-		.then( () => {
-			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
 		});
 		waitForElement(".Actions-sc-kdlg0e-0", 1000)
 		.then( () => {
