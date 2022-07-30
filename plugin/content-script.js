@@ -65,7 +65,8 @@ function updateOffers(offers, rateAndFees) {
 
 function updateHistory(histories, transactions) {
 
-	if (histories.length > 1) {
+	// Add 1 because of the mint
+	if (histories.length > 2) {
 		removeHistoryHelperPrompt();
 		createHistoryStatsCharts();
 
@@ -190,12 +191,14 @@ async function updateOffersWithApiData() {
 	if (nft != null)
 	{
 		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
-		let string = array_to_string(offers);
-		if (string != lastOffer){
-			lastOffer = string;
-			let rateAndFees = await makeApiCall('ratesAndFees');
-			clean_chart('offers');
-			updateOffers(offers, rateAndFees);
+		if (offers.length > 1){	
+			let string = array_to_string(offers);
+			if (string != lastOffer){
+				lastOffer = string;
+				let rateAndFees = await makeApiCall('ratesAndFees');
+				clean_chart('offers');
+				updateOffers(offers, rateAndFees);
+			}
 		}
 	}
 }
