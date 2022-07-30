@@ -22,7 +22,6 @@
 				"content-script.js"
 			],
 			"css": [
-				"mdb.min.css",
 				"sticky.min.js"
 			]
 		}
