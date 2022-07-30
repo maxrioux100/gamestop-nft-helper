@@ -216,7 +216,6 @@ stickies['nft'] = null;
 stickies['price'] = null;
 stickies['bar'] = null;
 stickies['likes'] = null;
-stickies['collections'] = null;
 
 function clean_stickies(){
 	for(var key in stickies) {
@@ -247,26 +246,22 @@ function onUrlChange() {
 		
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
 		.then( () => {
-			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both', stickyOffset: 160, stickyDelay: 50});
-			sticker();
+			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
 		});
 		waitForElement(".sc-FNXRL", 1000)
 		.then( () => {
 			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
-			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both', stickyDelay: 20});
-			sticker();
+			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
 		});
 		waitForElement(".Actions-sc-kdlg0e-0", 1000)
 		.then( () => {
 			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
 			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
-			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both', stickyOffset: 70, stickyDelay: -10});
-			sticker();
+			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
 		});
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
 		.then( () => {
-			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyOffset: 105, stickyDelay: 30});
-			sticker();
+			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
 		});
 
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
