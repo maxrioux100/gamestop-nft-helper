@@ -219,13 +219,11 @@ function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 10000)
 		.then( () => {
-			const sticky = document.querySelector('.MediaContainer-sc-1p3n06p-2');
-			const stickyInstance = new mdb.Sticky(sticky, {stickyDirection: 'both', stickyOffset: 160, stickyDelay: 50});
+			new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both', stickyOffset: 160, stickyDelay: 50});
 		});
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 10000)
 		.then( () => {
-			const sticky = document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0');
-			const stickyInstance = new mdb.Sticky(sticky, {stickyDirection : 'both', stickyDelay: -100});
+			new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both', stickyDelay: -100});
 		});
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
