@@ -251,20 +251,11 @@ function stickThing(stickiesName, className, options, activate=false)
 	}	
 }
 
-function stickThings(thing=null) {
-	if (!thing || thing == 'nft') {
-		stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
-	}
-	if (!thing || thing == 'bar') {
-		stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
-	}
-	if (!thing || thing == 'likes') {
-		stickThing('likes', 'Actions-sc-kdlg0e-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10}, backgroundColor = "#f9f9f9", backgroundClip = "content-box");
-	}
-	
-	if (!thing || thing == 'price') {
-		stickThing('price', 'PurchaseInfoWrapper-sc-11cpe2k-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
-	}
+function stickThings() {
+	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
+	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
+	stickThing('likes', 'Actions-sc-kdlg0e-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10}, backgroundColor = "#f9f9f9", backgroundClip = "content-box");
+	stickThing('price', 'PurchaseInfoWrapper-sc-11cpe2k-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
 }
 
 function clean_stickies(){
@@ -279,9 +270,7 @@ function clean_stickies(){
 
 function sticker() {
 	if (window.innerWidth > 1281){
-		for(var key in stickies) {
-			stickThings(key); 
-		}
+		stickThings(); 
 	} else {
 		for(var key in stickies) {
 			if (stickies[key]) { 
