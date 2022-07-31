@@ -234,12 +234,10 @@ function clean_stickies(){
 function sticker() {
 	for(var key in stickies) {
 		if (stickies[key]) {	
+			stickies[key].inactive();
 			if (window.innerWidth > 1281){
-				stickies[key].inactive();
 				stickies[key].active();
-			} else {
-				stickies[key].inactive();
-			};
+			}
 		}			
 	}
 }
