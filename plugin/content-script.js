@@ -223,32 +223,32 @@ stickies['likes'] = null;
 function stickThings(thing=null) {
 	if (!thing || thing == 'nft') {
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
-		.then( () => {
+		.then(() => {setTimeout(() => { 
 			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
-		});
+		}, 100);} ); 
 	}
 	if (!thing || thing == 'price') {
 		waitForElement(".sc-FNXRL", 1000)
-		.then( () => {
+		.then(() => {setTimeout(() => { 
 			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
 			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
-		});
+		}, 100);} ); 
 	}
 	
 	if (!thing || thing == 'bar') {
 		waitForElement(".Actions-sc-kdlg0e-0", 1000)
-		.then( () => {
+		.then(() => {setTimeout(() => { 
 			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
 			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
 			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
-		});
+		}, 100);} ); 
 	}
 	
 	if (!thing || thing == 'likes') {
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
-		.then( () => {
+		.then(() => {setTimeout(() => { 
 			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
-		});
+		}, 100);} ); 
 	}
 }
 
