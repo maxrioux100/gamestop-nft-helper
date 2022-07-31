@@ -220,6 +220,38 @@ stickies['price'] = null;
 stickies['bar'] = null;
 stickies['likes'] = null;
 
+function stickThings(thing=null) {
+	if (!thing || thing == 'nft') {
+		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
+		.then( () => {
+			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
+		});
+	}
+	if (!thing || thing == 'price') {
+		waitForElement(".sc-FNXRL", 1000)
+		.then( () => {
+			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
+			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
+		});
+	}
+	
+	if (!thing || thing == 'bar') {
+		waitForElement(".Actions-sc-kdlg0e-0", 1000)
+		.then( () => {
+			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
+			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
+			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
+		});
+	}
+	
+	if (!thing || thing == 'likes') {
+		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
+		.then( () => {
+			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
+		});
+	}
+}
+
 function clean_stickies(){
 	let bars = document.getElementsByClassName("sc-FNXRL");
 	for (let i = 0 ; i < bars.length ; i++) {
@@ -232,46 +264,25 @@ function clean_stickies(){
 }
 
 function sticker() {
-	for(var key in stickies) {
-		if (stickies[key]) {	
-			stickies[key].inactive();
-			if (window.innerWidth > 1281){
-				stickies[key].active();
+	if (window.innerWidth > 1281){
+		for(var key in stickies) {
+			if (!stickies[key]){
+				stickThings(key);
 			}
-		}			
-	}
+		}
+	} else {
+		for(var key in stickies) {
+			if (stickies[key]) { 
+				stickies[key].inactive();
+				stickies[key] = null;
+			};	
+		}
+	}		
 }
 
 window.onresize = sticker;
 
-function stickThings() {
-	// The NFT media
-	waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
-	.then( () => {
-		stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
-	});
-	
-	// The menubar
-	waitForElement(".sc-FNXRL", 1000)
-	.then( () => {
-		document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
-		stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
-	});
-	
-	// The "back-likes-share" menu
-	waitForElement(".Actions-sc-kdlg0e-0", 1000)
-	.then( () => {
-		document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
-		document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
-		stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
-	});
-	
-	// The price interface
-	waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
-	.then( () => {
-		stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
-	});
-}
+
 
 function onUrlChange() {
 	clean_charts();
