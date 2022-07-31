@@ -245,11 +245,11 @@ function stickThing(stickiesName, className, options, activate=false)
 			elem = document.getElementById(`stick_${stickiesName}`);
 			
 			waitForElement(`#stick_${stickiesName}`, 1000)
-			.then(() => {setTimeout(() => {
+			.then(() => {
 				stickies[stickiesName] = new mdb.Sticky(elem, options);
 				if (activate) { stickies[stickiesName].active(); }
-			}, 300);} );
-		}, 300);} ); 
+			} );
+		}, 250);} ); 
 	}	
 } 
 
