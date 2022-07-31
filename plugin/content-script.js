@@ -221,32 +221,35 @@ stickies['bar'] = null;
 stickies['likes'] = null;
 
 function stickThing(stickiesName, className, options, activate=false)
-{
-	let elems = document.getElementsByClassName(className);
-	if (elems.length > 1) { console.log(`class: ${className} number: ${elems.length}`); }
+{	
+	let elem = document.getElementById(`stick_${stickiesName}`);
 	
-	for (let i = 0 ; i < elems.length ; i++){
-		if (elems[i] != stickies[stickiesName]) {
-			let sticky = mdb.Sticky.getInstance(stickies[stickiesName]);
-			if (sticky) { sticky.inactive(); }
-			stickies[stickiesName] = elems[i];
-		}
-	}
-	
-	if (stickies[stickiesName]){
-		waitForElement(stickies[stickiesName], 1000)
-		.then(() => {setTimeout(() => { 
-			let sticky = mdb.Sticky.getInstance(stickies[stickiesName]);
-			if (!sticky) 
-			{ 
-				sticky = new mdb.Sticky(stickies[stickiesName], options);
-				if (activate) { sticky.active(); }
-			} else {
-				sticky.active();
+	if (elem) {
+		let sticky = mdb.Sticky.getInstance(elem);
+		sticky.active();
+	} else {
+		if (stickies[stickiesName]) { stickies[stickiesName].inactive(); }
+		waitForElement(`.${className}`, 1000)
+			.then(() => {setTimeout(() => {
+			let elems = document.getElementsByClassName(className);
+			for (let i = 0 ; i < elems.length ; i++){
+				if (elems[i].getAttribute('id') != `stick_${stickiesName}`) {
+					elems[i].setAttribute('id', `stick_${stickiesName}`);
+				} else {
+					elems[i].setAttribute('id', null);
+				}
 			}
+			
+			elem = document.getElementById(`stick_${stickiesName}`);
+			
+			waitForElement(`#stick_${stickiesName}`, 1000)
+			.then(() => {setTimeout(() => {
+				stickies[stickiesName] = new mdb.Sticky(elem, options);
+				if (activate) { stickies[stickiesName].active(); }
+
+			}, 300);} );
 		}, 300);} ); 
-	}
-	
+	}	
 }
 
 function stickThings(thing=null) {
@@ -268,8 +271,7 @@ function stickThings(thing=null) {
 function clean_stickies(){
 
 	for(var key in stickies) {
-		let sticky = mdb.Sticky.getInstance(stickies[key]);
-		if (sticky) { sticky.inactive(); }
+		if (stickies[key]) { stickies[key].inactive(); }
 		stickies[key] = null;
 	}
 }
@@ -277,14 +279,12 @@ function clean_stickies(){
 function sticker() {
 	if (window.innerWidth > 1281){
 		for(var key in stickies) {
-			let sticky = mdb.Sticky.getInstance(stickies[key])
-			if (!sticky) { stickThings(key); };
+			if (!stickies[key]) { stickThings(key); };
 		}
 	} else {
 		for(var key in stickies) {
-			let sticky = mdb.Sticky.getInstance(stickies[key])
-			if (sticky) { 
-				sticky.inactive();
+			if (stickies[key]) { 
+				stickies[key].inactive();
 			};	
 		}
 	}		
