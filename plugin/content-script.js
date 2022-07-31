@@ -225,11 +225,27 @@ function stickThing(stickiesName, className, options, activate=false)
 	let elems = document.getElementsByClassName(className);
 	if (elems.length > 1) { console.log(`class: ${className} number: ${elems.length}`); }
 	
-	waitForElement(`.${className}`, 1000)
-	.then(() => {setTimeout(() => { 
-		stickies[stickiesName] = new mdb.Sticky(document.querySelector(`.${className}`), options);
-		if (activate) { stickies[stickiesName].active(); }
-	}, 100);} ); 
+	for (let i = 0 ; i < elems.length ; i++){
+		if (elems[i] != stickies[stickiesName]) {
+			let sticky = mdb.Sticky.getInstance(stickies[stickiesName]);
+			if (sticky) { sticky.inactive(); }
+			stickies[stickiesName] = elems[i];
+		}
+	}
+	
+	if (stickies[stickiesName]){
+		waitForElement(stickies[stickiesName], 1000)
+		.then(() => {setTimeout(() => { 
+			let sticky = mdb.Sticky.getInstance(stickies[stickiesName]);
+			if (!sticky) 
+			{ 
+				sticky = new mdb.Sticky(stickies[stickiesName], options);
+				if (activate) { sticky.active(); }
+			} else {
+				sticky.active();
+			}
+		}, 300);} ); 
+	}
 	
 }
 
@@ -250,10 +266,10 @@ function stickThings(thing=null) {
 }
 
 function clean_stickies(){
+
 	for(var key in stickies) {
-		if (stickies[key]){
-			stickies[key].inactive();
-		};
+		let sticky = mdb.Sticky.getInstance(stickies[key]);
+		if (sticky) { sticky.inactive(); }
 		stickies[key] = null;
 	}
 }
@@ -261,13 +277,14 @@ function clean_stickies(){
 function sticker() {
 	if (window.innerWidth > 1281){
 		for(var key in stickies) {
-			if (!stickies[key]) { stickThings(key); };
+			let sticky = mdb.Sticky.getInstance(stickies[key])
+			if (!sticky) { stickThings(key); };
 		}
 	} else {
 		for(var key in stickies) {
-			if (stickies[key]) { 
-				stickies[key].inactive();
-				stickies[key] = null;
+			let sticky = mdb.Sticky.getInstance(stickies[key])
+			if (sticky) { 
+				sticky.inactive();
 			};	
 		}
 	}		
