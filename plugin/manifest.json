@@ -20,9 +20,6 @@
 				"html_writer.js",
 				"charts.js",
 				"content-script.js"
-			],
-			"css": [
-				"sticky.min.js"
 			]
 		}
 	],
