@@ -224,19 +224,8 @@ function stickThings(thing=null) {
 	if (!thing || thing == 'nft') {
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
 		.then(() => {setTimeout(() => { 
-			let container = document.getElementsByClassName("MediaContainer-sc-1p3n06p-2")
-			if (container.length > 1) { console.log(`WATCH OUT! container length : ${container.length}`); } 
-			let tempStick = mdb.Sticky.getInstance(container[0])
-
-			if (tempStick){
-				stickies['nft'] = tempStick;
-				stickies['nft'].active();
-			} else {
-				setTimeout(() => { 
-					stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
-				}, 200);
-			}
-			
+			if (stickies['nft']) { stickies['nft'].inactive(); };
+			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
 		}, 100);} ); 
 	}
 	if (!thing || thing == 'bar') {
@@ -282,7 +271,7 @@ function clean_stickies(){
 }
 
 function sticker() {
-	if (window.innerWidth >= 1281){
+	if (window.innerWidth > 1281){
 		for(var key in stickies) {
 			if (!stickies[key]) { stickThings(key); };
 		}
@@ -290,8 +279,8 @@ function sticker() {
 		for(var key in stickies) {
 			if (stickies[key]) { 
 				stickies[key].inactive();
-			}
-			if (key != 'nft') {stickies[key] = null};
+				stickies[key] = null;
+			};	
 		}
 	}		
 }
