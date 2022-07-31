@@ -220,48 +220,36 @@ stickies['price'] = null;
 stickies['bar'] = null;
 stickies['likes'] = null;
 
+function stickThing(stickiesName, className, options, activate=false)
+{
+	let elems = document.getElementsByClassName(className);
+	if (elems.length > 1) { console.log(`class: ${className} number: ${elems.length}`); }
+	
+	waitForElement(`.${className}`, 1000)
+	.then(() => {setTimeout(() => { 
+		stickies[stickiesName] = new mdb.Sticky(document.querySelector(`.${className}`), options);
+		if (activate) { stickies[stickiesName].active(); }
+	}, 100);} ); 
+	
+}
+
 function stickThings(thing=null) {
 	if (!thing || thing == 'nft') {
-		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
-		.then(() => {setTimeout(() => { 
-			if (stickies['nft']) { stickies['nft'].inactive(); };
-			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
-		}, 100);} ); 
+		stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
 	}
 	if (!thing || thing == 'bar') {
-		waitForElement(".sc-FNXRL", 1000)
-		.then(() => {setTimeout(() => { 
-			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
-			if (stickies['bar']) { stickies['bar'].inactive(); };
-			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
-			stickies['bar'].active();
-		}, 100);} ); 
+		stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
 	}
-	
 	if (!thing || thing == 'likes') {
-		waitForElement(".Actions-sc-kdlg0e-0", 1000)
-		.then(() => {setTimeout(() => { 
-			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
-			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
-			if (stickies['likes']) { stickies['likes'].inactive(); };
-			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
-		}, 100);} ); 
+		stickThing('likes', 'Actions-sc-kdlg0e-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10}, backgroundColor = "#f9f9f9", backgroundClip = "content-box");
 	}
 	
 	if (!thing || thing == 'price') {
-		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
-		.then(() => {setTimeout(() => { 
-			if (stickies['price']) { stickies['price'].inactive(); };
-			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
-		}, 100);} ); 
+		stickThing('price', 'PurchaseInfoWrapper-sc-11cpe2k-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
 	}
 }
 
 function clean_stickies(){
-	let bars = document.getElementsByClassName("sc-FNXRL");
-	for (let i = 0 ; i < bars.length ; i++) {
-		bars[i].style.backgroundColor = null;
-	}
 	for(var key in stickies) {
 		if (stickies[key]){
 			stickies[key].inactive();
