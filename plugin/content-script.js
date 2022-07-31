@@ -235,6 +235,7 @@ function sticker() {
 	for(var key in stickies) {
 		if (stickies[key]) {	
 			if (window.innerWidth > 1281){
+				stickies[key].inactive();
 				stickies[key].active();
 			} else {
 				stickies[key].inactive();
