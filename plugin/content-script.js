@@ -225,8 +225,7 @@ function stickThing(stickiesName, className, options, activate=false)
 	let elem = document.getElementById(`stick_${stickiesName}`);
 	
 	if (elem) {
-		let sticky = mdb.Sticky.getInstance(elem);
-		sticky.active();
+		stickies[stickiesName].active();
 	} else {
 		if (stickies[stickiesName]) { stickies[stickiesName].inactive(); }
 		waitForElement(`.${className}`, 1000)
@@ -271,15 +270,17 @@ function stickThings(thing=null) {
 function clean_stickies(){
 
 	for(var key in stickies) {
-		if (stickies[key]) { stickies[key].inactive(); }
-		stickies[key] = null;
+		if (stickies[key]) { 
+			stickies[key].inactive(); 
+			stickies[key] = null;
+		}
 	}
 }
 
 function sticker() {
 	if (window.innerWidth > 1281){
 		for(var key in stickies) {
-			if (!stickies[key]) { stickThings(key); };
+			stickThings(key); 
 		}
 	} else {
 		for(var key in stickies) {
