@@ -244,31 +244,42 @@ function sticker() {
 
 window.onresize = sticker;
 
+function stickThings() {
+	// The NFT media
+	waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
+	.then( () => {
+		stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
+	});
+	
+	// The menubar
+	waitForElement(".sc-FNXRL", 1000)
+	.then( () => {
+		document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
+		stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
+	});
+	
+	// The "back-likes-share" menu
+	waitForElement(".Actions-sc-kdlg0e-0", 1000)
+	.then( () => {
+		document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
+		document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
+		stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
+	});
+	
+	// The price interface
+	waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
+	.then( () => {
+		stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
+	});
+}
+
 function onUrlChange() {
 	clean_charts();
 	clean_watchers();
 	clean_stickies();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
-		.then( () => {
-			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
-		});
-		waitForElement(".sc-FNXRL", 1000)
-		.then( () => {
-			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
-			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
-		});
-		waitForElement(".Actions-sc-kdlg0e-0", 1000)
-		.then( () => {
-			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
-			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundColor = "#f9f9f9";
-			stickies['likes'] = new mdb.Sticky(document.querySelector('.Actions-sc-kdlg0e-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10});
-		});
-		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
-		.then( () => {
-			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
-		});
+		stickThings();
 
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
