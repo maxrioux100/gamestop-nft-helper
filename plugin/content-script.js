@@ -225,17 +225,19 @@ function stickThings(thing=null) {
 		waitForElement(".MediaContainer-sc-1p3n06p-2", 1000)
 		.then(() => {setTimeout(() => { 
 			stickies['nft'] = new mdb.Sticky(document.querySelector('.MediaContainer-sc-1p3n06p-2'), {stickyDirection: 'both',stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
+			stickies['nft'].active();
 		}, 100);} ); 
 	}
-	if (!thing || thing == 'price') {
+	if (!thing || thing == 'bar') {
 		waitForElement(".sc-FNXRL", 1000)
 		.then(() => {setTimeout(() => { 
 			document.getElementsByClassName("sc-FNXRL")[0].style.backgroundColor = "#f9f9f9";
 			stickies['bar'] = new mdb.Sticky(document.querySelector('.sc-FNXRL'), {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20});
+			stickies['bar'].active();
 		}, 100);} ); 
 	}
 	
-	if (!thing || thing == 'bar') {
+	if (!thing || thing == 'likes') {
 		waitForElement(".Actions-sc-kdlg0e-0", 1000)
 		.then(() => {setTimeout(() => { 
 			document.getElementsByClassName("Actions-sc-kdlg0e-0")[0].style.backgroundClip = "content-box";
@@ -244,7 +246,7 @@ function stickThings(thing=null) {
 		}, 100);} ); 
 	}
 	
-	if (!thing || thing == 'likes') {
+	if (!thing || thing == 'price') {
 		waitForElement(".PurchaseInfoWrapper-sc-11cpe2k-0", 1000)
 		.then(() => {setTimeout(() => { 
 			stickies['price'] = new mdb.Sticky(document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0'), {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
