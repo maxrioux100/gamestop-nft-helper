@@ -225,11 +225,14 @@ function stickThing(stickiesName, className, options, activate=false)
 	let elem = document.getElementById(`stick_${stickiesName}`);
 	
 	if (elem) {
-		stickies[stickiesName].active();
+		let sticky = mdb.Sticky.getInstance(elem);
+		if (sticky) {
+			stickies[stickiesName].active();
+		}
 	} else {
 		if (stickies[stickiesName]) { stickies[stickiesName].inactive(); }
 		waitForElement(`.${className}`, 1000)
-			.then(() => {setTimeout(() => {
+		.then(() => {setTimeout(() => {
 			let elems = document.getElementsByClassName(className);
 			for (let i = 0 ; i < elems.length ; i++){
 				if (elems[i].getAttribute('id') != `stick_${stickiesName}`) {
@@ -245,11 +248,10 @@ function stickThing(stickiesName, className, options, activate=false)
 			.then(() => {setTimeout(() => {
 				stickies[stickiesName] = new mdb.Sticky(elem, options);
 				if (activate) { stickies[stickiesName].active(); }
-
 			}, 300);} );
 		}, 300);} ); 
 	}	
-}
+} 
 
 function stickThings() {
 	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
