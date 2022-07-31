@@ -266,9 +266,7 @@ function clean_stickies(){
 function sticker() {
 	if (window.innerWidth > 1281){
 		for(var key in stickies) {
-			if (!stickies[key]){
-				stickThings(key);
-			}
+			if (!stickies[key]) { stickThings(key); };
 		}
 	} else {
 		for(var key in stickies) {
