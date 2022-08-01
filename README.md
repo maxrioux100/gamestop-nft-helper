@@ -50,5 +50,8 @@ If you would like to contribute to the plugin, please create a fork of this
 repository, work on the issue or feature request that you are interested in, then
 submit a pull request upstream.
 
+## Wiki
+There is a [wiki page](https://github.com/maxrioux100/gamestop-nft-helper/wiki) with help relating to the code of this extension.
+
 ## Attribution
 The plugin icon come from https://icon-icons.com/icon/graph-sales-increase-info-bars-statistics/123065 and have been made by the designer zishanrocks123
