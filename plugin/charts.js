@@ -181,6 +181,7 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 			labels: {
 				hideOverlappingLabels: true
 			},
+			tickAmount: quantities[quantities.length-1],
 			decimalsInFloat: 2,
 			tooltip: {
 				enabled: false
