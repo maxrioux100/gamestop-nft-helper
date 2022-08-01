@@ -218,14 +218,14 @@ let stickies = {};
 stickies['nft'] = null;
 stickies['bar'] = null;
 
-function stickThing(stickiesName, className, options, activate=false)
+function stickThing(stickiesName, className, options, activate=false, dontReactivate=false)
 {	
 	let elem = document.getElementById(`stick_${stickiesName}`);
 	
-	if (elem) {
+	if (elem && !dontReactivate) {
 		let sticky = mdb.Sticky.getInstance(elem);
 		if (sticky) {
-			stickies[stickiesName].active();
+			sticky.active();
 		}
 	} else {
 		if (stickies[stickiesName]) { stickies[stickiesName].inactive(); }
@@ -252,7 +252,7 @@ function stickThing(stickiesName, className, options, activate=false)
 } 
 
 function stickThings() {
-	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true);
+	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true);
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
 }
 
