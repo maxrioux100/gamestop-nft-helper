@@ -216,9 +216,7 @@ let lastHistory = '';
 let lastOffer = '';
 let stickies = {};
 stickies['nft'] = null;
-stickies['price'] = null;
 stickies['bar'] = null;
-stickies['likes'] = null;
 
 function stickThing(stickiesName, className, options, activate=false)
 {	
@@ -254,10 +252,26 @@ function stickThing(stickiesName, className, options, activate=false)
 } 
 
 function stickThings() {
-	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 50});
+	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true);
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
-	stickThing('likes', 'Actions-sc-kdlg0e-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 70, stickyDelay: -10}, backgroundColor = "#f9f9f9", backgroundClip = "content-box");
-	stickThing('price', 'PurchaseInfoWrapper-sc-11cpe2k-0', {stickyDirection : 'both',stickyMedia: 1281, stickyOffset: 105, stickyDelay: 30});
+}
+
+function moveThing(from, to, where='start') {
+	waitForElement(`.${from}`, 1000)
+	.then(() => {
+		waitForElement(`.${to}`, 1000)
+		.then(() => {
+			let aside = document.getElementsByClassName(from)[0];
+			let section = document.getElementsByClassName(to)[0];
+			if (where == 'start') { section.insertBefore(aside, section.firstChild); }
+			if (where == 'end') { section.appendChild(aside); }
+		} );
+	} );
+}
+
+function moveThings(){
+	moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2')
+	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', 'end')
 }
 
 function clean_stickies(){
@@ -292,6 +306,7 @@ function onUrlChange() {
 	clean_stickies();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		moveThings();
 		stickThings();
 
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
