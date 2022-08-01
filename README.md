@@ -14,6 +14,9 @@ This extenion add some information about the previous sale of a nft, this inform
 This extenion add some information about the current avalaible copy of this nft, this information include
 - chart of the price relative to the number of copies bought
 
+## Demonstration
+You can see a short [video demontration](https://youtu.be/T6pE9THfyNU) of this extension in action
+
 ## Installation
 The plugin is available on the Chrome store here:
 https://chrome.google.com/webstore/detail/gamestop-nft-helper/pfmijmlbedpgbnolohlcoejejpaddegk
