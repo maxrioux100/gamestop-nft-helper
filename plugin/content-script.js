@@ -252,7 +252,7 @@ function stickThing(stickiesName, className, options, activate=false, dontReacti
 } 
 
 function stickThings() {
-	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true);
+	if (window.innerWidth >= 1281){ stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); }
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
 }
 
@@ -307,7 +307,7 @@ function onUrlChange() {
 	clean_stickies();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		moveThings();
+		if (window.innerWidth >= 1281){ moveThings(); }
 		stickThings();
 
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
