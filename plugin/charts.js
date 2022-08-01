@@ -145,11 +145,11 @@ function get_volume_candle(agos_count){
 function getTickAmount(quantities) {
 	let maxTick = 0;
 	
-	for (let ii = 0 ; ii < 15 ; ii++){
-		for (let i = 15 ; i >= 0 ; i--){ 
-			if ((quantities+ii) % i == 0 && i > maxTick) { maxTick = i; }
-		}		
-	}
+	for (let i = 15 ; i >= 0 ; i--){ 
+		if (quantities % i == 0 && i > maxTick) { maxTick = i; }
+	}	
+	
+	if (maxTick == 0) {maxTick = undefined}
 	return maxTick;
 }
 
