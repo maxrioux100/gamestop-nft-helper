@@ -256,7 +256,7 @@ function stickThings() {
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
 }
 
-function moveThing(from, to, where='start') {
+function moveThing(from, to, where='start', paddingTop = null) {
 	waitForElement(`.${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
@@ -265,13 +265,14 @@ function moveThing(from, to, where='start') {
 			let section = document.getElementsByClassName(to)[0];
 			if (where == 'start') { section.insertBefore(aside, section.firstChild); }
 			if (where == 'end') { section.appendChild(aside); }
+			if (paddingTop) { aside.style.paddingTop = `${paddingTop}px`; }
 		} );
 	} );
 }
 
 function moveThings(){
 	moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2')
-	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', 'end')
+	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20)
 }
 
 function clean_stickies(){
