@@ -172,6 +172,7 @@ function updateHistory(histories, transactions) {
 
 let nft=null;
 
+let lastHistory = '';
 async function updateHistoryWithApiData() {
   let splitted_url = lastUrl.split('/');
   nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
@@ -187,6 +188,7 @@ async function updateHistoryWithApiData() {
   }
 }
 
+let lastOffer = '';
 async function updateOffersWithApiData() {
 	if (nft != null)
 	{
@@ -212,8 +214,6 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
 
-let lastHistory = '';
-let lastOffer = '';
 let stickies = {};
 stickies['nft'] = null;
 stickies['bar'] = null;
@@ -256,6 +256,16 @@ function stickThings() {
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
 }
 
+function clean_stickies(){
+
+	for(var key in stickies) {
+		if (stickies[key]) { 
+			stickies[key].inactive(); 
+			stickies[key] = null;
+		}
+	}
+}
+
 function moveThing(from, to, where='start', paddingTop = null) {
 	waitForElement(`.${from}`, 1000)
 	.then(() => {
@@ -273,16 +283,6 @@ function moveThing(from, to, where='start', paddingTop = null) {
 function moveThings(){
 	moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2')
 	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20)
-}
-
-function clean_stickies(){
-
-	for(var key in stickies) {
-		if (stickies[key]) { 
-			stickies[key].inactive(); 
-			stickies[key] = null;
-		}
-	}
 }
 
 function sticker() {
