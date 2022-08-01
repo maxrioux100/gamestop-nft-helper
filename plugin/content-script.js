@@ -228,7 +228,7 @@ function stickThing(stickiesName, className, options, activate=false, dontReacti
 			sticky.active();
 		}
 	} else {
-		if (stickies[stickiesName]) { stickies[stickiesName].inactive(); }
+		if (stickies[stickiesName] && !elem) { stickies[stickiesName].inactive(); }
 		waitForElement(`.${className}`, 1000)
 		.then(() => {setTimeout(() => {
 			let elems = document.getElementsByClassName(className);
