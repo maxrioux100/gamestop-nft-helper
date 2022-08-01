@@ -2,6 +2,19 @@
 
 Add additional information to the NFT pages.
 
+## Description
+Anyone who like to reflect on their choice before buying something will like this extension
+This extenion add some information about the previous sale of a nft, this information include
+- median
+- average
+- standard deviation
+- % change
+- chart of the sale values
+- chart of to volume relative to time
+- chart of the recurrent buyers and sellers
+This extenion add some information about the current avalaible copy of this nft, this information include
+- chart of the price relative to the number of copies bought
+
 ## Installation
 The plugin is available on the Chrome store here:
 https://chrome.google.com/webstore/detail/gamestop-nft-helper/pfmijmlbedpgbnolohlcoejejpaddegk
