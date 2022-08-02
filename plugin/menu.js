@@ -3,6 +3,7 @@ menu['MovePrice'] = 'Move the price interface to the left side';
 menu['MoveTools'] = 'Move the toolbar to the left side'; 
 menu['StickMenu'] = 'Stick the menu bar to the page';
 menu['StickNFT'] = 'Stick the NFT to the page';
+menu['ChartOffers'] = 'Chart of the available offers';
 
 for (let key in menu) {
 	let container = document.body;

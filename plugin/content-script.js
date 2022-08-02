@@ -315,7 +315,7 @@ async function onUrlChange() {
 
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
-			createOffersHelperContainer();
+			if (preferences['ChartOffers']) { createOffersHelperContainer(); }
 			createHistoryHelperContainer();
  			watchers['history'] = setIntervalImmediately(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
@@ -323,9 +323,11 @@ async function onUrlChange() {
 					updateHistoryWithApiData();
 				}, () => {} );
 			}, 3000);
-			watchers['offers'] = setIntervalImmediately(function() {
-				updateOffersWithApiData();
-			}, 1000); 
+			if (preferences['ChartOffers']) {
+				watchers['offers'] = setIntervalImmediately(function() {
+					updateOffersWithApiData();
+				}, 1000); 
+			}
 		});
 	}
 	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
