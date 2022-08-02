@@ -4,6 +4,7 @@ menu['MoveTools'] = 'Move the toolbar to the left side';
 menu['StickMenu'] = 'Stick the menu bar to the page';
 menu['StickNFT'] = 'Stick the NFT to the page';
 menu['ChartOffers'] = 'Chart of the available offers';
+menu['ChartRecurrent'] = 'Chart of the recurrent buyers and sellers';
 
 for (let key in menu) {
 	let container = document.body;

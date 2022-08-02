@@ -162,11 +162,11 @@ function updateHistory(histories, transactions) {
 
 		charts['volume'].render();
 		
-		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
-
-		charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
-
-		charts['recurrent'].render(); 
+		if (preferences['ChartRecurrent']) {
+			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
+			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
+			charts['recurrent'].render(); 
+		}
 	}
 }
 
