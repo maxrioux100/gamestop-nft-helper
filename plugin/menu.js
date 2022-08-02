@@ -37,6 +37,10 @@ waitForElement(".form-check-input", 1000)
 																			box.checked = false;
 																			persistPreferences(box.id, false);
 																		}});
+	document.getElementById('btnAll').addEventListener("click", (e) => { for (let box of boxes) { 
+																		box.checked = true;
+																		persistPreferences(box.id, true);
+																	}});																	
 });
 
 
