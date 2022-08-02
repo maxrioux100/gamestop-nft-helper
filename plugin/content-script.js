@@ -296,10 +296,8 @@ function sticker() {
 
 window.onresize = sticker;
 
-let preferences;
-
 async function onUrlChange() {
-	preferences = await readPreferences();
+	await readPreferences();
 
 	clean_charts();
 	clean_watchers();

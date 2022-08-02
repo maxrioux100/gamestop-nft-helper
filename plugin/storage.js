@@ -27,25 +27,28 @@ const readLocalStorage = async (key) => {
 	});
 };
 
+var preferences = {};
+preferences['MovePrice'] = true;
+preferences['MoveTools'] = true; 
+preferences['StickMenu'] = true;
+
 function persistMovePrice(tempMovePrice) {
-	chrome.storage.local.set({preferenceMovePrice: tempMovePrice}, function() {
+	chrome.storage.local.set({MovePrice: tempMovePrice}, function() {
 	});
 }
 
 function persistMoveTools(tempMoveTools) {
-	chrome.storage.local.set({preferenceMoveTools: tempMoveTools}, function() {
+	chrome.storage.local.set({MoveTools: tempMoveTools}, function() {
 	});
 }
 
 function persistStickMenu(tempStickMenu) {
-	chrome.storage.local.set({preferenceStickMenu: tempStickMenu}, function() {
+	chrome.storage.local.set({StickMenu: tempStickMenu}, function() {
 	});
 }
 
 async function readPreferences() {
-	let preferences = {};
-	preferences['MovePrice'] = await readLocalStorage('preferenceMovePrice');
-	preferences['MoveTools'] = await readLocalStorage('preferenceMoveTools'); 
-	preferences['StickMenu'] = await readLocalStorage('preferenceStickMenu');
-	return preferences;
+	preferences['MovePrice'] = await readLocalStorage('MovePrice');
+	preferences['MoveTools'] = await readLocalStorage('MoveTools'); 
+	preferences['StickMenu'] = await readLocalStorage('StickMenu');
 }
