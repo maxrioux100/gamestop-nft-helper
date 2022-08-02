@@ -10,7 +10,7 @@ function updateOffers(offers, rateAndFees) {
 
 	if (offers.length > 1) {
 		removeOffersHelperPrompt();
-		createOffersChart();
+		if (preferences['ChartOffers']) { createOffersChart(); }
 
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
@@ -319,7 +319,7 @@ async function onUrlChange() {
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
 			if (preferences['ChartOffers']) { createOffersHelperContainer(); }
-			createHistoryHelperContainer();
+			if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume'] || preferences['ChartRecurrent']) { createHistoryHelperContainer(); }
  			watchers['history'] = setIntervalImmediately(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
 				.then( () => {
