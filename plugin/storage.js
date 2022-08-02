@@ -19,6 +19,7 @@ const readLocalStorage = async (key) => {
 			i++;
 			chrome.storage.local.get([key], function (result) {
 				if (result[key] != undefined) {
+					clearInterval(interval);
 					resolve(result[key]);
 				}
 			});
