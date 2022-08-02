@@ -6,6 +6,8 @@ menu['StickNFT'] = 'Stick the NFT to the page';
 menu['ChartOffers'] = 'Chart of the available offers';
 menu['ChartRecurrent'] = 'Chart of the recurrent buyers and sellers';
 menu['ChartVolume'] = 'Chart of the last volume';
+menu['ChartHistory'] = 'Chart on the previous sale';
+menu['StatsHistory'] = 'Stats on the previous sale';
 
 for (let key in menu) {
 	let container = document.body;

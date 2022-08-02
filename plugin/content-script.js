@@ -123,39 +123,41 @@ function updateHistory(histories, transactions) {
 		let min_dollars = Math.min(...values_dollars);
 		let max_eth = Math.max(...values_eth);
 		let max_dollars = Math.max(...values_dollars);
-
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
-
-		let profile_sales_index = [];
-		let profile_buys_index = [];
-
-		for (let i = 0; i < sellers.length; i++) {
-		  if (profileName && sellers[i] == profileName) {
-			profile_sales_index.push(i)
-		  }
+		if (preferences['StatsHistory']) {
+			updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
 		}
-		for (let i = 0; i < buyers.length; i++) {
-		  if (profileName && buyers[i] == profileName) {
-			profile_buys_index.push(i)
-		  }
+		
+		if (preferences['ChartHistory']) {
+			let profile_sales_index = [];
+			let profile_buys_index = [];
+
+			for (let i = 0; i < sellers.length; i++) {
+			  if (profileName && sellers[i] == profileName) {
+				profile_sales_index.push(i)
+			  }
+			}
+			for (let i = 0; i < buyers.length; i++) {
+			  if (profileName && buyers[i] == profileName) {
+				profile_buys_index.push(i)
+			  }
+			}
+
+			if (min_eth == max_eth){
+				min_eth = 0;
+				min_dollars = 0;
+				max_eth *= 2;
+				max_dollars *= 2;
+			}
+
+			let colors = ['#00E396'];
+			if (change < 0) {colors = ["#FF4560"];}
+			else if (change == 0) {colors = ["#008FFB"];}
+			
+			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
+			charts['price_history'].render();
 		}
-
-		if (min_eth == max_eth){
-			min_eth = 0;
-			min_dollars = 0;
-			max_eth *= 2;
-			max_dollars *= 2;
-		}
-
-		let colors = ['#00E396'];
-		if (change < 0) {colors = ["#FF4560"];}
-		else if (change == 0) {colors = ["#008FFB"];}
-    
-		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
-
-		charts['price_history'].render();
 		
 		if (preferences['ChartVolume']) {
 			let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
