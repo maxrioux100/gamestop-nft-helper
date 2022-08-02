@@ -19,7 +19,7 @@ movePrice.addEventListener('change', (e) => {
 	persistPreferences({MovePrice: e.target.checked});
 });
 
-movePrice.addEventListener('change', (e) => {
+stickMenu.addEventListener('change', (e) => {
 	persistPreferences({StickMenu: e.target.checked});
 });
 
