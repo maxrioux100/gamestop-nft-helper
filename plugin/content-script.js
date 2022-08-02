@@ -56,10 +56,11 @@ function updateOffers(offers, rateAndFees) {
 			min_dollars = 0;
 			max_dollars *= 2;
 		}
-
-		charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
-
-		charts['offers'].render();
+		
+		if (preferences['ChartOffers']) {
+			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
+			charts['offers'].render();
+		}
 	}
 }
 
@@ -323,11 +324,9 @@ async function onUrlChange() {
 					updateHistoryWithApiData();
 				}, () => {} );
 			}, 3000);
-			if (preferences['ChartOffers']) {
-				watchers['offers'] = setIntervalImmediately(function() {
-					updateOffersWithApiData();
-				}, 1000); 
-			}
+			watchers['offers'] = setIntervalImmediately(function() {
+				updateOffersWithApiData();
+			}, 1000); 
 		});
 	}
 	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
