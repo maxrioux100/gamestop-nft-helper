@@ -2,6 +2,7 @@ var preferences = {};
 preferences['MovePrice'] = null;
 preferences['MoveTools'] = null; 
 preferences['StickMenu'] = null;
+preferences['StickNFT'] = null;
 
 function persistPreferences(name, value) {
 	let dict = {};
