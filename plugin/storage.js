@@ -33,8 +33,7 @@ preferences['MoveTools'] = null;
 preferences['StickMenu'] = null;
 
 function persistPreferences(dictionnary) {
-	chrome.storage.local.set(dictionnary, function() {
-	});
+	chrome.storage.local.set(dictionnary, function() {});
 }
 
 async function readPreferences() {
