@@ -74,7 +74,7 @@ function createHistoryStatsCharts() {
 	div_chart_recurrent.setAttribute('id', 'chart_recurrent');
 	
 	let history_helper = document.getElementById("history_helper");
-	history_helper.appendChild(section);
+	if (preferences['StatsHistory']) { history_helper.appendChild(section); }
 	history_helper.appendChild(div_chart_price_history);					
 	history_helper.appendChild(div_chart_volume);
 	history_helper.appendChild(div_chart_recurrent);
