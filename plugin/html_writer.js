@@ -75,9 +75,9 @@ function createHistoryStatsCharts() {
 	
 	let history_helper = document.getElementById("history_helper");
 	if (preferences['StatsHistory']) { history_helper.appendChild(section); }
-	history_helper.appendChild(div_chart_price_history);					
-	history_helper.appendChild(div_chart_volume);
-	history_helper.appendChild(div_chart_recurrent);
+	if (preferences['ChartHistory']) { history_helper.appendChild(div_chart_price_history);	}				
+	if (preferences['ChartVolume']) { history_helper.appendChild(div_chart_volume); }
+	if (preferences['ChartRecurrent']) { history_helper.appendChild(div_chart_recurrent); }
 }
 
 function createOffersChart() {
