@@ -1,10 +1,12 @@
 const movePrice = document.getElementById('switchMovePrice');
 const moveTools = document.getElementById('switchMoveTools');
+const stickMenu = document.getElementById('switchStickMenu');
 
 async function updateDefaultConfig(){
 	let preferences = await readPreferences();
 	movePrice.checked = preferences['MovePrice'];
 	moveTools.checked = preferences['MoveTools'];
+	stickMenu.checked = preferences['StickMenu'];
 }
 
 updateDefaultConfig()
@@ -17,6 +19,9 @@ movePrice.addEventListener('change', (e) => {
 	persistMovePrice(e.target.checked);
 });
 
+movePrice.addEventListener('change', (e) => {
+	persistStickMenu(e.target.checked);
+});
 
 
 

@@ -13,14 +13,17 @@ function persistProfileName(tempProfileName) {
 }
 
 const readLocalStorage = async (key) => {
+	let i = 0;
 	return new Promise((resolve, reject) => {
-		chrome.storage.local.get([key], function (result) {
-			if (result[key] === undefined) {
-				reject();
-			} else {
-				resolve(result[key]);
-			}
-		});
+		setIntervalImmediately( () => {
+			i++;
+			chrome.storage.local.get([key], function (result) {
+				if (result[key] != undefined) {
+					resolve(result[key]);
+				}
+			});
+			if (i >= 2) { resolve(true); }
+		}, 50);
 	});
 };
 
@@ -34,9 +37,15 @@ function persistMoveTools(tempMoveTools) {
 	});
 }
 
+function persistStickMenu(tempStickMenu) {
+	chrome.storage.local.set({preferenceStickMenu: tempStickMenu}, function() {
+	});
+}
+
 async function readPreferences() {
 	let preferences = {};
 	preferences['MovePrice'] = await readLocalStorage('preferenceMovePrice');
-	preferences['MoveTools'] = await readLocalStorage('preferenceMoveTools');
+	preferences['MoveTools'] = await readLocalStorage('preferenceMoveTools'); 
+	preferences['StickMenu'] = await readLocalStorage('preferenceStickMenu');
 	return preferences;
 }
