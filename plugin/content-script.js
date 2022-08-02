@@ -253,7 +253,7 @@ function stickThing(stickiesName, className, options, activate=false, dontReacti
 
 function clean_stickies(){
 
-	for(var key in stickies) {
+	for(let key in stickies) {
 		if (stickies[key]) { 
 			stickies[key].inactive(); 
 			stickies[key] = null;
