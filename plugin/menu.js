@@ -47,6 +47,7 @@ waitForElement(".form-check-input", 1000)
 																				chrome.tabs.reload(tab.id);
 																			}
 																		})
+																		window.close();
 																	});																		
 });
 
