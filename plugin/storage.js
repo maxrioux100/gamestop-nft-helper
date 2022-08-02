@@ -38,7 +38,7 @@ function persistPreferences(dictionnary) {
 }
 
 async function readPreferences() {
-	preferences['MovePrice'] = await readLocalStorage('MovePrice');
-	preferences['MoveTools'] = await readLocalStorage('MoveTools'); 
-	preferences['StickMenu'] = await readLocalStorage('StickMenu');
+	for(let key in preferences) {
+		preferences[key] = await readLocalStorage(key);
+	}
 }
