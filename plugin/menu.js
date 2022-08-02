@@ -28,11 +28,18 @@ async function updateDefaultConfig(boxes){
 	}
 }
 
+
 waitForElement(".form-check-input", 1000)
 .then( () => {
 	const boxes = document.getElementsByClassName('form-check-input');
 	updateDefaultConfig(boxes);
+	document.getElementById('btnNone').addEventListener("click", (e) => { for (let box of boxes) { 
+																			box.checked = false;
+																			persistPreferences(box.id, false);
+																		}});
 });
+
+
 
 
 
