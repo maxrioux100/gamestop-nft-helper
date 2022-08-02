@@ -28,22 +28,12 @@ const readLocalStorage = async (key) => {
 };
 
 var preferences = {};
-preferences['MovePrice'] = true;
-preferences['MoveTools'] = true; 
-preferences['StickMenu'] = true;
+preferences['MovePrice'] = null;
+preferences['MoveTools'] = null; 
+preferences['StickMenu'] = null;
 
-function persistMovePrice(tempMovePrice) {
-	chrome.storage.local.set({MovePrice: tempMovePrice}, function() {
-	});
-}
-
-function persistMoveTools(tempMoveTools) {
-	chrome.storage.local.set({MoveTools: tempMoveTools}, function() {
-	});
-}
-
-function persistStickMenu(tempStickMenu) {
-	chrome.storage.local.set({StickMenu: tempStickMenu}, function() {
+function persistPreferences(dictionnary) {
+	chrome.storage.local.set(dictionnary, function() {
 	});
 }
 

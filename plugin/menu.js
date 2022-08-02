@@ -12,15 +12,15 @@ async function updateDefaultConfig(){
 updateDefaultConfig()
 
 moveTools.addEventListener('change', (e) => {
-	persistMoveTools(e.target.checked);
+	persistPreferences({MoveTools: e.target.checked});
 });
 
 movePrice.addEventListener('change', (e) => {
-	persistMovePrice(e.target.checked);
+	persistPreferences({MovePrice: e.target.checked});
 });
 
 movePrice.addEventListener('change', (e) => {
-	persistStickMenu(e.target.checked);
+	persistPreferences({StickMenu: e.target.checked});
 });
 
 
