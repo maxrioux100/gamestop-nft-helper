@@ -15,14 +15,17 @@ function persistProfileName(tempProfileName) {
 const readLocalStorage = async (key) => {
 	let i = 0;
 	return new Promise((resolve, reject) => {
-		setIntervalImmediately( () => {
+		let interval = setIntervalImmediately( () => {
 			i++;
 			chrome.storage.local.get([key], function (result) {
 				if (result[key] != undefined) {
 					resolve(result[key]);
 				}
 			});
-			if (i >= 2) { resolve(true); }
+			if (i >= 2) { 
+				clearInterval(interval);
+				resolve(true); 
+			}
 		}, 50);
 	});
 };
