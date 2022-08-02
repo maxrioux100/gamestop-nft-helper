@@ -36,8 +36,10 @@ preferences['MovePrice'] = null;
 preferences['MoveTools'] = null; 
 preferences['StickMenu'] = null;
 
-function persistPreferences(dictionnary) {
-	chrome.storage.local.set(dictionnary, function() {});
+function persistPreferences(name, value) {
+	let dict = {};
+	dict[name] = value;
+	chrome.storage.local.set(dict, function() {});
 }
 
 async function readPreferences() {
