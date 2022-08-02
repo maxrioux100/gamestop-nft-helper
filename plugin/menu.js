@@ -40,7 +40,14 @@ waitForElement(".form-check-input", 1000)
 	document.getElementById('btnAll').addEventListener("click", (e) => { for (let box of boxes) { 
 																		box.checked = true;
 																		persistPreferences(box.id, true);
-																	}});																	
+																	}});
+	document.getElementById('btnRefresh').addEventListener("click", (e) => { 
+																		chrome.tabs.query({url: "https://nft.gamestop.com/*"}, function(tabs) {
+																			for(let tab in tabs){
+																				chrome.tabs.reload(tab.id);
+																			}
+																		})
+																	});																		
 });
 
 
