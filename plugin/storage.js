@@ -1,15 +1,12 @@
-var profileName = getProfileName();
+var preferences = {};
+preferences['MovePrice'] = null;
+preferences['MoveTools'] = null; 
+preferences['StickMenu'] = null;
 
-function getProfileName() {
-	chrome.storage.local.get(['profileName'], function(_profileName) {
-		profileName = _profileName.profileName;
-	});
-}
-
-function persistProfileName(tempProfileName) {
-	chrome.storage.local.set({profileName: tempProfileName}, function() {
-		profileName = tempProfileName;
-	});
+function persistPreferences(name, value) {
+	let dict = {};
+	dict[name] = value;
+	chrome.storage.local.set(dict, function() {});
 }
 
 const readLocalStorage = async (key) => {
@@ -31,19 +28,24 @@ const readLocalStorage = async (key) => {
 	});
 };
 
-var preferences = {};
-preferences['MovePrice'] = null;
-preferences['MoveTools'] = null; 
-preferences['StickMenu'] = null;
-
-function persistPreferences(name, value) {
-	let dict = {};
-	dict[name] = value;
-	chrome.storage.local.set(dict, function() {});
-}
-
 async function readPreferences() {
 	for(let key in preferences) {
 		preferences[key] = await readLocalStorage(key);
 	}
 }
+
+var profileName = getProfileName();
+
+function getProfileName() {
+	chrome.storage.local.get(['profileName'], function(_profileName) {
+		profileName = _profileName.profileName;
+	});
+}
+
+function persistProfileName(tempProfileName) {
+	chrome.storage.local.set({profileName: tempProfileName}, function() {
+		profileName = tempProfileName;
+	});
+}
+
+
