@@ -5,6 +5,7 @@ preferences['StickMenu'] = null;
 preferences['StickNFT'] = null;
 preferences['ChartOffers'] = null;
 preferences['ChartRecurrent'] = null;
+preferences['ChartVolume'] = null;
 
 function persistPreferences(name, value) {
 	let dict = {};

@@ -157,11 +157,11 @@ function updateHistory(histories, transactions) {
 
 		charts['price_history'].render();
 		
-		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-
-		charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
-
-		charts['volume'].render();
+		if (preferences['ChartVolume']) {
+			let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
+			charts['volume'].render();
+		}
 		
 		if (preferences['ChartRecurrent']) {
 			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
