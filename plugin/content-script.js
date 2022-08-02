@@ -276,15 +276,15 @@ function moveThing(from, to, where='start', paddingTop = null) {
 }
 
 function moveThings(reverse=false){
-	moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2')
-	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20)
+	if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
+	if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
 }
 
 //this functions need some love
 function sticker() {
 	if (window.innerWidth >= 1281){
 		moveThings();
-		stickThings(); 
+		//stickThings(); 
 	} else {
 		for(var key in stickies) {
 			if (stickies[key]) { 
@@ -296,9 +296,11 @@ function sticker() {
 
 window.onresize = sticker;
 
+let preferences;
 
+async function onUrlChange() {
+	preferences = await readPreferences();
 
-function onUrlChange() {
 	clean_charts();
 	clean_watchers();
 	clean_stickies();
