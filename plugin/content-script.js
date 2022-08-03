@@ -10,7 +10,7 @@ function updateOffers(offers, rateAndFees) {
 
 	if (offers.length > 1) {
 		removeOffersHelperPrompt();
-		createOffersChart();
+		if (preferences['ChartOffers']) { createOffersChart(); }
 
 		let values_eth = [offers.length];
 		let values_dollars = [offers.length];
@@ -56,10 +56,11 @@ function updateOffers(offers, rateAndFees) {
 			min_dollars = 0;
 			max_dollars *= 2;
 		}
-
-		charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
-
-		charts['offers'].render();
+		
+		if (preferences['ChartOffers']) {
+			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
+			charts['offers'].render();
+		}
 	}
 }
 
@@ -122,51 +123,53 @@ function updateHistory(histories, transactions) {
 		let min_dollars = Math.min(...values_dollars);
 		let max_eth = Math.max(...values_eth);
 		let max_dollars = Math.max(...values_dollars);
-
 		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
 		
-		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
-
-		let profile_sales_index = [];
-		let profile_buys_index = [];
-
-		for (let i = 0; i < sellers.length; i++) {
-		  if (profileName && sellers[i] == profileName) {
-			profile_sales_index.push(i)
-		  }
+		if (preferences['StatsHistory']) {
+			updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
 		}
-		for (let i = 0; i < buyers.length; i++) {
-		  if (profileName && buyers[i] == profileName) {
-			profile_buys_index.push(i)
-		  }
-		}
-
-		if (min_eth == max_eth){
-			min_eth = 0;
-			min_dollars = 0;
-			max_eth *= 2;
-			max_dollars *= 2;
-		}
-
-		let colors = ['#00E396'];
-		if (change < 0) {colors = ["#FF4560"];}
-		else if (change == 0) {colors = ["#008FFB"];}
-    
-		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
-
-		charts['price_history'].render();
 		
-		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+		if (preferences['ChartHistory']) {
+			let profile_sales_index = [];
+			let profile_buys_index = [];
 
-		charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
+			for (let i = 0; i < sellers.length; i++) {
+			  if (profileName && sellers[i] == profileName) {
+				profile_sales_index.push(i)
+			  }
+			}
+			for (let i = 0; i < buyers.length; i++) {
+			  if (profileName && buyers[i] == profileName) {
+				profile_buys_index.push(i)
+			  }
+			}
 
-		charts['volume'].render();
+			if (min_eth == max_eth){
+				min_eth = 0;
+				min_dollars = 0;
+				max_eth *= 2;
+				max_dollars *= 2;
+			}
+
+			let colors = ['#00E396'];
+			if (change < 0) {colors = ["#FF4560"];}
+			else if (change == 0) {colors = ["#008FFB"];}
+			
+			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
+			charts['price_history'].render();
+		}
 		
-		let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
-
-		charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
-
-		charts['recurrent'].render(); 
+		if (preferences['ChartVolume']) {
+			let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
+			charts['volume'].render();
+		}
+		
+		if (preferences['ChartRecurrent']) {
+			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
+			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
+			charts['recurrent'].render(); 
+		}
 	}
 }
 
@@ -258,7 +261,7 @@ function stickThings(){
 
 function clean_stickies(){
 
-	for(var key in stickies) {
+	for(let key in stickies) {
 		if (stickies[key]) { 
 			stickies[key].inactive(); 
 			stickies[key] = null;
@@ -281,15 +284,15 @@ function moveThing(from, to, where='start', paddingTop = null) {
 }
 
 function moveThings(reverse=false){
-	moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2')
-	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20)
+	if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
+	if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
 }
 
 //this functions need some love
 function sticker() {
 	if (window.innerWidth >= 1281){
 		moveThings();
-		stickThings(); 
+		//stickThings(); 
 	} else {
 		for(var key in stickies) {
 			if (stickies[key]) { 
@@ -301,24 +304,27 @@ function sticker() {
 
 window.onresize = sticker;
 
+async function onUrlChange() {
+	await readPreferences();
 
-
-function onUrlChange() {
 	clean_charts();
 	clean_watchers();
 	clean_stickies();
-	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
+	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
-			stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); 
+			if (preferences['StickNFT']) {
+				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); }
+				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true, dontReactivate=true); }
+			}
 		}
 
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
-			createOffersHelperContainer();
-			createHistoryHelperContainer();
+			if (preferences['ChartOffers']) { createOffersHelperContainer(); }
+			if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume'] || preferences['ChartRecurrent']) { createHistoryHelperContainer(); }
  			watchers['history'] = setIntervalImmediately(function() {
 				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
 				.then( () => {

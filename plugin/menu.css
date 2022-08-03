@@ -1,0 +1,12 @@
+html {
+	min-width: 26em;
+}
+
+body {
+	background-image: url("menu_darker.jpg");
+}
+
+.card {
+	background-image: url("menu.jpg");
+}
+
