@@ -14,7 +14,7 @@ function writeCheck(key, container){
 	let div = document.createElement('div');
 	
 	div.innerHTML = `<input class="form-check-input" type="checkbox" role="switch" id="${key}" checked />` +
-					`<label class="form-check-label" for="${key}">${menu[key]}</label>`;
+					`<label class="form-check-label ps-3" for="${key}">${menu[key]}</label>`;
 	
 	div.setAttribute('class', 'form-check form-switch my-1');
 	container_elem.appendChild(div);
