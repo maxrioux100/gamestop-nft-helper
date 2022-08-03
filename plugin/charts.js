@@ -142,6 +142,17 @@ function get_volume_candle(agos_count){
 	return [series, labels, sorted];
 }
 
+function getTickAmount(quantities) {
+	let maxTick = 0;
+	
+	for (let i = 15 ; i >= 0 ; i--){ 
+		if (quantities % i == 0 && i > maxTick) { maxTick = i; }
+	}	
+	
+	if (maxTick == 0) {maxTick = undefined}
+	return maxTick;
+}
+
 function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars){
 	return {
 		title: {
@@ -181,7 +192,8 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 			labels: {
 				hideOverlappingLabels: true
 			},
-			decimalsInFloat: 2,
+			tickAmount: getTickAmount(quantities[quantities.length-1]),
+			decimalsInFloat: 0,
 			tooltip: {
 				enabled: false
 			}
