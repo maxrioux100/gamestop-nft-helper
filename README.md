@@ -9,7 +9,7 @@ This extenion add some information about the previous sale of a nft, this inform
 - standard deviation
 - % change
 - chart of the sale values
-- chart of to volume relative to time
+- chart of volume relative to time
 - chart of the recurrent buyers and sellers
 This extenion add some information about the current avalaible copy of this nft, this information include
 - chart of the price relative to the number of copies bought
