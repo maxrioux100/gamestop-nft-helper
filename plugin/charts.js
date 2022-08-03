@@ -271,7 +271,10 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 		xaxis: {
 			labels: {
 				show: false
-			}
+			},
+			axisTicks: {
+					show: false
+				}
 		},
 		yaxis: [
 			{
@@ -309,15 +312,6 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 		},
 		dataLabels: {
 			enabled: false
-		},
-		fill: {
-			type: "gradient",
-			gradient: {
-				shadeIntensity: 1,
-				opacityFrom: 0.5,
-				opacityTo: 0.9,
-				stops: [0, 95, 100]
-			}
 		},
 		annotations: {
 			xaxis: [
