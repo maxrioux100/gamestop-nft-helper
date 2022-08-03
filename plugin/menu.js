@@ -6,8 +6,8 @@ menu['StickNFT'] = '<i class="far fa-sticky-note"></i> Stick the NFT';
 menu['ChartOffers'] = '<i class="fas fa-chart-line"></i> Chart of the available offers';
 menu['ChartRecurrent'] = '<i class="fas fa-chart-line"></i> Chart of the recurrent buyers/sellers';
 menu['ChartVolume'] = '<i class="fas fa-chart-line"></i> Chart of the last volume';
-menu['ChartHistory'] = '<i class="fas fa-chart-line"></i> Chart on the previous sale';
-menu['StatsHistory'] = '<i class="fas fa-table"></i> Stats on the previous sale';
+menu['ChartHistory'] = '<i class="fas fa-chart-line"></i> Chart on the previous sales';
+menu['StatsHistory'] = '<i class="fas fa-table"></i> Stats on the previous sales';
 
 function writeCheck(key, container){
 	let container_elem = document.getElementById(container);
