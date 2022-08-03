@@ -313,6 +313,15 @@ async function onUrlChange() {
 	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		
+		if (preferences['DarkMode']) { 
+			document.body.style.backgroundColor = '#262626'; 	
+			let _elements = document.querySelectorAll('.Title-sc-1p3n06p-7,.hIESFk .sc-iUKqMP,.sc-bkkeKt,.sc-jlRLRk,.ActionBack-sc-kdlg0e-2,.Button-sc-18j7gm-0,.ioeVpX,.sc-dlVxhl');
+			for (_element of _elements){
+				if (_element.style) { _element.style.color = '#FBFBFB'; }
+			}
+		}
+		
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
 			if (preferences['StickNFT']) {
