@@ -323,8 +323,9 @@ async function onUrlChange() {
 		
 		if (preferences['DarkMode']) { 
 			themeMode = 'dark'
-			document.body.style.backgroundColor = '#424242'; 	
-			let _elements = document.querySelectorAll('.Title-sc-1p3n06p-7,.hIESFk .sc-iUKqMP,.sc-jlRLRk,.ActionBack-sc-kdlg0e-2,.Button-sc-18j7gm-0,.ioeVpX,.sc-bkkeKt,.SectionTitle-sc-13gqei4-5');
+			document.body.style.backgroundColor = '#424242';
+			document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
+			let _elements = document.querySelectorAll('.Title-sc-1p3n06p-7,.hIESFk .sc-iUKqMP,.sc-jlRLRk,.ActionBack-sc-kdlg0e-2,.Button-sc-18j7gm-0,.ioeVpX,.sc-bkkeKt,.SectionTitle-sc-13gqei4-5,a');
 			for (_element of _elements){
 				if (_element.style) { _element.style.color = '#FBFBFB'; }
 			}
