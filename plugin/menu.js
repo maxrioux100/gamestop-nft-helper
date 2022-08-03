@@ -10,13 +10,13 @@ menu['ChartHistory'] = 'Chart on the previous sale';
 menu['StatsHistory'] = 'Stats on the previous sale';
 
 for (let key in menu) {
-	let container = document.body;
+	let container = document.getElementById('container');
 	let div = document.createElement('div');
 	
 	div.innerHTML = `<input class="form-check-input" type="checkbox" role="switch" id="${key}" checked />` +
 					`<label class="form-check-label" for="${key}">${menu[key]}</label>`;
 	
-	div.setAttribute('class', 'form-check form-switch');
+	div.setAttribute('class', 'form-check form-switch my-1');
 	container.appendChild(div);
 }
 
