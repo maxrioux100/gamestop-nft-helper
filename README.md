@@ -3,7 +3,7 @@ Add additional information to the NFT pages.
 
 ## Description
 Anyone who like to reflect on their choice before buying something will like this extension
-This extenion add some information about the previous sale of a nft. This information includes:
+This extenion add some information about the previous sale of an NFT. This information includes:
 - median
 - average
 - standard deviation
@@ -11,7 +11,7 @@ This extenion add some information about the previous sale of a nft. This inform
 - chart of the sale values
 - chart of volume relative to time
 - chart of the recurrent buyers and sellers
-This extension adds some information about the current available copy of this nft. This information includes:
+This extension adds some information about the current available copy of this NFT. This information includes:
 - chart of the price relative to the number of copies bought
 
 ## Demonstration
