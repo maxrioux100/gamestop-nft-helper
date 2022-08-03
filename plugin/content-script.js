@@ -172,6 +172,7 @@ function updateHistory(histories, transactions) {
 
 let nft=null;
 
+let lastHistory = '';
 async function updateHistoryWithApiData() {
   let splitted_url = lastUrl.split('/');
   nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
@@ -187,6 +188,7 @@ async function updateHistoryWithApiData() {
   }
 }
 
+let lastOffer = '';
 async function updateOffersWithApiData() {
 	if (nft != null)
 	{
@@ -212,14 +214,107 @@ new MutationObserver(() => {
   }
 }).observe(document, {subtree: true, childList: true});
 
-let lastHistory = '';
-let lastOffer = '';
+let stickies = {};
+stickies['nft'] = null;
+stickies['bar'] = null;
+
+function stickThing(stickiesName, className, options, activate=false, dontReactivate=false)
+{	
+	let elem = document.getElementById(`stick_${stickiesName}`);
+	
+	if (elem && !dontReactivate) {
+		let sticky = mdb.Sticky.getInstance(elem);
+		if (sticky) {
+			sticky.active();
+		}
+	} else {
+		if (stickies[stickiesName] && !elem) { stickies[stickiesName].inactive(); }
+		waitForElement(`.${className}`, 1000)
+		.then(() => {setTimeout(() => {
+			let elems = document.getElementsByClassName(className);
+			for (let i = 0 ; i < elems.length ; i++){
+				if (elems[i].getAttribute('id') != `stick_${stickiesName}`) {
+					elems[i].setAttribute('id', `stick_${stickiesName}`);
+				} else {
+					elems[i].setAttribute('id', null);
+				}
+			}
+			
+			elem = document.getElementById(`stick_${stickiesName}`);
+			
+			waitForElement(`#stick_${stickiesName}`, 1000)
+			.then(() => {
+				stickies[stickiesName] = new mdb.Sticky(elem, options);
+				if (activate) { stickies[stickiesName].active(); }
+			} );
+		}, 250);} ); 
+	}	
+} 
+
+function stickThings(){
+	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
+	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); 
+}
+
+function clean_stickies(){
+
+	for(var key in stickies) {
+		if (stickies[key]) { 
+			stickies[key].inactive(); 
+			stickies[key] = null;
+		}
+	}
+}
+
+function moveThing(from, to, where='start', paddingTop = null) {
+	waitForElement(`.${from}`, 1000)
+	.then(() => {
+		waitForElement(`.${to}`, 1000)
+		.then(() => {
+			let aside = document.getElementsByClassName(from)[0];
+			let section = document.getElementsByClassName(to)[0];
+			if (where == 'start') { section.insertBefore(aside, section.firstChild); }
+			if (where == 'end') { section.appendChild(aside); }
+			if (paddingTop) { aside.style.paddingTop = `${paddingTop}px`; }
+		} );
+	} );
+}
+
+function moveThings(reverse=false){
+	moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2')
+	moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20)
+}
+
+//this functions need some love
+function sticker() {
+	if (window.innerWidth >= 1281){
+		moveThings();
+		stickThings(); 
+	} else {
+		for(var key in stickies) {
+			if (stickies[key]) { 
+				stickies[key].inactive();
+			};	
+		}
+	}		
+}
+
+window.onresize = sticker;
+
+
 
 function onUrlChange() {
 	clean_charts();
 	clean_watchers();
+	clean_stickies();
+	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		if (window.innerWidth >= 1281){ 
+			moveThings(); 
+			stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); 
+		}
+
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
 			createOffersHelperContainer();
