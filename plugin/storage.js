@@ -8,6 +8,7 @@ preferences['ChartRecurrent'] = null;
 preferences['ChartVolume'] = null;
 preferences['ChartHistory'] = null;
 preferences['StatsHistory'] = null;
+preferences['DarkMode'] = null;
 
 function persistPreferences(name, value) {
 	let dict = {};
