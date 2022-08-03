@@ -58,7 +58,7 @@ function updateOffers(offers, rateAndFees) {
 		}
 		
 		if (preferences['ChartOffers']) {
-			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
+			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars, themeMode));
 			charts['offers'].render();
 		}
 	}
@@ -155,19 +155,19 @@ function updateHistory(histories, transactions) {
 			if (change < 0) {colors = ["#FF4560"];}
 			else if (change == 0) {colors = ["#008FFB"];}
 			
-			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
+			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, themeMode));
 			charts['price_history'].render();
 		}
 		
 		if (preferences['ChartVolume']) {
 			let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
+			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
 			charts['volume'].render();
 		}
 		
 		if (preferences['ChartRecurrent']) {
 			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
-			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
+			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
 			charts['recurrent'].render(); 
 		}
 	}
@@ -177,18 +177,24 @@ let nft=null;
 
 let lastHistory = '';
 async function updateHistoryWithApiData() {
-  let splitted_url = lastUrl.split('/');
-  nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
-  transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`)
-  let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-  let string = array_to_string(histories);
-  if (string != lastHistory){
-    lastHistory = string;
-    clean_chart('price_history');
-    clean_chart('volume');
-    clean_chart('recurrent');
-    updateHistory(histories, transactions);
-  }
+	let splitted_url = lastUrl.split('/');
+	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+	transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`)
+	let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+	let string = array_to_string(histories);
+	if (string != lastHistory){
+		lastHistory = string;
+		if (preferences['DarkMode']) { 
+			let _elements = document.querySelectorAll('.sc-bkkeKt,.sc-dlVxhl,#offershelperprompt,#history_helper');
+			for (_element of _elements){
+				if (_element.style) { _element.style.color = '#FBFBFB'; }
+			}
+		}
+		clean_chart('price_history');
+		clean_chart('volume');
+		clean_chart('recurrent');
+		updateHistory(histories, transactions);
+	}
 }
 
 let lastOffer = '';
@@ -304,6 +310,7 @@ function sticker() {
 
 window.onresize = sticker;
 
+let themeMode = 'light';
 async function onUrlChange() {
 	await readPreferences();
 
@@ -315,8 +322,9 @@ async function onUrlChange() {
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		
 		if (preferences['DarkMode']) { 
-			document.body.style.backgroundColor = '#262626'; 	
-			let _elements = document.querySelectorAll('.Title-sc-1p3n06p-7,.hIESFk .sc-iUKqMP,.sc-bkkeKt,.sc-jlRLRk,.ActionBack-sc-kdlg0e-2,.Button-sc-18j7gm-0,.ioeVpX,.sc-dlVxhl');
+			themeMode = 'dark'
+			document.body.style.backgroundColor = '#424242'; 	
+			let _elements = document.querySelectorAll('.Title-sc-1p3n06p-7,.hIESFk .sc-iUKqMP,.sc-jlRLRk,.ActionBack-sc-kdlg0e-2,.Button-sc-18j7gm-0,.ioeVpX,.sc-bkkeKt,.SectionTitle-sc-13gqei4-5');
 			for (_element of _elements){
 				if (_element.style) { _element.style.color = '#FBFBFB'; }
 			}

@@ -153,7 +153,7 @@ function getTickAmount(quantities) {
 	return maxTick;
 }
 
-function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars){
+function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars, theme){
 	return {
 		title: {
 			text: "Future offers"
@@ -232,11 +232,14 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 					"</div>"
 				);
 			}
+		},
+		theme:{
+			mode: theme
 		}
 	}
 }
 
-function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index){
+function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, theme){
 	
 	let options = {
 		title: {
@@ -319,55 +322,58 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 		annotations: {
 			xaxis: [
 				{}
-			],
+			]
 		},
-			markers: {
-				discrete: []
-			}
+		markers: {
+			discrete: []
+		},
+		theme: {
+			mode: theme
 		}
+	}
 
-		if (all_transactions) {
-			options.annotations.xaxis.push({
-				x: 0,
-				borderColor: '#999',
-				yAxisIndex: 0,
-				label: {
-					show: true,
-					text: 'Minted',
-					offsetX: 10,
-					style: {
-						color: "#fff",
-						background: '#775DD0'
-					}
+	if (all_transactions) {
+		options.annotations.xaxis.push({
+			x: 0,
+			borderColor: '#999',
+			yAxisIndex: 0,
+			label: {
+				show: true,
+				text: 'Minted',
+				offsetX: 10,
+				style: {
+					color: "#fff",
+					background: '#775DD0'
 				}
-			});
-		}
-		if (profileName) {
-			for (var i = 0; i < profile_sales_index.length; i++) {
-				options.markers.discrete.push({
-					seriesIndex: 0,
-					dataPointIndex: profile_sales_index[i],
-					fillColor: '#000000',
-					strokeColor: '#7c1760',
-					size: 5,
-					shape: "circle"
-				})
 			}
-			for (var i = 0; i < profile_buys_index.length; i++) {
-				options.markers.discrete.push({
-					seriesIndex: 0,
-					dataPointIndex: profile_buys_index[i],
-					fillColor: '#ffffff',
-					strokeColor: '#7c1760',
-					size: 5,
-					shape: "circle"
-				})
-			}
+		});
+	}
+	if (profileName) {
+		for (var i = 0; i < profile_sales_index.length; i++) {
+			options.markers.discrete.push({
+				seriesIndex: 0,
+				dataPointIndex: profile_sales_index[i],
+				fillColor: '#000000',
+				strokeColor: '#7c1760',
+				size: 5,
+				shape: "circle"
+			})
 		}
-		return options;
+		for (var i = 0; i < profile_buys_index.length; i++) {
+			options.markers.discrete.push({
+				seriesIndex: 0,
+				dataPointIndex: profile_buys_index[i],
+				fillColor: '#ffffff',
+				strokeColor: '#7c1760',
+				size: 5,
+				shape: "circle"
+			})
+		}
+	}
+	return options;
 }
 
-function get_options_volume(values_eth, series_volume, labels_volume, all_data_volume) {
+function get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, theme) {
 	return {
 		title: {
 			text: `Volume (Total : ${values_eth.length})`
@@ -394,12 +400,13 @@ function get_options_volume(values_eth, series_volume, labels_volume, all_data_v
 			}
 		},
 		theme: {
+			mode: theme,
 			palette: 'palette3'
 		}
 	}
 }
 
-function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
+function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, theme){
 	return {
 		title: {
 			text: "Recurrent buyers/sellers"
@@ -421,6 +428,9 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
 		colors: ['#008FFB', '#00E396', '#FF4560'],
 		xaxis: {
 			decimalsInFloat: 0
+		},
+		theme:{
+			mode:theme
 		}
 	}
 }
