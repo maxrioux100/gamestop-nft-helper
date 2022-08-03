@@ -9,16 +9,27 @@ menu['ChartVolume'] = 'Chart of the last volume';
 menu['ChartHistory'] = 'Chart on the previous sale';
 menu['StatsHistory'] = 'Stats on the previous sale';
 
-for (let key in menu) {
-	let container = document.getElementById('container');
+function writeCheck(key, container){
+	let container_elem = document.getElementById(container);
 	let div = document.createElement('div');
 	
 	div.innerHTML = `<input class="form-check-input" type="checkbox" role="switch" id="${key}" checked />` +
 					`<label class="form-check-label" for="${key}">${menu[key]}</label>`;
 	
 	div.setAttribute('class', 'form-check form-switch my-1');
-	container.appendChild(div);
+	container_elem.appendChild(div);
 }
+
+
+writeCheck('StickMenu', 'container_all_interface');
+writeCheck('StickNFT', 'container_NFT_interface');
+writeCheck('MovePrice', 'container_NFT_interface');
+writeCheck('MoveTools', 'container_NFT_interface');
+writeCheck('ChartOffers', 'container_NFT_offers');
+writeCheck('StatsHistory', 'container_NFT_history');
+writeCheck('ChartHistory', 'container_NFT_history');
+writeCheck('ChartVolume', 'container_NFT_history');
+writeCheck('ChartRecurrent', 'container_NFT_history');
 
 async function updateDefaultConfig(boxes){
 	await readPreferences();
