@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="14"
+   height="13"
+   fill="none"
+   version="1.1"
+   id="svg570"
+   sodipodi:docname="0f655dbe35439e127dd99dd383d06350.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs574">
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Colorize"
+       id="filter590"
+       x="0"
+       y="0"
+       width="1"
+       height="1">
+      <feComposite
+         in2="SourceGraphic"
+         operator="arithmetic"
+         k1="0"
+         k2="1.38778e-16"
+         result="composite1"
+         id="feComposite576" />
+      <feColorMatrix
+         in="composite1"
+         values="1"
+         type="saturate"
+         result="colormatrix1"
+         id="feColorMatrix578" />
+      <feFlood
+         flood-opacity="1"
+         flood-color="rgb(251,251,251)"
+         result="flood1"
+         id="feFlood580" />
+      <feBlend
+         in="flood1"
+         in2="colormatrix1"
+         mode="multiply"
+         result="blend1"
+         id="feBlend582" />
+      <feBlend
+         in2="blend1"
+         mode="screen"
+         result="blend2"
+         id="feBlend584" />
+      <feColorMatrix
+         in="blend2"
+         values="1"
+         type="saturate"
+         result="colormatrix2"
+         id="feColorMatrix586" />
+      <feComposite
+         in="colormatrix2"
+         in2="SourceGraphic"
+         operator="in"
+         k2="1"
+         result="composite2"
+         id="feComposite588" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="namedview572"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="64.384615"
+     inkscape:cx="7.004779"
+     inkscape:cy="6.5077658"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="1072"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg570" />
+  <path
+     d="M11.911 11.556H1.8V1.444h5.055V0H1.8C.998 0 .355.65.355 1.444v10.112C.355 12.35.998 13 1.8 13h10.11c.795 0 1.444-.65 1.444-1.444V6.5H11.91v5.056ZM8.3 0v1.444h2.593l-7.1 7.1 1.019 1.018 7.099-7.1v2.594h1.444V0H8.3Z"
+     fill="#000"
+     id="path568"
+     style="filter:url(#filter590)" />
+</svg>

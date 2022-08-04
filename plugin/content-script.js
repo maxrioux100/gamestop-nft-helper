@@ -328,7 +328,7 @@ function updateDark() {
 		if (_element.style) { _element.style.backgroundColor = '#262626'; }
 	}
 	
-	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"]');
+	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"],img[src="/0f655dbe35439e127dd99dd383d06350.svg"]');
 	for (_element of imgs ){
 		if (_element) { 
 			let splitted_url = _element.src.split('/');
