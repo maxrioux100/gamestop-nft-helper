@@ -328,8 +328,13 @@ function updateDark() {
 		if (_element.style) { _element.style.backgroundColor = '#262626'; }
 	}
 	
-	let back_arrow = document.querySelector('img[src="/31ff16eef888637505a9c58ca047dd60.svg"]');
-	if (back_arrow) { back_arrow.src = chrome.runtime.getURL('images/31ff16eef888637505a9c58ca047dd60.svg'); }
+	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"]');
+	for (_element of imgs ){
+		if (_element) { 
+			let splitted_url = _element.src.split('/');
+			_element.src = chrome.runtime.getURL('images/' + splitted_url[splitted_url.length-1]); 
+		}
+	}
 	
 }
 
