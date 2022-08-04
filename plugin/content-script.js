@@ -184,12 +184,7 @@ async function updateHistoryWithApiData() {
 	let string = array_to_string(histories);
 	if (string != lastHistory){
 		lastHistory = string;
-		if (preferences['DarkMode']) { 
-			let _elements = document.querySelectorAll('.sc-bkkeKt,.sc-dlVxhl,#offershelperprompt,#history_helper');
-			for (_element of _elements){
-				if (_element.style) { _element.style.color = '#FBFBFB'; }
-			}
-		}
+		if (preferences['DarkMode']) { updateDark(); } 
 		clean_chart('price_history');
 		clean_chart('volume');
 		clean_chart('recurrent');
@@ -206,6 +201,7 @@ async function updateOffersWithApiData() {
 			let string = array_to_string(offers);
 			if (string != lastOffer){
 				lastOffer = string;
+				if (preferences['DarkMode']) { updateDark(); } 
 				let rateAndFees = await makeApiCall('ratesAndFees');
 				clean_chart('offers');
 				updateOffers(offers, rateAndFees);
@@ -311,6 +307,28 @@ function sticker() {
 window.onresize = sticker;
 
 let themeMode = 'light';
+function updateDark() {
+	themeMode = 'dark'
+	document.body.style.backgroundColor = '#424242';
+	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
+	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
+	
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD)');
+	for (_element of whitefont){
+		if (_element.style) { _element.style.color = '#FBFBFB'; }
+	}
+	
+	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2 ');
+	for (_element of blackfont){
+		if (_element.style) { _element.style.color = 'black'; }
+	}
+	
+	let _darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk)');
+	for (_element of _darkbackground ){
+		if (_element.style) { _element.style.backgroundColor = '#262626'; }
+	}
+}
+
 async function onUrlChange() {
 	await readPreferences();
 
@@ -321,18 +339,8 @@ async function onUrlChange() {
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		
-		if (preferences['DarkMode']) { 
-			themeMode = 'dark'
-			document.body.style.backgroundColor = '#424242';
-			document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
-			document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
-			
-			let _elements = document.querySelectorAll('.Title-sc-1p3n06p-7,.hIESFk .sc-iUKqMP,.sc-jlRLRk,.ActionBack-sc-kdlg0e-2,.Button-sc-18j7gm-0,.ioeVpX,.sc-bkkeKt,.SectionTitle-sc-13gqei4-5,a');
-			for (_element of _elements){
-				if (_element.style) { _element.style.color = '#FBFBFB'; }
-			}
-		}
-		
+		if (preferences['DarkMode']) { updateDark(); } 
+
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
 			if (preferences['StickNFT']) {
