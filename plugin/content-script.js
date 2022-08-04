@@ -1,3 +1,12 @@
+let lastUrl = location.href;
+new MutationObserver(() => {
+	const url = location.href;
+	if (url !== lastUrl) {
+		lastUrl = url;
+		location.reload();
+	}
+}).observe(document, {subtree: true, childList: true});
+
 function updateOffers(offers, rateAndFees) {
 	
 	let sorted = Object.keys(offers).map(function(key) {
@@ -209,16 +218,6 @@ async function updateOffersWithApiData() {
 		}
 	}
 }
-
-let lastUrl = location.href;
-new MutationObserver(() => {
-  const url = location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
-	location.reload();
-    //onUrlChange();
-  }
-}).observe(document, {subtree: true, childList: true});
 
 let stickies = {};
 stickies['nft'] = null;
