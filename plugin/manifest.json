@@ -32,5 +32,11 @@
 	],
 	"host_permissions": [
         "https://api.nft.gamestop.com/*"
-    ]
+    ],
+	"web_accessible_resources": [{
+		"resources": [ 
+			"images/31ff16eef888637505a9c58ca047dd60.svg"
+		],
+		"matches": [ "https://nft.gamestop.com/*" ]
+	}]
 }

@@ -184,11 +184,11 @@ async function updateHistoryWithApiData() {
 	let string = array_to_string(histories);
 	if (string != lastHistory){
 		lastHistory = string;
-		if (preferences['DarkMode']) { updateDark(); } 
 		clean_chart('price_history');
 		clean_chart('volume');
 		clean_chart('recurrent');
 		updateHistory(histories, transactions);
+		if (preferences['DarkMode']) { updateDark(); } 
 	}
 }
 
@@ -201,10 +201,10 @@ async function updateOffersWithApiData() {
 			let string = array_to_string(offers);
 			if (string != lastOffer){
 				lastOffer = string;
-				if (preferences['DarkMode']) { updateDark(); } 
 				let rateAndFees = await makeApiCall('ratesAndFees');
 				clean_chart('offers');
 				updateOffers(offers, rateAndFees);
+				if (preferences['DarkMode']) { updateDark(); } 
 			}
 		}
 	}
@@ -313,7 +313,7 @@ function updateDark() {
 	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
 	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
 	
-	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD)');
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
@@ -323,10 +323,14 @@ function updateDark() {
 		if (_element.style) { _element.style.color = 'black'; }
 	}
 	
-	let _darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0,DetailsItem-sc-asex48-1');
-	for (_element of _darkbackground ){
+	let darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0,DetailsItem-sc-asex48-1');
+	for (_element of darkbackground ){
 		if (_element.style) { _element.style.backgroundColor = '#262626'; }
 	}
+	
+	let back_arrow = document.querySelector('img[src="/31ff16eef888637505a9c58ca047dd60.svg"]');
+	if (back_arrow) { back_arrow.src = chrome.runtime.getURL('images/31ff16eef888637505a9c58ca047dd60.svg'); }
+	
 }
 
 async function onUrlChange() {
