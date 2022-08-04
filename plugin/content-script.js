@@ -2,8 +2,9 @@ let lastUrl = location.href;
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { location.reload(); }
 		lastUrl = url;
-		location.reload();
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { main(); }
 	}
 }).observe(document, {subtree: true, childList: true});
 
@@ -337,7 +338,7 @@ function updateDark() {
 	}
 }
 
-async function onUrlChange() {
+async function main() {
 	await readPreferences();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
@@ -369,18 +370,20 @@ async function onUrlChange() {
 			}, 1000); 
 		});
 	}
-	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-		watchers['profileName'] = setIntervalImmediately(function() {
-			waitForElement(".sc-hBUSln", 3000)
-			.then( () => {
-				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
-				if (tempProfileName != '') {
-					persistProfileName(tempProfileName);
-					clean_watcher('profileName');
-				}
-			});
-		}, 3000);
-	}
 }
 
-onUrlChange();
+if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { main(); }
+
+
+if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+	watchers['profileName'] = setIntervalImmediately(function() {
+		waitForElement(".sc-hBUSln", 3000)
+		.then( () => {
+			let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
+			if (tempProfileName != '') {
+				persistProfileName(tempProfileName);
+				clean_watcher('profileName');
+			}
+		});
+	}, 3000);
+}
