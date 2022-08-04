@@ -258,7 +258,7 @@ function stickThing(stickiesName, className, options, activate=false, dontReacti
 
 function stickThings(){
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
-	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); 
+	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); 
 }
 
 function clean_stickies(){
@@ -318,9 +318,9 @@ function updateDark() {
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
 	
-	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2 ');
+	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14');
 	for (_element of blackfont){
-		if (_element.style) { _element.style.color = 'black'; }
+		if (_element.style) { _element.style.color = '#262626'; }
 	}
 	
 	let darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0,DetailsItem-sc-asex48-1');
@@ -353,7 +353,7 @@ async function onUrlChange() {
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
 			if (preferences['StickNFT']) {
-				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); }
+				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); }
 				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true, dontReactivate=true); }
 			}
 		}
