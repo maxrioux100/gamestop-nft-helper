@@ -21,10 +21,9 @@ function writeCheck(key, container){
 	container_elem.appendChild(div);
 }
 
-
-writeCheck('StickMenu', 'container_all_interface');
 writeCheck('DarkMode', 'container_NFT_interface');
 writeCheck('StickNFT', 'container_NFT_interface');
+writeCheck('StickMenu', 'container_NFT_interface');
 writeCheck('MovePrice', 'container_NFT_interface');
 writeCheck('MoveTools', 'container_NFT_interface');
 writeCheck('ChartOffers', 'container_NFT_offers');
