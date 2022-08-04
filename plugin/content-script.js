@@ -323,7 +323,7 @@ function updateDark() {
 		if (_element.style) { _element.style.color = 'black'; }
 	}
 	
-	let _darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk)');
+	let _darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0');
 	for (_element of _darkbackground ){
 		if (_element.style) { _element.style.backgroundColor = '#262626'; }
 	}
