@@ -345,9 +345,10 @@ async function onUrlChange() {
 	clean_watchers();
 	clean_stickies();
 	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
-	if (preferences['DarkMode']) { updateDark(); } 
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		
+		if (preferences['DarkMode']) { updateDark(); } 
 
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
