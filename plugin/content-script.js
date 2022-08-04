@@ -341,10 +341,6 @@ function updateDark() {
 async function onUrlChange() {
 	await readPreferences();
 
-	//clean_charts();
-	//clean_watchers();
-	//clean_stickies();
-
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		
 		if (preferences['DarkMode']) { updateDark(); } 
