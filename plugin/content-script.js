@@ -215,7 +215,8 @@ new MutationObserver(() => {
   const url = location.href;
   if (url !== lastUrl) {
     lastUrl = url;
-    onUrlChange();
+	location.reload();
+    //onUrlChange();
   }
 }).observe(document, {subtree: true, childList: true});
 
@@ -285,7 +286,7 @@ function moveThing(from, to, where='start', paddingTop = null) {
 	} );
 }
 
-function moveThings(reverse=false){
+function moveThings(){
 	if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
 	if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
 }
@@ -312,7 +313,7 @@ function updateDark() {
 	document.body.style.backgroundColor = '#424242';
 	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
 	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
-	
+
 	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
@@ -335,20 +336,20 @@ function updateDark() {
 			_element.src = chrome.runtime.getURL('images/' + splitted_url[splitted_url.length-1]); 
 		}
 	}
-	
 }
 
 async function onUrlChange() {
 	await readPreferences();
 
-	clean_charts();
-	clean_watchers();
-	clean_stickies();
-	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
+	//clean_charts();
+	//clean_watchers();
+	//clean_stickies();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
 		
 		if (preferences['DarkMode']) { updateDark(); } 
+		
+		if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
 
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
