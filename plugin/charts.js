@@ -421,13 +421,6 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
 		colors: ['#008FFB', '#00E396', '#FF4560'],
 		xaxis: {
 			decimalsInFloat: 0
-		},
-		yaxis: {
-			labels: {
-				      formatter: function(val, index) {
-						return `<span>${val}-test</span>`;
-					}
-			}
 		}
 	}
 }
