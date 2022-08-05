@@ -407,7 +407,7 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
 		},
 		series: series_sellers_buyers,
 		labels: labels_sellers_buyers,
-		colors: ['#008FFB', '#00E396', '#FF4560'],
+		colors: ['#00E396', '#FF4560'],
 		xaxis: {
 			decimalsInFloat: 0
 		},
