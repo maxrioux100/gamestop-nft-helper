@@ -172,7 +172,9 @@ function updateHistory(histories, transactions) {
 			
 			const labels = document.querySelectorAll('.chart_recurrent');
 			for (let label of labels) {
-				if (label.value == creator) { label.setAttribute("fill", "#1266F1"); }
+				let title = label.querySelector('title').textContent;
+				if (title == creator) { label.setAttribute("fill", "#1266F1"); }
+				if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
 			}
 		}
 	}
