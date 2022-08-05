@@ -319,7 +319,7 @@ function updateDark() {
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
 	
-	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14');
+	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK');
 	for (_element of blackfont){
 		if (_element.style) { _element.style.color = '#262626'; }
 	}
