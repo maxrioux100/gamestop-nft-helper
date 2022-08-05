@@ -169,6 +169,11 @@ function updateHistory(histories, transactions) {
 			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
 			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 			charts['recurrent'].render(); 
+			
+			const labels = document.querySelectorAll('.chart_recurrent');
+			for (let label of labels) {
+				if (label.value == creator) { label.setAttribute("fill", "#1266F1"); }
+			}
 		}
 	}
 }

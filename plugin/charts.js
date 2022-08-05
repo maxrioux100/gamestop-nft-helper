@@ -424,9 +424,9 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
 		},
 		yaxis: {
 			labels: {
-				      formatter: function(val, index) {
-						return `<span>${val}-test</span>`;
-					}
+				style: {
+					cssClass: 'chart_recurrent'
+				}
 			}
 		}
 	}
