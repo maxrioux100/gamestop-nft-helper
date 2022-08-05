@@ -18,8 +18,7 @@ function clean_charts(){
 	}
 }
 
-function combine_buyers_sellers(buyers, sellers){
-
+function combine_buyers_sellers(buyers, sellers, listers){		
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
@@ -30,6 +29,14 @@ function combine_buyers_sellers(buyers, sellers){
 			combined[Object.keys(sellers)[i]] += sellers[Object.keys(sellers)[i]];
 		} else {
 			combined[Object.keys(sellers)[i]] = sellers[Object.keys(sellers)[i]];
+		}
+	}
+	
+	for (let i = 0; i < Object.keys(listers).length ; i++){
+		if (Object.keys(listers)[i] in combined) {
+			combined[Object.keys(listers)[i]] += listers[Object.keys(listers)[i]];
+		} else {
+			combined[Object.keys(listers)[i]] = listers[Object.keys(listers)[i]];
 		}
 	}
 
@@ -67,6 +74,14 @@ function combine_buyers_sellers(buyers, sellers){
 		if (items[i][0] in buyers) {value = buyers[items[i][0]]};
 		data_buyers.push(value);
 	}
+	
+	let data_listers = [];
+
+	for (let i = 0; i < items.length ; i++){
+		let value = 0;
+		if (items[i][0] in listers) {value = listers[items[i][0]]};
+		data_listers.push(value);
+	}
 
 	let series = [{
 				name: 'Bought',
@@ -74,6 +89,9 @@ function combine_buyers_sellers(buyers, sellers){
 			},{
 				name: 'Sold',
 				data: data_sellers
+			},{
+				name: 'Listed',
+				data: data_listers
 			}]
 
 
@@ -407,7 +425,7 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers){
 		},
 		series: series_sellers_buyers,
 		labels: labels_sellers_buyers,
-		colors: ['#00E396', '#FF4560'],
+		colors: ['#00E396', '#FF4560', '#A300D6'],
 		xaxis: {
 			decimalsInFloat: 0
 		},
