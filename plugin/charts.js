@@ -80,10 +80,10 @@ function combine_buyers_sellers(buyers, sellers, creator){
 				name: 'Creator',
 				data: data_creators
 			},{
-				name: 'Buyers',
+				name: 'Bought',
 				data: data_buyers
 			},{
-				name: 'Sellers',
+				name: 'Sold',
 				data: data_sellers
 			}]
 
