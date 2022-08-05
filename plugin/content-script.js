@@ -166,7 +166,7 @@ function updateHistory(histories, transactions) {
 		}
 		
 		if (preferences['ChartRecurrent']) {
-			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
+			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers));
 			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
 			charts['recurrent'].render(); 
 			

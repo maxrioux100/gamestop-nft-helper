@@ -18,7 +18,7 @@ function clean_charts(){
 	}
 }
 
-function combine_buyers_sellers(buyers, sellers, creator){
+function combine_buyers_sellers(buyers, sellers){
 
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
@@ -55,7 +55,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 
 	for (let i = 0; i < items.length ; i++){
 		let value = 0;
-		if (items[i][0] in sellers && items[i][0] != creator) {value = sellers[items[i][0]]};
+		if (items[i][0] in sellers) {value = sellers[items[i][0]]};
 		data_sellers.push(value);
 		labels.push(items[i][0]);
 	}
@@ -68,18 +68,7 @@ function combine_buyers_sellers(buyers, sellers, creator){
 		data_buyers.push(value);
 	}
 
-	let data_creators = [];
-
-	for (let i = 0; i < items.length ; i++){
-		let value = 0;
-		if (items[i][0] == creator) {value = sellers[items[i][0]]};
-		data_creators.push(value);
-	}
-
 	let series = [{
-				name: 'Creator',
-				data: data_creators
-			},{
 				name: 'Bought',
 				data: data_buyers
 			},{
