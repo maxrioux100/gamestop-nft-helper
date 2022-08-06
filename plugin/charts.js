@@ -18,7 +18,7 @@ function clean_charts(){
 	}
 }
 
-function combine_buyers_sellers(buyers, sellers, listers){		
+function combine_buyers_sellers_listers(buyers, sellers, listers){		
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];

@@ -169,7 +169,7 @@ function updateHistory() {
 				}
 			}
 
-			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), count(listers));
+			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
 			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
 			charts['recurrent'].render(); 
 			
@@ -209,13 +209,18 @@ getNFT();
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
 	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+	
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
 		updateNeeded = true;
 	}, 5000);
+	
 	setIntervalImmediately(async function() {
 		offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
-		updateOffersWithApiData();
+		updateNeeded = true;
+		for (offer of offers) {
+			addAddress(offer['ownerAddress']);
+		}
 	}, 5000);
 };
 
@@ -225,8 +230,8 @@ let Usernames = {}
 async function addAddress(address){
 	if (!(address in Usernames)) {
 		Usernames[address] = address;
-		Usernames[address] = await makeApiCall('getPublicProfile', 'address', address);
-		console.log(Usernames);
+		let temp = await makeApiCall('getPublicProfile', 'address', address);
+		if (temp['name']) Usernames[address] = temp['name'];
 		updateNeeded = true;
 	}
 }
