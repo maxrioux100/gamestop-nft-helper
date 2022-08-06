@@ -8,7 +8,7 @@ new MutationObserver(() => {
 	}
 }).observe(document, {subtree: true, childList: true});
 
-function updateOffers(offers, rateAndFees) {
+function updateOffers(offers) {
 	
 	let sorted = Object.keys(offers).map(function(key) {
 		return [key, offers[key]];
@@ -28,7 +28,7 @@ function updateOffers(offers, rateAndFees) {
 
 		for (let i=0; i < offers.length; i++) {
 			values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
-			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 2);
+			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*ETH_US, 2);
 			quantities[i] = parseInt(sorted[i][1]['amount']);
 		}
 
@@ -201,12 +201,14 @@ function updateHistory(histories, transactions) {
 }
 
 
-
-
+let rateAndFees = null;
+let ETH_US = null;
 setIntervalImmediately(async function() {
-	let rateAndFees = await makeApiCall('ratesAndFees');
-	console.log(rateAndFees);
-}, 5000);
+	rateAndFees = await makeApiCall('ratesAndFees');
+	//Add a verification to be sure it's ETH_US
+	ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
+	updateOffersWithApiData();
+}, 30000);
 
 
 
@@ -233,17 +235,15 @@ async function updateHistoryWithApiData(force=false) {
 
 var lastOffers = null;
 async function updateOffersWithApiData() {
-	if (nft != null)
+	if (nft && ETH_US)
 	{
 		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
 		if (offers.length > 1){	
 			let string = array_to_string(offers);
 			if (string != array_to_string(lastOffers)){
 				lastOffers = offers;
-				//let rateAndFees = await makeApiCall('ratesAndFees');
-				let rateAndFees = null;
 				clean_chart('offers');
-				updateOffers(offers, rateAndFees);
+				updateOffers(offers);
 				updateHistoryWithApiData(force=true);
 				if (preferences['DarkMode']) { updateDark(); } 
 			}
