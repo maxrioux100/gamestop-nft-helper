@@ -105,22 +105,11 @@ function updateHistory() {
 			values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
 			total_eth += values_eth[transactions.length - 1 - i];
 			total_dollars += values_dollars[transactions.length - 1 - i];
-
 			created_at[transactions.length - 1 - i] = transactions[i]['createdAt'];
-
 			amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
 
-		console.log(values_eth);
-		console.log(values_dollars);
-		console.log(buyers);
-		console.log(sellers);
-		console.log(created_at);
-
-		
-		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
-
-		transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts);
+		transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, created_at, amounts);
 
 		let min_eth = Math.min(...values_eth);
 		let min_dollars = Math.min(...values_dollars);
@@ -133,6 +122,7 @@ function updateHistory() {
 		}
 		
 		if (preferences['ChartHistory']) {
+			//make a function in charts.js to get this like for other charts
 			let profile_sales_index = [];
 			let profile_buys_index = [];
 
@@ -163,9 +153,9 @@ function updateHistory() {
 		}
 		
 		if (preferences['ChartVolume']) {
-			let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
-			charts['volume'].render();
+			//let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+			//charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
+			//charts['volume'].render();
 		}
 		
 		if (preferences['ChartRecurrent'] ) {

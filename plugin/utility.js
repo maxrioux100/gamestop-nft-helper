@@ -65,7 +65,8 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
-function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts){
+//need to remake this function in a more general way
+function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, created_at, amounts){
 	for (let i = 0 ; i < amounts.length ; i++) {
 		if (amounts[i] > 1) {
 			let amount = amounts[i]
@@ -83,7 +84,7 @@ function transactions_splitter(values_eth, values_dollars, sellers, buyers, labe
 				sellers.splice(i, 0, sellers[i]);
 				buyers.splice(i, 0, buyers[i]);
 				labels.splice(i, 0, labels[i]);
-				agos.splice(i, 0, agos[i]);
+				created_at.splice(i, 0, created_at[i]);
 				amounts.splice(i, 0, 1);
 				i++;
 			}
