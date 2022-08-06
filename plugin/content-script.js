@@ -4,7 +4,7 @@ new MutationObserver(() => {
 	if (url !== lastUrl) {
 		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { location.reload(); }
 		lastUrl = url;
-		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { main(); }
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 	}
 }).observe(document, {subtree: true, childList: true});
 
@@ -239,8 +239,9 @@ async function updateOffersWithApiData() {
 	}
 }
 
+if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 
-async function main() {
+async function token_page() {
 	await readPreferences();
 
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
@@ -273,9 +274,6 @@ async function main() {
 		});
 	}
 }
-
-if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { main(); }
-
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
 	watchers['profileName'] = setIntervalImmediately(function() {
