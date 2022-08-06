@@ -46,6 +46,7 @@ function createHistoryHelperContainer() {
 	container.appendChild(div);
 }
 
+
 function createHistoryStatsCharts() {
 	let history_stats_elem = document.getElementById("history_stats");
 	if (history_stats_elem != null) {history_stats_elem.remove();};
@@ -72,12 +73,13 @@ function createHistoryStatsCharts() {
 	div_chart_volume.setAttribute('id', 'chart_volume');
 	let div_chart_recurrent = document.createElement('div');
 	div_chart_recurrent.setAttribute('id', 'chart_recurrent');
-	
+
 	let history_helper = document.getElementById("history_helper");
 	if (preferences['StatsHistory']) { history_helper.appendChild(section); }
 	if (preferences['ChartHistory']) { history_helper.appendChild(div_chart_price_history);	}				
 	if (preferences['ChartVolume']) { history_helper.appendChild(div_chart_volume); }
 	if (preferences['ChartRecurrent']) { history_helper.appendChild(div_chart_recurrent); }
+
 }
 
 function createOffersChart() {

@@ -8,7 +8,7 @@ new MutationObserver(() => {
 	}
 }).observe(document, {subtree: true, childList: true});
 
-function updateOffers(offers) {
+function updateOffers() {
 	
 	let sorted = Object.keys(offers).map(function(key) {
 		return [key, offers[key]];
@@ -74,7 +74,7 @@ function updateOffers(offers) {
 	}
 }
 
-function updateHistory(histories, transactions) {
+function updateHistory(histories) {
 
 	// Add 1 because of the mint
 	if (histories.length > 2) {
@@ -175,7 +175,7 @@ function updateHistory(histories, transactions) {
 			charts['volume'].render();
 		}
 		
-		if (preferences['ChartRecurrent']) {
+		if (preferences['ChartRecurrent'] ) {
     
 			let listers = [];
 			if (lastOffers) {
@@ -212,7 +212,8 @@ setIntervalImmediately(async function() {
 
 let nft=null;
 let transactions = null;
-getNFT()
+let offers=null;
+getNFT();
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
 	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
@@ -220,12 +221,17 @@ async function getNFT() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
 		updateHistoryWithApiData();
 	}, 5000);
+	setIntervalImmediately(async function() {
+		offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
+		updateOffersWithApiData();
+	}, 5000);
 };
 
 
 
 let lastHistory = '';
 
+//force is for the recurrent sellers/buyers graph
 async function updateHistoryWithApiData(force=false) {
 	if (transactions){
 		let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
@@ -235,25 +241,32 @@ async function updateHistoryWithApiData(force=false) {
 			clean_chart('price_history');
 			clean_chart('volume');
 			clean_chart('recurrent');
-			updateHistory(histories, transactions);
-			if (preferences['DarkMode']) { updateDark(); }
+			waitForElement("#history_helper", 1000)
+			.then( () => {
+				updateHistory(histories);
+				if (preferences['DarkMode']) { updateDark(); }
+			});
 		}	
 	}
 }
 
 var lastOffers = null;
 async function updateOffersWithApiData() {
-	if (nft && ETH_US)
+	if (offers && ETH_US)
 	{
-		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
 		if (offers.length > 1){	
-			let string = array_to_string(offers);
-			if (string != array_to_string(lastOffers)){
+			if (JSON.stringify(offers) != JSON.stringify(lastOffers)){
 				lastOffers = offers;
 				clean_chart('offers');
-				updateOffers(offers);
-				updateHistoryWithApiData(force=true);
-				if (preferences['DarkMode']) { updateDark(); } 
+				waitForElement("#offers_helper", 1000)
+				.then( () => {
+					updateOffers();
+					waitForElement("#history_helper", 1000)
+					.then( () => {
+						updateHistoryWithApiData(force=true);
+					});
+					if (preferences['DarkMode']) { updateDark(); } 
+				});
 			}
 		}
 	}
