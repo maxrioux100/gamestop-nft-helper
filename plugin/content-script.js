@@ -75,8 +75,6 @@ function updateOffers() {
 }
 
 function updateHistory() {
-	//move it to the transactipon request funtion?
-	transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
 	if (transactions.length > 1) {
 		removeHistoryHelperPrompt();
 		createHistoryStatsCharts();
@@ -100,7 +98,7 @@ function updateHistory() {
 		for (let i=0; i < transactions.length; i++) {
 			buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
 			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
-			labels[transactions.length - 1 - i] = `<b>${buyers[transactions.length - 1 - i]}</b> bought from <b>${sellers[transactions.length - 1 - i]}</b>`;
+			labels[transactions.length - 1 - i] = `<b>${Usernames[buyers[transactions.length - 1 - i]]}</b> bought from <b>${Usernames[sellers[transactions.length - 1 - i]]}</b>`;
 			values_eth[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18), 4);;
 			values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
 			total_eth += values_eth[transactions.length - 1 - i];
@@ -212,7 +210,12 @@ async function getNFT() {
 	
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
+		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
 		updateNeeded = true;
+		for (transaction of transactions) {
+			addAddress(transaction['transaction']['orderB']['accountAddress']);
+			addAddress(transaction['transaction']['orderA']['accountAddress']);
+		}
 	}, 5000);
 	
 	setIntervalImmediately(async function() {
@@ -237,21 +240,19 @@ async function addAddress(address){
 }
 
 
-let lastHistory = '';
-
+let lastTransaction = '';
 //force is for the recurrent sellers/buyers graph
 async function updateHistoryWithApiData(force=false) {
 	if (transactions){
-		let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-		let string = array_to_string(histories);
-		if (force || string != lastHistory){
+		let string = array_to_string(transactions);
+		if (force || string != lastTransaction){
 			lastHistory = string;
 			clean_chart('price_history');
 			clean_chart('volume');
 			clean_chart('recurrent');
 			waitForElement("#history_helper", 1000)
 			.then( () => {
-				updateHistory(histories);
+				updateHistory();
 				if (preferences['DarkMode']) { updateDark(); }
 			});
 		}	
@@ -303,15 +304,7 @@ async function token_page() {
 		.then( () => {
 			if (preferences['ChartOffers']) { createOffersHelperContainer(); }
 			if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume'] || preferences['ChartRecurrent']) { createHistoryHelperContainer(); }
- 			watchers['history'] = setIntervalImmediately(function() {
-				waitForElement(".HistoryItemWrapper-sc-13gqei4-0", 3000)
-				.then( () => {
-					updateHistoryWithApiData();
-				}, () => {} );
-			}, 3000);
-			watchers['offers'] = setIntervalImmediately(function() {
-				updateOffersWithApiData();
-			}, 1000); 
+			updateNeeded = true;
 		});
 	}
 }
