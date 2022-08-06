@@ -200,6 +200,17 @@ function updateHistory(histories, transactions) {
 	}
 }
 
+
+
+
+setIntervalImmediately(async function() {
+	let rateAndFees = await makeApiCall('ratesAndFees');
+	console.log(rateAndFees);
+}, 5000);
+
+
+
+
 let nft=null;
 
 let lastHistory = '';
@@ -229,7 +240,8 @@ async function updateOffersWithApiData() {
 			let string = array_to_string(offers);
 			if (string != array_to_string(lastOffers)){
 				lastOffers = offers;
-				let rateAndFees = await makeApiCall('ratesAndFees');
+				//let rateAndFees = await makeApiCall('ratesAndFees');
+				let rateAndFees = null;
 				clean_chart('offers');
 				updateOffers(offers, rateAndFees);
 				updateHistoryWithApiData(force=true);

@@ -17,7 +17,7 @@ function clean_watchers(){
 	}
 }
 
-function setIntervalImmediately(func, interval) {
+async function setIntervalImmediately(func, interval) {
 	func();
 	return setInterval(func, interval);
 }
