@@ -176,9 +176,26 @@ function updateHistory(histories, transactions) {
 		}
 		
 		if (preferences['ChartRecurrent']) {
-			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), creator);
+    
+			let listers = [];
+			if (lastOffers) {
+				for (let i=0; i < lastOffers.length; i++) {
+					for (let ii=0 ; ii < lastOffers[i]['amount'] ; ii++) {
+						listers.push(lastOffers[i]['ownerAddress']);
+					}
+				}
+			}
+
+			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), count(listers));
 			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
 			charts['recurrent'].render(); 
+			
+			const labels = document.querySelectorAll('.chart_recurrent');
+			for (let label of labels) {
+				let title = label.querySelector('title').textContent;
+				if (title == creator) { label.setAttribute("fill", "#1266F1"); }
+				if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
+			}
 		}
 	}
 }
@@ -186,34 +203,36 @@ function updateHistory(histories, transactions) {
 let nft=null;
 
 let lastHistory = '';
-async function updateHistoryWithApiData() {
-	let splitted_url = lastUrl.split('/');
-	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
-	transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`)
-	let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-	let string = array_to_string(histories);
-	if (string != lastHistory){
-		lastHistory = string;
-		clean_chart('price_history');
-		clean_chart('volume');
-		clean_chart('recurrent');
-		updateHistory(histories, transactions);
-		if (preferences['DarkMode']) { updateDark(); } 
-	}
+
+async function updateHistoryWithApiData(force=false) {
+  let splitted_url = lastUrl.split('/');
+  nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+  transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`)
+  let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+  let string = array_to_string(histories);
+  if (force || string != lastHistory){
+    lastHistory = string;
+    clean_chart('price_history');
+    clean_chart('volume');
+    clean_chart('recurrent');
+    updateHistory(histories, transactions);
+    if (preferences['DarkMode']) { updateDark(); } 
+  }
 }
 
-let lastOffer = '';
+var lastOffers = null;
 async function updateOffersWithApiData() {
 	if (nft != null)
 	{
 		let offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
 		if (offers.length > 1){	
 			let string = array_to_string(offers);
-			if (string != lastOffer){
-				lastOffer = string;
+			if (string != array_to_string(lastOffers)){
+				lastOffers = offers;
 				let rateAndFees = await makeApiCall('ratesAndFees');
 				clean_chart('offers');
 				updateOffers(offers, rateAndFees);
+				updateHistoryWithApiData(force=true);
 				if (preferences['DarkMode']) { updateDark(); } 
 			}
 		}

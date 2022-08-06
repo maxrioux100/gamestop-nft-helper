@@ -34,7 +34,7 @@ function sortedToDict(sorted){
 
 function array_to_string(array){
 	let output = '';
-	array.forEach((value) => {output += value.textContent});
+	if (array) { array.forEach((value) => {output += value.textContent}); }
 	return output
 
 }
