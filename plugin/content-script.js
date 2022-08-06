@@ -243,7 +243,7 @@ async function addAddress(address){
 let lastTransaction = '';
 //force is for the recurrent sellers/buyers graph
 async function updateHistoryWithApiData(force=false) {
-	if (transactions){
+	if (transactions && ETH_US){
 		let string = array_to_string(transactions);
 		if (force || string != lastTransaction){
 			lastHistory = string;
