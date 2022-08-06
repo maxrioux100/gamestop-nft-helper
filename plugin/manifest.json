@@ -35,6 +35,8 @@
     ],
 	"web_accessible_resources": [{
 		"resources": [ 
+			"mdb.min.js.map",
+			"sticky.min.js.map",
 			"images/31ff16eef888637505a9c58ca047dd60.svg",
 			"images/e33e04602d2c85d6edb3008d7823158e.svg",
 			"images/0633293a9820d3f8c71e277f337a9f34.svg",
