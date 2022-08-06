@@ -210,27 +210,35 @@ setIntervalImmediately(async function() {
 	updateOffersWithApiData();
 }, 30000);
 
-
-
-
 let nft=null;
+let transactions = null;
+getNFT()
+async function getNFT() {
+	let splitted_url = lastUrl.split('/');
+	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+	setIntervalImmediately(async function() {
+		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
+		updateHistoryWithApiData();
+	}, 5000);
+};
+
+
 
 let lastHistory = '';
 
 async function updateHistoryWithApiData(force=false) {
-  let splitted_url = lastUrl.split('/');
-  nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
-  transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`)
-  let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
-  let string = array_to_string(histories);
-  if (force || string != lastHistory){
-    lastHistory = string;
-    clean_chart('price_history');
-    clean_chart('volume');
-    clean_chart('recurrent');
-    updateHistory(histories, transactions);
-    if (preferences['DarkMode']) { updateDark(); } 
-  }
+	if (transactions){
+		let histories = Array.prototype.slice.call(document.getElementsByClassName("HistoryItemWrapper-sc-13gqei4-0"));
+		let string = array_to_string(histories);
+		if (force || string != lastHistory){
+			lastHistory = string;
+			clean_chart('price_history');
+			clean_chart('volume');
+			clean_chart('recurrent');
+			updateHistory(histories, transactions);
+			if (preferences['DarkMode']) { updateDark(); }
+		}	
+	}
 }
 
 var lastOffers = null;
