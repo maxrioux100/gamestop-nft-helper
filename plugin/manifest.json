@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Gamestop NFT helper",
 	"description": "Add additional information to NFT pages",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"icons": { "16": "icon16.png",
 				"48": "icon48.png",
 				"128": "icon128.png" },
@@ -32,5 +32,14 @@
 	],
 	"host_permissions": [
         "https://api.nft.gamestop.com/*"
-    ]
+    ],
+	"web_accessible_resources": [{
+		"resources": [ 
+			"images/31ff16eef888637505a9c58ca047dd60.svg",
+			"images/e33e04602d2c85d6edb3008d7823158e.svg",
+			"images/0633293a9820d3f8c71e277f337a9f34.svg",
+			"images/0f655dbe35439e127dd99dd383d06350.svg"
+		],
+		"matches": [ "https://nft.gamestop.com/*" ]
+	}]
 }
