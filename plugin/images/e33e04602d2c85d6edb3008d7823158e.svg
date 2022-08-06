@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="15"
+   height="19"
+   fill="none"
+   version="1.1"
+   id="svg370"
+   sodipodi:docname="e33e04602d2c85d6edb3008d7823158e.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs374">
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Colorize"
+       id="filter390"
+       x="0"
+       y="0"
+       width="1"
+       height="1">
+      <feComposite
+         in2="SourceGraphic"
+         operator="arithmetic"
+         k1="0"
+         k2="1.38778e-16"
+         result="composite1"
+         id="feComposite376" />
+      <feColorMatrix
+         in="composite1"
+         values="1"
+         type="saturate"
+         result="colormatrix1"
+         id="feColorMatrix378" />
+      <feFlood
+         flood-opacity="1"
+         flood-color="rgb(251,251,251)"
+         result="flood1"
+         id="feFlood380" />
+      <feBlend
+         in="flood1"
+         in2="colormatrix1"
+         mode="multiply"
+         result="blend1"
+         id="feBlend382" />
+      <feBlend
+         in2="blend1"
+         mode="screen"
+         result="blend2"
+         id="feBlend384" />
+      <feColorMatrix
+         in="blend2"
+         values="1"
+         type="saturate"
+         result="colormatrix2"
+         id="feColorMatrix386" />
+      <feComposite
+         in="colormatrix2"
+         in2="SourceGraphic"
+         operator="in"
+         k2="1"
+         result="composite2"
+         id="feComposite388" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Colorize"
+       id="filter406"
+       x="0"
+       y="0"
+       width="1"
+       height="1">
+      <feComposite
+         in2="SourceGraphic"
+         operator="arithmetic"
+         k1="0"
+         k2="1.38778e-16"
+         result="composite1"
+         id="feComposite392" />
+      <feColorMatrix
+         in="composite1"
+         values="1"
+         type="saturate"
+         result="colormatrix1"
+         id="feColorMatrix394" />
+      <feFlood
+         flood-opacity="1"
+         flood-color="rgb(251,251,251)"
+         result="flood1"
+         id="feFlood396" />
+      <feBlend
+         in="flood1"
+         in2="colormatrix1"
+         mode="multiply"
+         result="blend1"
+         id="feBlend398" />
+      <feBlend
+         in2="blend1"
+         mode="screen"
+         result="blend2"
+         id="feBlend400" />
+      <feColorMatrix
+         in="blend2"
+         values="1"
+         type="saturate"
+         result="colormatrix2"
+         id="feColorMatrix402" />
+      <feComposite
+         in="colormatrix2"
+         in2="SourceGraphic"
+         operator="in"
+         k2="1"
+         result="composite2"
+         id="feComposite404" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="namedview372"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="44.052632"
+     inkscape:cx="7.4910394"
+     inkscape:cy="9.5113501"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="1072"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg370" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="M.719 8.876c.382 0 .692.31.692.692v6.365a.9.9 0 0 0 .9.9h9.547a.9.9 0 0 0 .9-.9V9.568a.692.692 0 1 1 1.383 0v6.365a2.283 2.283 0 0 1-2.283 2.283H2.31a2.283 2.283 0 0 1-2.283-2.283V9.568c0-.383.31-.692.692-.692Z"
+     fill="#5C5C5C"
+     id="path366"
+     style="filter:url(#filter406)" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="M6.595 1.122c.27-.27.708-.27.979 0l3.182 3.182a.692.692 0 1 1-.978.979L7.776 3.28v8.674a.692.692 0 0 1-1.384 0V3.28L4.391 5.283a.692.692 0 1 1-.979-.979l3.183-3.182Z"
+     fill="#5C5C5C"
+     id="path368"
+     style="filter:url(#filter390)" />
+</svg>

@@ -1,3 +1,13 @@
+let lastUrl = location.href;
+new MutationObserver(() => {
+	const url = location.href;
+	if (url !== lastUrl) {
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { location.reload(); }
+		lastUrl = url;
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { main(); }
+	}
+}).observe(document, {subtree: true, childList: true});
+
 function updateOffers(offers, rateAndFees) {
 	
 	let sorted = Object.keys(offers).map(function(key) {
@@ -58,7 +68,7 @@ function updateOffers(offers, rateAndFees) {
 		}
 		
 		if (preferences['ChartOffers']) {
-			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars));
+			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars, themeMode));
 			charts['offers'].render();
 		}
 	}
@@ -155,18 +165,18 @@ function updateHistory(histories, transactions) {
 			if (change < 0) {colors = ["#FF4560"];}
 			else if (change == 0) {colors = ["#008FFB"];}
 			
-			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index));
+			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, themeMode));
 			charts['price_history'].render();
 		}
 		
 		if (preferences['ChartVolume']) {
 			let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume));
+			charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
 			charts['volume'].render();
 		}
 		
 		if (preferences['ChartRecurrent']) {
-			
+    
 			let listers = [];
 			if (lastOffers) {
 				for (let i=0; i < lastOffers.length; i++) {
@@ -177,7 +187,7 @@ function updateHistory(histories, transactions) {
 			}
 
 			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers(count(buyers), count(sellers), count(listers));
-			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers));
+			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
 			charts['recurrent'].render(); 
 			
 			const labels = document.querySelectorAll('.chart_recurrent');
@@ -193,6 +203,7 @@ function updateHistory(histories, transactions) {
 let nft=null;
 
 let lastHistory = '';
+
 async function updateHistoryWithApiData(force=false) {
   let splitted_url = lastUrl.split('/');
   nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
@@ -205,6 +216,7 @@ async function updateHistoryWithApiData(force=false) {
     clean_chart('volume');
     clean_chart('recurrent');
     updateHistory(histories, transactions);
+    if (preferences['DarkMode']) { updateDark(); } 
   }
 }
 
@@ -221,19 +233,11 @@ async function updateOffersWithApiData() {
 				clean_chart('offers');
 				updateOffers(offers, rateAndFees);
 				updateHistoryWithApiData(force=true);
+				if (preferences['DarkMode']) { updateDark(); } 
 			}
 		}
 	}
 }
-
-let lastUrl = location.href;
-new MutationObserver(() => {
-  const url = location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
-    onUrlChange();
-  }
-}).observe(document, {subtree: true, childList: true});
 
 let stickies = {};
 stickies['nft'] = null;
@@ -274,7 +278,7 @@ function stickThing(stickiesName, className, options, activate=false, dontReacti
 
 function stickThings(){
 	stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true);
-	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); 
+	stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); 
 }
 
 function clean_stickies(){
@@ -301,7 +305,7 @@ function moveThing(from, to, where='start', paddingTop = null) {
 	} );
 }
 
-function moveThings(reverse=false){
+function moveThings(){
 	if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
 	if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
 }
@@ -322,19 +326,50 @@ function sticker() {
 
 window.onresize = sticker;
 
-async function onUrlChange() {
+let themeMode = 'light';
+function updateDark() {
+	themeMode = 'dark'
+	document.body.style.backgroundColor = '#424242';
+	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
+	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
+
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
+	for (_element of whitefont){
+		if (_element.style) { _element.style.color = '#FBFBFB'; }
+	}
+	
+	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK');
+	for (_element of blackfont){
+		if (_element.style) { _element.style.color = '#262626'; }
+	}
+	
+	let darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0,DetailsItem-sc-asex48-1');
+	for (_element of darkbackground ){
+		if (_element.style) { _element.style.backgroundColor = '#262626'; }
+	}
+	
+	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"],img[src="/0f655dbe35439e127dd99dd383d06350.svg"]');
+	for (_element of imgs ){
+		if (_element) { 
+			let splitted_url = _element.src.split('/');
+			_element.src = chrome.runtime.getURL('images/' + splitted_url[splitted_url.length-1]); 
+		}
+	}
+}
+
+async function main() {
 	await readPreferences();
 
-	clean_charts();
-	clean_watchers();
-	clean_stickies();
-	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
-
 	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
+		
+		if (preferences['DarkMode']) { updateDark(); } 
+		
+		if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
+
 		if (window.innerWidth >= 1281){ 
 			moveThings(); 
 			if (preferences['StickNFT']) {
-				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 70, stickyDelay: 70}, activate=true, dontReactivate=true); }
+				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); }
 				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true, dontReactivate=true); }
 			}
 		}
@@ -354,18 +389,20 @@ async function onUrlChange() {
 			}, 1000); 
 		});
 	}
-	if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
-		watchers['profileName'] = setIntervalImmediately(function() {
-			waitForElement(".sc-hBUSln", 3000)
-			.then( () => {
-				let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
-				if (tempProfileName != '') {
-					persistProfileName(tempProfileName);
-					clean_watcher('profileName');
-				}
-			});
-		}, 3000);
-	}
 }
 
-onUrlChange();
+if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { main(); }
+
+
+if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+	watchers['profileName'] = setIntervalImmediately(function() {
+		waitForElement(".sc-hBUSln", 3000)
+		.then( () => {
+			let tempProfileName = document.getElementsByClassName("sc-hBUSln")[0].textContent;
+			if (tempProfileName != '') {
+				persistProfileName(tempProfileName);
+				clean_watcher('profileName');
+			}
+		});
+	}, 3000);
+}

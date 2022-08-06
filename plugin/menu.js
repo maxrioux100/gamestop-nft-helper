@@ -8,6 +8,7 @@ menu['ChartRecurrent'] = '<i class="fas fa-chart-line"></i> Chart of the recurre
 menu['ChartVolume'] = '<i class="fas fa-chart-line"></i> Chart of the last volume';
 menu['ChartHistory'] = '<i class="fas fa-chart-line"></i> Chart on the previous sales';
 menu['StatsHistory'] = '<i class="fas fa-table"></i> Stats on the previous sales';
+menu['DarkMode'] = '<i class="fas fa-lightbulb"></i> Dark mode';
 
 function writeCheck(key, container){
 	let container_elem = document.getElementById(container);
@@ -20,9 +21,9 @@ function writeCheck(key, container){
 	container_elem.appendChild(div);
 }
 
-
-writeCheck('StickMenu', 'container_all_interface');
+writeCheck('DarkMode', 'container_NFT_interface');
 writeCheck('StickNFT', 'container_NFT_interface');
+writeCheck('StickMenu', 'container_NFT_interface');
 writeCheck('MovePrice', 'container_NFT_interface');
 writeCheck('MoveTools', 'container_NFT_interface');
 writeCheck('ChartOffers', 'container_NFT_offers');
