@@ -28,7 +28,7 @@ function updateOffers(offers, rateAndFees) {
 
 		for (let i=0; i < offers.length; i++) {
 			values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
-			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*rateAndFees['rates'][0]['quotes'][0]['rate'], 2);
+			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 2);
 			quantities[i] = parseInt(sorted[i][1]['amount']);
 		}
 
