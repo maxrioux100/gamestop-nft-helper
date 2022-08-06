@@ -74,57 +74,50 @@ function updateOffers() {
 	}
 }
 
-function updateHistory(histories) {
-
-	// Add 1 because of the mint
-	if (histories.length > 2) {
+function updateHistory() {
+	//move it to the transactipon request funtion?
+	transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
+	if (transactions.length > 1) {
 		removeHistoryHelperPrompt();
 		createHistoryStatsCharts();
 
+		//need to give the creator some love
 		let creator = '';
-		let creator_collections = Array.prototype.slice.call(document.getElementsByClassName("sc-iUKqMP"));
-		creator_collections.forEach((creator_collection) => {
-			if (creator_collection.getElementsByClassName("sc-iAKWXU")[0].textContent == "Creator") {
-				creator = creator_collection.getElementsByClassName("sc-iAKWXU")[1].textContent;
-			}
-		});
 
+		//need to give the creator some love
 		let all_transactions = false;
-		for (let i=0; i < histories.length; i++) {
-			if (histories[i].textContent.split(' ')[1] === 'minted') {
-				histories.splice(i, 1);
-				all_transactions = true;
-				break;
-			};
-		};
+
 		let total_eth = 0;
 		let total_dollars = 0;
-		let values_eth = [histories.length];
-		let values_dollars = [histories.length];
-		let buyers = [histories.length];
-		let sellers = [histories.length];
-		let labels = [histories.length];
-		let agos = [histories.length];
-		let amounts = [histories.length];
+		let values_eth = [transactions.length];
+		let values_dollars = [transactions.length];
+		let buyers = [transactions.length];
+		let sellers = [transactions.length];
+		let labels = [transactions.length];
+		let created_at = [transactions.length];
+		let amounts = [transactions.length];
 
-		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
+		for (let i=0; i < transactions.length; i++) {
+			buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
+			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+			labels[transactions.length - 1 - i] = `<b>${buyers[transactions.length - 1 - i]}</b> bought from <b>${sellers[transactions.length - 1 - i]}</b>`;
+			values_eth[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18), 4);;
+			values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
+			total_eth += values_eth[transactions.length - 1 - i];
+			total_dollars += values_dollars[transactions.length - 1 - i];
 
-		for (let i=0; i < histories.length; i++) {
-			let transaction = histories[i].textContent.replace(")", ") ").split(' ');
-			buyers[histories.length - 1 - i] = histories[i].querySelectorAll("strong")[0].querySelector("a").getAttribute("href").replace("/user/", "");
-			sellers[histories.length - 1 - i] = histories[i].querySelectorAll("strong")[1].querySelector("a").getAttribute("href").replace("/user/", "");
-			labels[histories.length - 1 - i] = `<b>${buyers[histories.length - 1 - i]}</b> bought from <b>${sellers[histories.length - 1 - i]}</b>`;
-			values_eth[histories.length - 1 - i] = parseFloat(transaction[5].replace(',', ''));
-			values_dollars[histories.length - 1 - i] = parseFloat(transaction[7].replace(',', '').substring(2,transaction.length-1));
-			total_eth += values_eth[histories.length - 1 - i];
-			total_dollars += values_dollars[histories.length - 1 - i];
+			created_at[transactions.length - 1 - i] = transactions[i]['createdAt'];
 
-			let ago_index = transaction.findIndex((element) => element === 'ago');
-			agos[histories.length - 1 - i] = `${transaction[ago_index - 2]} ${transaction[ago_index - 1]}`
-
-			amounts[histories.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
+			amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
 
+		console.log(values_eth);
+		console.log(values_dollars);
+		console.log(buyers);
+		console.log(sellers);
+		console.log(created_at);
+
+		
 		let maxAvailable = parseInt(document.getElementsByClassName("InfoValue-sc-11cpe2k-18")[0].textContent.split(' ')[0].split('/')[1]);
 
 		transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, agos, amounts);
