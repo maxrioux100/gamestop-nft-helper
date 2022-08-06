@@ -84,7 +84,7 @@ function updateHistory() {
 		//need to give the creator some love
 		let creator = '';
 
-		//need to give the creator some love
+		//need to give the all transacions some love (move it?) but mostly find a way to get it
 		let all_transactions = false;
 
 		let total_eth = 0;
@@ -183,6 +183,14 @@ function updateHistory() {
 	}
 }
 
+let updateNeeded = false;
+setInterval(function() {
+	if (updateNeeded) {
+		updateNeeded = false;
+		updateHistoryWithApiData();
+		updateOffersWithApiData();
+	}
+}, 500);
 
 let rateAndFees = null;
 let ETH_US = null;
@@ -190,19 +198,20 @@ setIntervalImmediately(async function() {
 	rateAndFees = await makeApiCall('ratesAndFees');
 	//Add a verification to be sure it's ETH_US
 	ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
-	updateOffersWithApiData();
+	updateNeeded = true;
 }, 30000);
 
 let nft=null;
 let transactions = null;
 let offers=null;
 getNFT();
+
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
 	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
-		updateHistoryWithApiData();
+		updateNeeded = true;
 	}, 5000);
 	setIntervalImmediately(async function() {
 		offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
@@ -210,6 +219,17 @@ async function getNFT() {
 	}, 5000);
 };
 
+
+
+let Usernames = {}
+async function addAddress(address){
+	if (!(address in Usernames)) {
+		Usernames[address] = address;
+		Usernames[address] = await makeApiCall('getPublicProfile', 'address', address);
+		console.log(Usernames);
+		updateNeeded = true;
+	}
+}
 
 
 let lastHistory = '';

@@ -65,7 +65,6 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
-//need to remake this function in a more general way
 function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, created_at, amounts){
 	for (let i = 0 ; i < amounts.length ; i++) {
 		if (amounts[i] > 1) {
