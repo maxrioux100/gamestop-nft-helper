@@ -4,12 +4,6 @@ charts['offers'] = null;
 charts['volume'] = null;
 charts['recurrent'] = null;
 
-function clean_chart(name){
-	if (charts[name] != null) {
-		charts[name].destroy();
-	}
-}
-
 function combine_buyers_sellers_listers(buyers, sellers, listers){		
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
