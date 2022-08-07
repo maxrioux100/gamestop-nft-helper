@@ -167,10 +167,10 @@ function updateWhales() {
 	transactions_splitter(amounts, [sellers, buyers]);
 
 	let listers = [];
-	if (lastOffers) {
-		for (let i=0; i < lastOffers.length; i++) {
-			for (let ii=0 ; ii < lastOffers[i]['amount'] ; ii++) {
-				listers.push(lastOffers[i]['ownerAddress']);
+	if (offers) {
+		for (let i=0; i < offers.length; i++) {
+			for (let ii=0 ; ii < offers[i]['amount'] ; ii++) {
+				listers.push(offers[i]['ownerAddress']);
 			}
 		}
 	}
@@ -189,12 +189,29 @@ function updateWhales() {
 
 }
 
-let updateNeeded = false;
+
+let updateNeededHistory = false;
+let updateNeededOffers = false;
+let updateNeededWhales = false;
+
+function updateNeeded() {
+	updateNeededHistory = true;
+	updateNeededOffers = true;
+	updateNeededWhales = true;
+}
+
+
 setInterval(function() {
-	if (updateNeeded) {
-		updateNeeded = false;
+	if (updateNeededWhales) {
+		updateNeededWhales = false;
 		updateWhalesWithApiData();
+	}
+	if (updateNeededHistory) {
+		updateNeededHistory = false;
 		updateHistoryWithApiData();
+	}
+	if (updateNeededOffers) {
+		updateNeededOffers = false;
 		updateOffersWithApiData();
 	}
 }, 500);
@@ -205,7 +222,7 @@ setIntervalImmediately(async function() {
 	rateAndFees = await makeApiCall('ratesAndFees');
 	//Add a verification to be sure it's ETH_US
 	ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
-	updateNeeded = true;
+	updateNeeded();
 }, 30000);
 
 let nft=null;
@@ -222,7 +239,8 @@ async function getNFT() {
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
 		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
-		updateNeeded = true;
+		updateNeededHistory = true;
+		updateNeededWhales = true;
 		for (transaction of transactions) {
 			addAddress(transaction['transaction']['orderB']['accountAddress']);
 			addAddress(transaction['transaction']['orderA']['accountAddress']);
@@ -231,7 +249,8 @@ async function getNFT() {
 	
 	setIntervalImmediately(async function() {
 		offers = await makeApiCall('getNftOrders', 'nftId', nft['nftId']);
-		updateNeeded = true;
+		updateNeededOffers = true;
+		updateNeededWhales = true;
 		for (offer of offers) {
 			addAddress(offer['ownerAddress']);
 		}
@@ -246,43 +265,36 @@ async function addAddress(address){
 		Usernames[address] = address;
 		let temp = await makeApiCall('getPublicProfile', 'address', address);
 		if (temp['name']) Usernames[address] = temp['name'];
-		updateNeeded = true;
+		updateNeeded();
 	}
 }
 
 
-let lastTransactions = '';
 async function updateHistoryWithApiData() {
 	if (transactions && ETH_US){
 		if (transactions.length > 1) {
-			if (JSON.stringify(transactions) != JSON.stringify(lastTransactions)){
-				lastTransactions = transactions;
-				clean_chart('price_history');
-				clean_chart('volume');
-				waitForElement("#history_helper", 1000)
-				.then( () => {
-					updateHistory();
-					if (preferences['DarkMode']) { updateDark(); }
-				});
-			}	
+			clean_chart('price_history');
+			clean_chart('volume');
+			waitForElement("#history_helper", 1000)
+			.then( () => {
+				updateHistory();
+				if (preferences['DarkMode']) { updateDark(); }
+			});
 		}
 	}
 }
 
-var lastOffers = null;
+
 async function updateOffersWithApiData() {
 	if (offers && ETH_US)
 	{
 		if (offers.length > 1){	
-			if (JSON.stringify(offers) != JSON.stringify(lastOffers)){
-				lastOffers = offers;
-				clean_chart('offers');
-				waitForElement("#offers_helper", 1000)
-				.then( () => {
-					updateOffers();
-					if (preferences['DarkMode']) { updateDark(); } 
-				});
-			}
+			clean_chart('offers');
+			waitForElement("#offers_helper", 1000)
+			.then( () => {
+				updateOffers();
+				if (preferences['DarkMode']) { updateDark(); } 
+			});
 		}
 	}
 }
@@ -290,14 +302,12 @@ async function updateOffersWithApiData() {
 async function updateWhalesWithApiData() {
 	if ((transactions || offers) && ETH_US)
 	{
-		if ((JSON.stringify(offers) != JSON.stringify(lastOffers)) || (JSON.stringify(transactions) != JSON.stringify(lastTransactions))){
-			clean_chart('recurrent');
-			waitForElement("#whales_helper", 1000)
-			.then( () => {
-				updateWhales();
-				if (preferences['DarkMode']) { updateDark(); } 
-			});
-		}
+		clean_chart('recurrent');
+		waitForElement("#whales_helper", 1000)
+		.then( () => {
+			updateWhales();
+			if (preferences['DarkMode']) { updateDark(); } 
+		});
 	}
 }
 
@@ -325,7 +335,7 @@ async function token_page() {
 		if (preferences['ChartOffers']) { createOffersHelperContainer(); }
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
-		updateNeeded = true;
+		updateNeeded();
 	});
 }
 
