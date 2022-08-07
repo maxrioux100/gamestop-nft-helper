@@ -211,13 +211,12 @@ let nft=null;
 let transactions = null;
 let offers=null;
 let creator=null;
-getNFT();
 
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
 	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
 	
-	creator = nft['0x9b944a5f2f90ba9f8a8c375be8b076b8361bff15']
+	creator = nft['creatorEthAddress'];
 	
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
@@ -305,29 +304,28 @@ if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 
 async function token_page() {
 	await readPreferences();
+	
+	getNFT();
+	
+	if (preferences['DarkMode']) { updateDark(); } 
+	
+	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
 
-	if (lastUrl.startsWith("https://nft.gamestop.com/token/")) {
-		
-		if (preferences['DarkMode']) { updateDark(); } 
-		
-		if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
-
-		if (window.innerWidth >= 1281){ 
-			moveThings(); 
-			if (preferences['StickNFT']) {
-				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); }
-				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true, dontReactivate=true); }
-			}
+	if (window.innerWidth >= 1281){ 
+		moveThings(); 
+		if (preferences['StickNFT']) {
+			if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); }
+			else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true, dontReactivate=true); }
 		}
-
-		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
-		.then( () => {
-			if (preferences['ChartOffers']) { createOffersHelperContainer(); }
-			if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
-			if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
-			updateNeeded = true;
-		});
 	}
+
+	waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
+	.then( () => {
+		if (preferences['ChartOffers']) { createOffersHelperContainer(); }
+		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
+		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
+		updateNeeded = true;
+	});
 }
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
