@@ -1,4 +1,5 @@
 let lastUrl = location.href;
+
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
