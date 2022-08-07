@@ -147,7 +147,6 @@ function updateHistory() {
 }
 
 function updateWhales() {
-	//console.log(transactions);
 	if (preferences['ChartRecurrent'] && charts['recurrent']) {
 		let buyers = [transactions.length];
 		let sellers = [transactions.length];
