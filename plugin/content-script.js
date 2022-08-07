@@ -76,9 +76,6 @@ function updateHistory() {
 	removeHistoryHelperPrompt();
 	createHistoryStatsCharts();
 
-	//need to give the creator some love
-	let creator = '';
-
 	//need to give the all transacions some love (move it?) but mostly find a way to get it
 	let all_transactions = false;
 
@@ -104,7 +101,7 @@ function updateHistory() {
 		amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 	}
 
-	transactions_splitter(amounts, values_eth, values_dollars, sellers, buyers, labels, created_at);
+	transactions_splitter(amounts, [sellers, buyers, labels, created_at], values_eth=values_eth, values_dollars=values_dollars);
 
 	let min_eth = Math.min(...values_eth);
 	let min_dollars = Math.min(...values_dollars);
@@ -166,7 +163,7 @@ function updateWhales() {
 		amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 	}
 
-	transactions_splitter(amounts, sellers, buyers);
+	transactions_splitter(amounts, [sellers, buyers]);
 
 	let listers = [];
 	if (lastOffers) {
@@ -177,14 +174,14 @@ function updateWhales() {
 		}
 	}
 
-	let [series_sellers_buyers_listers, labels_sellers_buyers_lister] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
-	charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
+	let [series_sellers_buyers_listers, labels_sellers_buyers_listers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
+	charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers_listers, labels_sellers_buyers_listers, themeMode));
 	charts['recurrent'].render(); 
 	
 	const labels = document.querySelectorAll('.chart_recurrent');
 	for (let label of labels) {
 		let title = label.querySelector('title').textContent;
-		if (title == creator) { label.setAttribute("fill", "#1266F1"); }
+		if (title == Usernames[creator]) { label.setAttribute("fill", "#1266F1"); }
 		if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
 	}
 	
@@ -212,11 +209,14 @@ setIntervalImmediately(async function() {
 let nft=null;
 let transactions = null;
 let offers=null;
+let creator=null;
 getNFT();
 
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
 	nft = await makeApiCall('getNft', 'tokenIdAndContractAddress', `${splitted_url[5]}_${splitted_url[4]}`)
+	
+	creator = nft['0x9b944a5f2f90ba9f8a8c375be8b076b8361bff15']
 	
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
@@ -290,15 +290,13 @@ async function updateOffersWithApiData() {
 async function updateWhalesWithApiData() {
 	if ((transactions || offers) && ETH_US)
 	{
-		if (offers.length + transactions.length > 1){	
-			if ((JSON.stringify(offers) != JSON.stringify(lastOffers)) || (JSON.stringify(transactions) != JSON.stringify(lastTransactions))){
-				clean_chart('recurrent');
-				waitForElement("#whales_helper", 1000)
-				.then( () => {
-					updateWhales();
-					if (preferences['DarkMode']) { updateDark(); } 
-				});
-			}
+		if ((JSON.stringify(offers) != JSON.stringify(lastOffers)) || (JSON.stringify(transactions) != JSON.stringify(lastTransactions))){
+			clean_chart('recurrent');
+			waitForElement("#whales_helper", 1000)
+			.then( () => {
+				updateWhales();
+				if (preferences['DarkMode']) { updateDark(); } 
+			});
 		}
 	}
 }

@@ -52,7 +52,7 @@ function createWhalesHelperContainer() {
 
 	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
 						'<p class="sc-bkkeKt vhTUk">Whales helper</p>' +
-					'</header>' +
+					'</header>';
 	div.setAttribute('id', 'whales_helper');
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 	container.appendChild(div);
@@ -110,7 +110,7 @@ function createWhalesChart() {
 	let div = document.createElement('div');
 	div.setAttribute('id', 'chart_recurrent');
 
-	let offers_helper = document.getElementById("whales_helper");
+	let whales_helper = document.getElementById("whales_helper");
 	whales_helper.appendChild(div);
 }
 

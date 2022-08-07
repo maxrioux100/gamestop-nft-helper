@@ -39,11 +39,6 @@ function array_to_string(array){
 
 }
 
-function removeUnknownTransactions(transactions) {
-	console.log(transactions[0]['txType']);
-	return transactions.filter( item => (item['txType'] != "SpotTrade") );
-}
-
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
 		var timer = false;
@@ -65,25 +60,31 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
-function transactions_splitter(amounts, values_eth, values_dollars, sellers, buyers, labels, created_at){
+function transactions_splitter(amounts, toDouble, values_eth=null, values_dollars=null){
 	for (let i = 0 ; i < amounts.length ; i++) {
 		if (amounts[i] > 1) {
 			let amount = amounts[i]
-			let value_eth = bestRound(values_eth[i]/amount, 4);
-			let value_dollars = bestRound(values_dollars[i]/amount, 2);
-
-			values_eth[i] = value_eth;
-			values_dollars[i] = value_dollars;
 			amounts[i] = 1;
-
+			
+			let value_eth = null;
+			if (values_eth) {
+				value_eth = bestRound(values_eth[i]/amount, 4);
+				values_eth[i] = value_eth;
+			}
+			
+			value_dollars = null;
+			if (values_dollars) {
+				let value_dollars = bestRound(values_dollars[i]/amount, 2);
+				values_dollars[i] = value_dollars;
+			}
+		
 			for (let ii = 1 ; ii < amount ; ii++)
 			{
-				values_eth.splice(i, 0, value_eth);
-				values_dollars.splice(i, 0, value_dollars);
-				sellers.splice(i, 0, sellers[i]);
-				buyers.splice(i, 0, buyers[i]);
-				labels.splice(i, 0, labels[i]);
-				created_at.splice(i, 0, created_at[i]);
+				if (values_eth) { values_eth.splice(i, 0, value_eth); }
+				if (values_dollars) { values_dollars.splice(i, 0, value_dollars); }
+				for (array of toDouble) { 
+					array.splice(i, 0, array[i]); 
+				}
 				amounts.splice(i, 0, 1);
 				i++;
 			}
