@@ -120,7 +120,6 @@ function updateHistory() {
 		}
 		
 		if (preferences['ChartHistory']) {
-			//make a function in charts.js to get this like for other charts
 			let profile_sales_index = [];
 			let profile_buys_index = [];
 
