@@ -65,7 +65,7 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
-function transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, created_at, amounts){
+function transactions_splitter(amounts, values_eth, values_dollars, sellers, buyers, labels, created_at){
 	for (let i = 0 ; i < amounts.length ; i++) {
 		if (amounts[i] > 1) {
 			let amount = amounts[i]

@@ -9,6 +9,8 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 function updateOffers() {
+	removeOffersHelperPrompt();
+	createOffersChart();
 	
 	let sorted = Object.keys(offers).map(function(key) {
 		return [key, offers[key]];
@@ -17,173 +19,182 @@ function updateOffers() {
 	sorted.sort(function(first, second) {
 		return first[1]['pricePerNft'] - second[1]['pricePerNft'];
 	});
+	
 
-	if (offers.length > 1) {
-		removeOffersHelperPrompt();
-		if (preferences['ChartOffers']) { createOffersChart(); }
+	let values_eth = [offers.length];
+	let values_dollars = [offers.length];
+	let quantities = [offers.length];
 
-		let values_eth = [offers.length];
-		let values_dollars = [offers.length];
-		let quantities = [offers.length];
+	for (let i=0; i < offers.length; i++) {
+		values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
+		values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*ETH_US, 2);
+		quantities[i] = parseInt(sorted[i][1]['amount']);
+	}
 
-		for (let i=0; i < offers.length; i++) {
-			values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
-			values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*ETH_US, 2);
-			quantities[i] = parseInt(sorted[i][1]['amount']);
+	let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
+
+	let new_values_eth = [];
+	let new_values_dollars = [];
+	let new_quantities = [];
+
+	let lastValue = -1;
+	for (let i=0; i < noOutliers; i++){
+		if (lastValue == values_eth[i]) {
+			new_quantities[new_quantities.length-1] += quantities[i];
+		} else {
+			if (i==0) {new_quantities.push(quantities[i])}
+			else {new_quantities.push(quantities[i] + new_quantities[new_quantities.length-1])};
+			lastValue = values_eth[i];
+			new_values_eth.push(values_eth[i]);
+			new_values_dollars.push(values_dollars[i]);
 		}
+	}
+	
+	let min_eth = new_values_eth[0];
+	let max_eth = new_values_eth[new_values_eth.length-1];
+	let min_dollars = new_values_dollars[0];
+	let max_dollars = new_values_dollars[new_values_dollars.length-1];
 
-		let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
+	new_values_eth.push(new_values_eth[new_values_eth.length-1]);
+	new_values_dollars.push(new_values_dollars[new_values_dollars.length-1]);
+	new_quantities.unshift(0);
 
-		let new_values_eth = [];
-		let new_values_dollars = [];
-		let new_quantities = [];
-
-		let lastValue = -1;
-		for (let i=0; i < noOutliers; i++){
-			if (lastValue == values_eth[i]) {
-				new_quantities[new_quantities.length-1] += quantities[i];
-			} else {
-				if (i==0) {new_quantities.push(quantities[i])}
-				else {new_quantities.push(quantities[i] + new_quantities[new_quantities.length-1])};
-				lastValue = values_eth[i];
-				new_values_eth.push(values_eth[i]);
-				new_values_dollars.push(values_dollars[i]);
-			}
-		}
-		
-		let min_eth = new_values_eth[0];
-		let max_eth = new_values_eth[new_values_eth.length-1];
-		let min_dollars = new_values_dollars[0];
-		let max_dollars = new_values_dollars[new_values_dollars.length-1];
-
-		new_values_eth.push(new_values_eth[new_values_eth.length-1]);
-		new_values_dollars.push(new_values_dollars[new_values_dollars.length-1]);
-		new_quantities.unshift(0);
-
-		if (min_eth == max_eth){
-			min_eth = 0;
-			max_eth *= 2;
-			min_dollars = 0;
-			max_dollars *= 2;
-		}
-		
-		if (preferences['ChartOffers']) {
-			charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars, themeMode));
-			charts['offers'].render();
-		}
+	if (min_eth == max_eth){
+		min_eth = 0;
+		max_eth *= 2;
+		min_dollars = 0;
+		max_dollars *= 2;
+	}
+	
+	if (preferences['ChartOffers']) {
+		charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars, themeMode));
+		charts['offers'].render();
 	}
 }
 
 function updateHistory() {
-	if (transactions.length > 1) {
-		removeHistoryHelperPrompt();
-		createHistoryStatsCharts();
+	removeHistoryHelperPrompt();
+	createHistoryStatsCharts();
 
-		//need to give the creator some love
-		let creator = '';
+	//need to give the creator some love
+	let creator = '';
 
-		//need to give the all transacions some love (move it?) but mostly find a way to get it
-		let all_transactions = false;
+	//need to give the all transacions some love (move it?) but mostly find a way to get it
+	let all_transactions = false;
 
-		let total_eth = 0;
-		let total_dollars = 0;
-		let values_eth = [transactions.length];
-		let values_dollars = [transactions.length];
-		let buyers = [transactions.length];
-		let sellers = [transactions.length];
-		let labels = [transactions.length];
-		let created_at = [transactions.length];
-		let amounts = [transactions.length];
+	let total_eth = 0;
+	let total_dollars = 0;
+	let values_eth = [transactions.length];
+	let values_dollars = [transactions.length];
+	let buyers = [transactions.length];
+	let sellers = [transactions.length];
+	let labels = [transactions.length];
+	let created_at = [transactions.length];
+	let amounts = [transactions.length];
 
-		for (let i=0; i < transactions.length; i++) {
-			buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
-			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
-			labels[transactions.length - 1 - i] = `<b>${Usernames[buyers[transactions.length - 1 - i]]}</b> bought from <b>${Usernames[sellers[transactions.length - 1 - i]]}</b>`;
-			values_eth[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18), 4);;
-			values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
-			total_eth += values_eth[transactions.length - 1 - i];
-			total_dollars += values_dollars[transactions.length - 1 - i];
-			created_at[transactions.length - 1 - i] = transactions[i]['createdAt'];
-			amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
+	for (let i=0; i < transactions.length; i++) {
+		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
+		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+		labels[transactions.length - 1 - i] = `<b>${Usernames[buyers[transactions.length - 1 - i]]}</b> bought from <b>${Usernames[sellers[transactions.length - 1 - i]]}</b>`;
+		values_eth[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18), 4);;
+		values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
+		total_eth += values_eth[transactions.length - 1 - i];
+		total_dollars += values_dollars[transactions.length - 1 - i];
+		created_at[transactions.length - 1 - i] = transactions[i]['createdAt'];
+		amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
+	}
+
+	transactions_splitter(amounts, values_eth, values_dollars, sellers, buyers, labels, created_at);
+
+	let min_eth = Math.min(...values_eth);
+	let min_dollars = Math.min(...values_dollars);
+	let max_eth = Math.max(...values_eth);
+	let max_dollars = Math.max(...values_dollars);
+	let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
+	
+	if (preferences['StatsHistory']) {
+		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
+	}
+	
+	if (preferences['ChartHistory']) {
+		let profile_sales_index = [];
+		let profile_buys_index = [];
+
+		for (let i = 0; i < sellers.length; i++) {
+		  if (profileName && sellers[i] == profileName) {
+			profile_sales_index.push(i)
+		  }
+		}
+		for (let i = 0; i < buyers.length; i++) {
+		  if (profileName && buyers[i] == profileName) {
+			profile_buys_index.push(i)
+		  }
 		}
 
-		transactions_splitter(values_eth, values_dollars, sellers, buyers, labels, created_at, amounts);
-
-		let min_eth = Math.min(...values_eth);
-		let min_dollars = Math.min(...values_dollars);
-		let max_eth = Math.max(...values_eth);
-		let max_dollars = Math.max(...values_dollars);
-		let change = values_eth[values_eth.length-1]/values_eth[0]*100-100;
-		
-		if (preferences['StatsHistory']) {
-			updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
+		if (min_eth == max_eth){
+			min_eth = 0;
+			min_dollars = 0;
+			max_eth *= 2;
+			max_dollars *= 2;
 		}
+
+		let colors = ['#00E396'];
+		if (change < 0) {colors = ["#FF4560"];}
+		else if (change == 0) {colors = ["#008FFB"];}
 		
-		if (preferences['ChartHistory']) {
-			let profile_sales_index = [];
-			let profile_buys_index = [];
+		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, themeMode));
+		charts['price_history'].render();
+	}
+	
+	if (preferences['ChartVolume']) {
+		//let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+		//charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
+		//charts['volume'].render();
+	}
+}
 
-			for (let i = 0; i < sellers.length; i++) {
-			  if (profileName && sellers[i] == profileName) {
-				profile_sales_index.push(i)
-			  }
-			}
-			for (let i = 0; i < buyers.length; i++) {
-			  if (profileName && buyers[i] == profileName) {
-				profile_buys_index.push(i)
-			  }
-			}
+function updateWhales() {
+	createWhalesChart();
 
-			if (min_eth == max_eth){
-				min_eth = 0;
-				min_dollars = 0;
-				max_eth *= 2;
-				max_dollars *= 2;
-			}
+	let buyers = [transactions.length];
+	let sellers = [transactions.length];
+	let amounts = [transactions.length];
 
-			let colors = ['#00E396'];
-			if (change < 0) {colors = ["#FF4560"];}
-			else if (change == 0) {colors = ["#008FFB"];}
-			
-			charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, themeMode));
-			charts['price_history'].render();
-		}
-		
-		if (preferences['ChartVolume']) {
-			//let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-			//charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
-			//charts['volume'].render();
-		}
-		
-		if (preferences['ChartRecurrent'] ) {
-    
-			let listers = [];
-			if (lastOffers) {
-				for (let i=0; i < lastOffers.length; i++) {
-					for (let ii=0 ; ii < lastOffers[i]['amount'] ; ii++) {
-						listers.push(lastOffers[i]['ownerAddress']);
-					}
-				}
-			}
+	for (let i=0; i < transactions.length; i++) {
+		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
+		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+		amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
+	}
 
-			let [series_sellers_buyers, labels_sellers_buyers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
-			charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
-			charts['recurrent'].render(); 
-			
-			const labels = document.querySelectorAll('.chart_recurrent');
-			for (let label of labels) {
-				let title = label.querySelector('title').textContent;
-				if (title == creator) { label.setAttribute("fill", "#1266F1"); }
-				if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
+	transactions_splitter(amounts, sellers, buyers);
+
+	let listers = [];
+	if (lastOffers) {
+		for (let i=0; i < lastOffers.length; i++) {
+			for (let ii=0 ; ii < lastOffers[i]['amount'] ; ii++) {
+				listers.push(lastOffers[i]['ownerAddress']);
 			}
 		}
 	}
+
+	let [series_sellers_buyers_listers, labels_sellers_buyers_lister] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
+	charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, themeMode));
+	charts['recurrent'].render(); 
+	
+	const labels = document.querySelectorAll('.chart_recurrent');
+	for (let label of labels) {
+		let title = label.querySelector('title').textContent;
+		if (title == creator) { label.setAttribute("fill", "#1266F1"); }
+		if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
+	}
+	
 }
 
 let updateNeeded = false;
 setInterval(function() {
 	if (updateNeeded) {
 		updateNeeded = false;
+		updateWhalesWithApiData();
 		updateHistoryWithApiData();
 		updateOffersWithApiData();
 	}
@@ -239,22 +250,22 @@ async function addAddress(address){
 }
 
 
-let lastTransaction = '';
+let lastTransactions = '';
 //force is for the recurrent sellers/buyers graph
-async function updateHistoryWithApiData(force=false) {
+async function updateHistoryWithApiData() {
 	if (transactions && ETH_US){
-		let string = array_to_string(transactions);
-		if (force || string != lastTransaction){
-			lastHistory = string;
-			clean_chart('price_history');
-			clean_chart('volume');
-			clean_chart('recurrent');
-			waitForElement("#history_helper", 1000)
-			.then( () => {
-				updateHistory();
-				if (preferences['DarkMode']) { updateDark(); }
-			});
-		}	
+		if (transactions.length > 1) {
+			if (JSON.stringify(transactions) != JSON.stringify(lastTransactions)){
+				lastTransactions = transactions;
+				clean_chart('price_history');
+				clean_chart('volume');
+				waitForElement("#history_helper", 1000)
+				.then( () => {
+					updateHistory();
+					if (preferences['DarkMode']) { updateDark(); }
+				});
+			}	
+		}
 	}
 }
 
@@ -269,10 +280,22 @@ async function updateOffersWithApiData() {
 				waitForElement("#offers_helper", 1000)
 				.then( () => {
 					updateOffers();
-					waitForElement("#history_helper", 1000)
-					.then( () => {
-						updateHistoryWithApiData(force=true);
-					});
+					if (preferences['DarkMode']) { updateDark(); } 
+				});
+			}
+		}
+	}
+}
+
+async function updateWhalesWithApiData() {
+	if ((transactions || offers) && ETH_US)
+	{
+		if (offers.length + transactions.length > 1){	
+			if ((JSON.stringify(offers) != JSON.stringify(lastOffers)) || (JSON.stringify(transactions) != JSON.stringify(lastTransactions))){
+				clean_chart('recurrent');
+				waitForElement("#whales_helper", 1000)
+				.then( () => {
+					updateWhales();
 					if (preferences['DarkMode']) { updateDark(); } 
 				});
 			}
@@ -302,7 +325,8 @@ async function token_page() {
 		waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 		.then( () => {
 			if (preferences['ChartOffers']) { createOffersHelperContainer(); }
-			if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume'] || preferences['ChartRecurrent']) { createHistoryHelperContainer(); }
+			if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
+			if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
 			updateNeeded = true;
 		});
 	}
