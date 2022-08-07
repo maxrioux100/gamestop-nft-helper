@@ -77,9 +77,6 @@ function updateHistory() {
 	removeHistoryHelperPrompt();
 	createHistoryStatsCharts();
 
-	//need to give the all transacions some love (move it?) but mostly find a way to get it
-	let all_transactions = false;
-
 	let total_eth = 0;
 	let total_dollars = 0;
 	let values_eth = [transactions.length];
@@ -236,6 +233,7 @@ let nft=null;
 let transactions = null;
 let offers=null;
 let creator=null;
+let all_transactions=false;
 
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
@@ -245,6 +243,8 @@ async function getNFT() {
 	
 	setIntervalImmediately(async function() {
 		transactions = await makeApiCall('history', 'nftData', `${nft['loopringNftInfo']['nftData'][0]}`);
+		mint = transactions.filter( item => (item['transaction']['txType'] == "NftMint") );
+		if (mint.length > 0) { all_transactions=true; }
 		transactions = transactions.filter( item => (item['transaction']['txType'] == "SpotTrade") );
 		updateNeededHistory = true;
 		updateNeededWhales = true;
