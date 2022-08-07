@@ -175,6 +175,7 @@ function updateWhales() {
 	}
 
 	let [series_sellers_buyers_listers, labels_sellers_buyers_listers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
+	
 	charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers_listers, labels_sellers_buyers_listers, themeMode));
 	charts['recurrent'].render(); 
 	
@@ -184,7 +185,7 @@ function updateWhales() {
 		if (title == Usernames[creator]) { label.setAttribute("fill", "#1266F1"); }
 		if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
 	}
-	
+
 }
 
 let updateNeeded = false;
@@ -251,7 +252,6 @@ async function addAddress(address){
 
 
 let lastTransactions = '';
-//force is for the recurrent sellers/buyers graph
 async function updateHistoryWithApiData() {
 	if (transactions && ETH_US){
 		if (transactions.length > 1) {

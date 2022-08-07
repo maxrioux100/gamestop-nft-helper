@@ -66,8 +66,6 @@ function createHistoryStatsCharts() {
 	if (chart_price_history_elem != null) {chart_price_history_elem.remove();};
 	let chart_volume_elem = document.getElementById("chart_volume");
 	if (chart_volume_elem != null) {chart_volume_elem.remove();};
-	let chart_recurrent_elem = document.getElementById("chart_recurrent");
-	if (chart_recurrent_elem != null) {chart_recurrent_elem.remove();};
 	
 	let section = document.createElement('section');
 	section.setAttribute('id', 'history_stats');
@@ -83,8 +81,6 @@ function createHistoryStatsCharts() {
 	div_chart_price_history.setAttribute('id', 'chart_price_history');
 	let div_chart_volume = document.createElement('div');
 	div_chart_volume.setAttribute('id', 'chart_volume');
-	let div_chart_recurrent = document.createElement('div');
-	div_chart_recurrent.setAttribute('id', 'chart_recurrent');
 
 	let history_helper = document.getElementById("history_helper");
 	if (preferences['StatsHistory']) { history_helper.appendChild(section); }
