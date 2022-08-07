@@ -403,7 +403,7 @@ function get_options_price_history(theme, values_eth=null, values_dollars=null, 
 function get_options_volume(theme, values_eth=null, series_volume=null, labels_volume=null, all_data_volume=null) {
 	let options = {
 		title: {
-			title: 'Volume'
+			text: 'Volume'
 		},
 		chart: {
 			stacked: true,
