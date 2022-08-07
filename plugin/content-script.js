@@ -147,6 +147,7 @@ function updateHistory() {
 }
 
 function updateWhales() {
+	//console.log(transactions);
 	if (preferences['ChartRecurrent'] && charts['recurrent']) {
 		let buyers = [transactions.length];
 		let sellers = [transactions.length];
@@ -157,9 +158,10 @@ function updateWhales() {
 			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
 			amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
-
+		
+		
 		transactions_splitter(amounts, [sellers, buyers]);
-
+		
 		let listers = [];
 		if (offers) {
 			for (let i=0; i < offers.length; i++) {
@@ -171,7 +173,8 @@ function updateWhales() {
 
 		let [series_sellers_buyers_listers, labels_sellers_buyers_listers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
 		
-		//charts['recurrent'].updateOptions(get_options_recurrent(themeMode, series_sellers_buyers_listers, labels_sellers_buyers_listers), animate=false);
+		get_options_recurrent(themeMode, series_sellers_buyers_listers, labels_sellers_buyers_listers)
+		charts['recurrent'].updateOptions(get_options_recurrent(themeMode, series_sellers_buyers_listers, labels_sellers_buyers_listers), animate=false);
 		
 		const labels = document.querySelectorAll('.chart_recurrent');
 		for (let label of labels) {

@@ -32,9 +32,8 @@ function combine_buyers_sellers_listers(buyers, sellers, listers){
 		}
 	}
 
-
 	let filtered = Object.keys(combined).reduce(function (filtered, key) {
-		if (combined[key] > 1) filtered[key] = combined[key];
+		if (key != 0) filtered[key] = combined[key];
 		return filtered;
 	}, {});
 
@@ -74,6 +73,8 @@ function combine_buyers_sellers_listers(buyers, sellers, listers){
 		if (items[i][0] in listers) {value = listers[items[i][0]]};
 		data_listers.push(value);
 	}
+	
+	
 
 	let series = [{
 				name: 'Bought',
