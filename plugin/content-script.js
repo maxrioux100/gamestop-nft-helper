@@ -103,8 +103,9 @@ function updateHistory() {
 	if (preferences['StatsHistory']) {
 		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
 	}
-	
+	console.log('b');
 	if (preferences['ChartHistory'] && charts['price_history']) {
+		console.log('entering');
 		let profile_sales_index = [];
 		let profile_buys_index = [];
 
