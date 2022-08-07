@@ -145,9 +145,16 @@ function updateHistory() {
 	}
 	
 	if (preferences['ChartVolume']) {
-		//let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-		//charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
-		//charts['volume'].render();
+		let agos = [];
+		for (timestamp of created_at) {
+			let ago = timeago.format(timestamp);
+			if (ago.endsWith(' ago')) { ago = ago.slice(0, ago.length-4); }
+			agos.push(ago);
+		}
+		
+		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
+		charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
+		charts['volume'].render();
 	}
 }
 

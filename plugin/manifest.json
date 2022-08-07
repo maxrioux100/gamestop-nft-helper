@@ -16,6 +16,7 @@
 				"mdb.min.js",
 				"sticky.min.js",
 				"apexcharts.js",
+				"timeago.min.js",
 				"storage.js",
 				"math.js",
 				"utility.js",
