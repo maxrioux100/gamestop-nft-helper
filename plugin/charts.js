@@ -160,10 +160,10 @@ function getTickAmount(quantities) {
 	return maxTick;
 }
 
-function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars, theme){
-	return {
+function get_options_listed_sellers(theme, values_eth=null, values_dollars=null, quantities=null, min_eth=null, max_eth=null, min_dollars=null, max_dollars=null){
+	options = {
 		title: {
-			text: "Future offers"
+			text: "Listed offers"
 		},
 		chart: {
 			type: 'area',
@@ -180,13 +180,10 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 				}
 			}
 		},
+		series: [],
 		dataLabels: {
 			enabled: false
 		},
-		series: [{
-			name: 'Ethereum',
-			data: quantities.map(function(e, i) { return [e, values_eth[i]]; })
-		}],
 		stroke: {
 		  curve: 'stepline',
 		  width: 1
@@ -199,7 +196,6 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 			labels: {
 				hideOverlappingLabels: true
 			},
-			tickAmount: getTickAmount(quantities[quantities.length-1]),
 			decimalsInFloat: 0,
 			tooltip: {
 				enabled: false
@@ -210,16 +206,12 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 				title: {
 					text: "Ethereum"
 				},
-				min: min_eth,
-				max: max_eth
 			},
 			{
 				opposite: true,
 				title: {
 					text: "Dollars"
 				},
-				min: min_dollars,
-				max: max_dollars,
 				decimalsInFloat: 2
 			}
 		],
@@ -229,7 +221,16 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 		colors: [
 			"#008FFB"
 		],
-		tooltip: {
+		theme:{
+			mode: theme
+		},
+		noData: {
+			text: 'Need at least 2 listed offers at different price'
+		}
+	}
+	
+	if (values_eth && values_dollars) {
+		options['tooltip'] = {
 			custom: function({ series, seriesIndex, dataPointIndex, w }) {
 				return (
 					'<div class="arrow_box">' +
@@ -239,11 +240,35 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 					"</div>"
 				);
 			}
-		},
-		theme:{
-			mode: theme
 		}
 	}
+	
+	if (min_eth) { options['yaxis'][0]['min'] = min_eth; }
+	if (max_eth) { options['yaxis'][0]['max'] = max_eth; }
+	if (min_dollars) { options['yaxis'][1]['min'] = min_dollars; }
+	if (max_dollars) { options['yaxis'][1]['max'] = max_dollars; }
+	
+	if ( values_eth && values_dollars && quantities) { 
+		options['series'].push({
+			name: 'Ethereum',
+			data: quantities.map(function(e, i) { return [e, values_eth[i]]; })
+		});
+		options['xaxis']['tickAmount'] = getTickAmount(quantities[quantities.length-1]); 
+		
+		options['tooltip'] = {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				return (
+					'<div class="arrow_box">' +
+						"<span>" +
+							`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
+						"</span>" +
+					"</div>"
+				);
+			}
+		}
+	}
+	
+	return options;
 }
 
 function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, theme){

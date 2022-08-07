@@ -10,9 +10,6 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 function updateOffers() {
-	removeOffersHelperPrompt();
-	createOffersChart();
-	
 	let sorted = Object.keys(offers).map(function(key) {
 		return [key, offers[key]];
 	});
@@ -68,8 +65,7 @@ function updateOffers() {
 	}
 	
 	if (preferences['ChartOffers']) {
-		charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars, themeMode));
-		charts['offers'].render();
+		charts['offers'].updateOptions(get_options_listed_sellers(themeMode, new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars), animate=false);
 	}
 }
 
@@ -296,7 +292,6 @@ async function updateOffersWithApiData() {
 	if (offers && ETH_US)
 	{
 		if (offers.length > 1){	
-			clean_chart('offers');
 			waitForElement("#offers_helper", 1000)
 			.then( () => {
 				updateOffers();

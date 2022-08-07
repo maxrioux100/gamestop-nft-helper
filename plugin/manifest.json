@@ -20,8 +20,8 @@
 				"storage.js",
 				"math.js",
 				"utility.js",
-				"html_writer.js",
 				"charts.js",
+				"html_writer.js",
 				"content-script.js"
 			]
 		}

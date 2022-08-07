@@ -27,10 +27,13 @@ function createOffersHelperContainer() {
 	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
 						'<p class="sc-bkkeKt vhTUk">Offers helper</p>' +
 					'</header>' +
-					'<div id="offershelperprompt">' + chrome.i18n.getMessage("offershelperprompt") + '</div>';
+					'<div id="chart_offers"></div>';
 	div.setAttribute('id', 'offers_helper');
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 	container.appendChild(div);
+	
+	charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_listed_sellers(themeMode));
+	charts['offers'].render();
 }
 
 function createHistoryHelperContainer() {
@@ -88,17 +91,6 @@ function createHistoryStatsCharts() {
 	if (preferences['ChartVolume']) { history_helper.appendChild(div_chart_volume); }
 }
 
-function createOffersChart() {
-	let chart_offers_elem = document.getElementById("chart_offers");
-	if (chart_offers_elem != null) {chart_offers_elem.remove();};
-
-	let div = document.createElement('div');
-	div.setAttribute('id', 'chart_offers');
-
-	let offers_helper = document.getElementById("offers_helper");
-	offers_helper.appendChild(div);
-}
-
 function createWhalesChart() {
 	let chart_recurrent_elem = document.getElementById("chart_recurrent");
 	if (chart_recurrent_elem != null) {chart_recurrent_elem.remove();};
@@ -108,11 +100,6 @@ function createWhalesChart() {
 
 	let whales_helper = document.getElementById("whales_helper");
 	whales_helper.appendChild(div);
-}
-
-function removeOffersHelperPrompt() {
-	let offershelperprompt = document.getElementById("offershelperprompt");
-	if (offershelperprompt != null) {offershelperprompt.remove();};
 }
 
 function removeHistoryHelperPrompt() {
