@@ -46,6 +46,19 @@ function createHistoryHelperContainer() {
 	container.appendChild(div);
 }
 
+function createWhalesHelperContainer() {
+	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
+	let div = document.createElement('div');
+
+	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
+						'<p class="sc-bkkeKt vhTUk">Whales helper</p>' +
+					'</header>';
+	div.setAttribute('id', 'whales_helper');
+	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
+	container.appendChild(div);
+}
+
+
 function createHistoryStatsCharts() {
 	let history_stats_elem = document.getElementById("history_stats");
 	if (history_stats_elem != null) {history_stats_elem.remove();};
@@ -53,8 +66,6 @@ function createHistoryStatsCharts() {
 	if (chart_price_history_elem != null) {chart_price_history_elem.remove();};
 	let chart_volume_elem = document.getElementById("chart_volume");
 	if (chart_volume_elem != null) {chart_volume_elem.remove();};
-	let chart_recurrent_elem = document.getElementById("chart_recurrent");
-	if (chart_recurrent_elem != null) {chart_recurrent_elem.remove();};
 	
 	let section = document.createElement('section');
 	section.setAttribute('id', 'history_stats');
@@ -70,14 +81,11 @@ function createHistoryStatsCharts() {
 	div_chart_price_history.setAttribute('id', 'chart_price_history');
 	let div_chart_volume = document.createElement('div');
 	div_chart_volume.setAttribute('id', 'chart_volume');
-	let div_chart_recurrent = document.createElement('div');
-	div_chart_recurrent.setAttribute('id', 'chart_recurrent');
-	
+
 	let history_helper = document.getElementById("history_helper");
 	if (preferences['StatsHistory']) { history_helper.appendChild(section); }
 	if (preferences['ChartHistory']) { history_helper.appendChild(div_chart_price_history);	}				
 	if (preferences['ChartVolume']) { history_helper.appendChild(div_chart_volume); }
-	if (preferences['ChartRecurrent']) { history_helper.appendChild(div_chart_recurrent); }
 }
 
 function createOffersChart() {
@@ -89,6 +97,17 @@ function createOffersChart() {
 
 	let offers_helper = document.getElementById("offers_helper");
 	offers_helper.appendChild(div);
+}
+
+function createWhalesChart() {
+	let chart_recurrent_elem = document.getElementById("chart_recurrent");
+	if (chart_recurrent_elem != null) {chart_recurrent_elem.remove();};
+
+	let div = document.createElement('div');
+	div.setAttribute('id', 'chart_recurrent');
+
+	let whales_helper = document.getElementById("whales_helper");
+	whales_helper.appendChild(div);
 }
 
 function removeOffersHelperPrompt() {

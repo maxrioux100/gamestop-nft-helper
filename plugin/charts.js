@@ -18,7 +18,7 @@ function clean_charts(){
 	}
 }
 
-function combine_buyers_sellers(buyers, sellers, listers){		
+function combine_buyers_sellers_listers(buyers, sellers, listers){		
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
 		combined[Object.keys(buyers)[i]] = buyers[Object.keys(buyers)[i]];
@@ -64,7 +64,7 @@ function combine_buyers_sellers(buyers, sellers, listers){
 		let value = 0;
 		if (items[i][0] in sellers) {value = sellers[items[i][0]]};
 		data_sellers.push(value);
-		labels.push(items[i][0]);
+		labels.push(Usernames[items[i][0]]);
 	}
 
 	let data_buyers = [];
