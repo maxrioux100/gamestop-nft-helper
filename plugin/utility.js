@@ -189,7 +189,7 @@ function moveThing(from, to, where='start', paddingTop = null) {
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
 		.then(() => {
-			let aside = document.getElementsByClassName(from)[0];
+			let aside = document.getElementsByClassName(from)[0].cloneNode(true);
 			let section = document.getElementsByClassName(to)[0];
 			if (where == 'start') { section.insertBefore(aside, section.firstChild); }
 			if (where == 'end') { section.appendChild(aside); }
