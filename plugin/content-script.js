@@ -81,8 +81,8 @@ function updateHistory() {
 	let amounts = [transactions.length];
 
 	for (let i=0; i < transactions.length; i++) {
-		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
-		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
 		labels[transactions.length - 1 - i] = `<b>${Usernames[buyers[transactions.length - 1 - i]]}</b> bought from <b>${Usernames[sellers[transactions.length - 1 - i]]}</b>`;
 		values_eth[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18), 4);;
 		values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
@@ -153,8 +153,8 @@ function updateWhales() {
 		let amounts = [transactions.length];
 
 		for (let i=0; i < transactions.length; i++) {
-			buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
-			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+			buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
 			amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 		}
 		
