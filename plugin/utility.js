@@ -171,21 +171,39 @@ function stickThings(){
 	}, 50)
 }
 
-function moveThing(from, to, where='start', paddingTop = null) {
+function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
 	waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
 		.then(() => {
-			let old_source = document.querySelector(`.${to} .${from}`);
+			let old_sources = document.querySelectorAll(`.${to} .${from}`);
+			for(let i=0 ; i< old_sources.length ; i++) { 
+				old_sources[i].parentElement.removeChild(old_sources[i]);
+			}
+			
 			let source = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`);
 			source.style.display = 'none';
 			let clone = source.cloneNode(true);
 			clone.style.display = null;
-			let dest = document.getElementsByClassName(to)[0];
-			if (old_source) { dest.removeChild(old_source); }
-			if (where == 'start') { dest.insertBefore(clone, dest.firstChild); }
-			if (where == 'end') { dest.appendChild(clone); }
+			let dests = document.querySelectorAll(`.${to}`);
+			for (let i=0 ; i < dests.length ; i++) {
+				if (where == 'start') { dests[i].insertBefore(clone, dests[i].firstChild); }
+				if (where == 'end') { dests[i].appendChild(clone); }
+			}
 			if (paddingTop) { clone.style.paddingTop = `${paddingTop}px`; }
+			
+			if (buttons) {
+				buttons.forEach(btn => {
+					waitForElement(`.${to} .${from} .${btn}`, 1000)
+					.then(() => {
+						let new_btn = document.querySelector(`.${to} .${from} .${btn}`);
+						let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} .${btn}`);
+						new_btn.addEventListener("click", (e) => {
+							old_btn.click();
+						});
+					});
+				});
+			}
 		} );
 	} );
 }
@@ -193,11 +211,15 @@ function moveThing(from, to, where='start', paddingTop = null) {
 function moveThings(){
 	setTimeout(() => {
 		if (window.innerWidth >= 1281) {
-			if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
-			if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
+			if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2', buttons=['ActionBack-sc-kdlg0e-2']); }
+			
+			if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = null, where='end', paddingTop=20); }
 		}
 	}, 50)
 }
+
+
+setInterval(() => { moveThings(); }, 3000);
 
 
 let lastMoved = null
