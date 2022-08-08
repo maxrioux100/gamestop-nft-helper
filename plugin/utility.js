@@ -185,15 +185,20 @@ function stickThings(){
 }
 
 function moveThing(from, to, where='start', paddingTop = null) {
-	waitForElement(`.${from}`, 1000)
+	waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
 		.then(() => {
-			let aside = document.getElementsByClassName(from)[0].cloneNode(true);
-			let section = document.getElementsByClassName(to)[0];
-			if (where == 'start') { section.insertBefore(aside, section.firstChild); }
-			if (where == 'end') { section.appendChild(aside); }
-			if (paddingTop) { aside.style.paddingTop = `${paddingTop}px`; }
+			let old_source = document.querySelector(`.${to} .${from}`);
+			let source = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`);
+			source.style.display = 'none';
+			let clone = source.cloneNode(true);
+			clone.style.display = null;
+			let dest = document.getElementsByClassName(to)[0];
+			if (old_source) { dest.removeChild(old_source); }
+			if (where == 'start') { dest.insertBefore(clone, dest.firstChild); }
+			if (where == 'end') { dest.appendChild(clone); }
+			if (paddingTop) { clone.style.paddingTop = `${paddingTop}px`; }
 		} );
 	} );
 }
@@ -219,6 +224,7 @@ function sticker() {
 	if (!lastMoved) {
 		intervalResizing = setInterval( () => {
 			if (Date.now() - lastMoved > 250){
+				moveThings();
 				stickThings();
 				lastMoved = null;
 				clearInterval(intervalResizing);
