@@ -172,14 +172,14 @@ async function stickThing(stickiesName, className, options, activate=false)
 function stickThings(){
 	setTimeout(() => {
 		if (window.innerWidth >= 1281) {
-			if (preferences['StickMenu']) { 
-				stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); 
-			}
-			
 			if (preferences['StickNFT']) {
 				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true); }
 				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true); }
 			}
+		}
+		
+		if (preferences['StickMenu']) { 
+			stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); 
 		}
 	}, 50)
 }
