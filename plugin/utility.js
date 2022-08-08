@@ -139,40 +139,49 @@ stickies['bar'] = null;
 
 async function stickThing(stickiesName, className, options, activate=false)
 {	
-	setTimeout(() => {
-		if (window.innerWidth >= 1281) {
-			waitForElement(`.${className}`, 1000)
-			.then(() => {setTimeout(() => {
-				let elems = document.getElementsByClassName(className);
-				for (let i = 0 ; i < elems.length ; i++){
-					if (elems[i].getAttribute('id') != `stick_${stickiesName}`) {
-						elems[i].setAttribute('id', `stick_${stickiesName}`);
-					} else {
-						elems[i].setAttribute('id', null);
-					}
-				}
-				
-				elem = document.getElementById(`stick_${stickiesName}`);
-				
-				waitForElement(`#stick_${stickiesName}`, 1000)
-				.then(() => {
-					stickies[stickiesName] = new mdb.Sticky(elem, options);
-					if (activate) { stickies[stickiesName].active(); }
-				} );
-			}, 250);} ); 
+	let elem = document.getElementById(`stick_${stickiesName}`);
+
+	if (elem) {
+		let sticky = mdb.Sticky.getInstance(elem);
+		if (sticky) {
+			sticky.active();
 		}
-	}, 50)
+	} else {
+		waitForElement(`.${className}`, 1000)
+		.then(() => {
+			let elems = document.getElementsByClassName(className);
+			for (let i = 0 ; i < elems.length ; i++){
+				if (elems[i].getAttribute('id') != `stick_${stickiesName}`) {
+					elems[i].setAttribute('id', `stick_${stickiesName}`);
+				} else {
+					elems[i].setAttribute('id', null);
+				}
+			}
+			
+			elem = document.getElementById(`stick_${stickiesName}`);
+			
+			waitForElement(`#stick_${stickiesName}`, 1000)
+			.then(() => {
+				stickies[stickiesName] = new mdb.Sticky(elem, options);
+				if (activate) { stickies[stickiesName].active(); }
+			} );
+		}); 
+	}
 } 
 
-function stickThings(thing=null){
-	if (preferences['StickMenu'] && (!thing || thing=='Menu')) { 
-		stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); 
-	}
-	
-	if (preferences['StickNFT'] && (!thing || thing=='NFT')) {
-		if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true); }
-		else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true); }
-	}
+function stickThings(){
+	setTimeout(() => {
+		if (window.innerWidth >= 1281) {
+			if (preferences['StickMenu']) { 
+				stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); 
+			}
+			
+			if (preferences['StickNFT']) {
+				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true); }
+				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true); }
+			}
+		}
+	}, 50)
 }
 
 function moveThing(from, to, where='start', paddingTop = null) {
@@ -190,8 +199,12 @@ function moveThing(from, to, where='start', paddingTop = null) {
 }
 
 function moveThings(){
-	if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
-	if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
+	setTimeout(() => {
+		if (window.innerWidth >= 1281) {
+			if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2'); }
+			if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', where='end', paddingTop=20); }
+		}
+	}, 50)
 }
 
 
@@ -201,17 +214,16 @@ function sticker() {
 	for(var key in stickies) {
 		if (stickies[key]) { 
 			stickies[key].inactive();
-			//stickies[key] = null;
 		};	
 	}
 	if (!lastMoved) {
 		intervalResizing = setInterval( () => {
-			if (Date.now() - lastMoved > 500){
+			if (Date.now() - lastMoved > 250){
 				stickThings();
 				lastMoved = null;
 				clearInterval(intervalResizing);
 			}
-		}, 500)
+		}, 50);
 	}
 	lastMoved = Date.now();
 }

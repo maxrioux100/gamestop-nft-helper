@@ -313,12 +313,8 @@ async function token_page() {
 	
 	if (preferences['DarkMode']) { updateDark(); } 
 	
-	stickThings(thing='Menu');
-
-	if (window.innerWidth >= 1281){ 
-		moveThings(); 
-		stickThings(thing='NFT');
-	}
+	moveThings(); 
+	stickThings();
 
 	waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 	.then( () => {
