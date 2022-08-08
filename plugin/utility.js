@@ -149,22 +149,9 @@ async function stickThing(stickiesName, className, options, activate=false)
 	} else {
 		waitForElement(`.${className}`, 1000)
 		.then(() => {
-			let elems = document.getElementsByClassName(className);
-			for (let i = 0 ; i < elems.length ; i++){
-				if (elems[i].getAttribute('id') != `stick_${stickiesName}`) {
-					elems[i].setAttribute('id', `stick_${stickiesName}`);
-				} else {
-					elems[i].setAttribute('id', null);
-				}
-			}
-			
-			elem = document.getElementById(`stick_${stickiesName}`);
-			
-			waitForElement(`#stick_${stickiesName}`, 1000)
-			.then(() => {
-				stickies[stickiesName] = new mdb.Sticky(elem, options);
-				if (activate) { stickies[stickiesName].active(); }
-			} );
+			elem = document.querySelector(`.${className}`);
+			stickies[stickiesName] = new mdb.Sticky(elem, options);
+			if (activate) { stickies[stickiesName].active(); }
 		}); 
 	}
 } 
