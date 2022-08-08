@@ -189,20 +189,16 @@ function moveThing(from, to, where='start', paddingTop = null) {
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
 		.then(() => {
-			let container = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5`);
-			let source = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`);
-			let clone = source.cloneNode(true);
-			clone.style.display = 'none';
-			source.style.display = null;
-			container.appendChild(clone);
-			
-			let dest = document.getElementsByClassName(to)[0];
 			let old_source = document.querySelector(`.${to} .${from}`);
-			
+			let source = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`);
+			source.style.display = 'none';
+			let clone = source.cloneNode(true);
+			clone.style.display = null;
+			let dest = document.getElementsByClassName(to)[0];
 			if (old_source) { dest.removeChild(old_source); }
-			if (where == 'start') { dest.insertBefore(source, dest.firstChild); }
-			if (where == 'end') { dest.appendChild(source); }
-			if (paddingTop) { source.style.paddingTop = `${paddingTop}px`; }
+			if (where == 'start') { dest.insertBefore(clone, dest.firstChild); }
+			if (where == 'end') { dest.appendChild(clone); }
+			if (paddingTop) { clone.style.paddingTop = `${paddingTop}px`; }
 		} );
 	} );
 }
