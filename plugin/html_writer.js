@@ -57,7 +57,6 @@ function createHistoryHelperContainer() {
 	div.setAttribute('id', 'history_helper');
 	div.setAttribute('class', 'ContentContainerDesktop-sc-1p3n06p-5 eVGMue');
 	container.appendChild(div);
-	
 	waitForElement("#chart_price_history", 1000)
 	.then( () => {
 		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(themeMode));
@@ -69,11 +68,13 @@ function createHistoryHelperContainer() {
 		charts['volume'] = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(themeMode));
 		charts['volume'].render();
 	});
+
 }
 
 function createWhalesHelperContainer() {
 	let container = document.getElementsByClassName("ContentContainer-sc-1p3n06p-4")[0];
 	let div = document.createElement('div');
+
 
 	div.innerHTML = '<header class="SectionTitle-sc-13gqei4-5 hiQCYL">' +
 						'<p class="sc-bkkeKt vhTUk">Whales helper</p>' +
