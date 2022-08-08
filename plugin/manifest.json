@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Gamestop NFT helper",
 	"description": "Add additional information to NFT pages",
-	"version": "1.2.5",
+	"version": "1.2.6",
 	"icons": { "16": "icon16.png",
 				"48": "icon48.png",
 				"128": "icon128.png" },
@@ -20,8 +20,8 @@
 				"storage.js",
 				"math.js",
 				"utility.js",
-				"html_writer.js",
 				"charts.js",
+				"html_writer.js",
 				"content-script.js"
 			]
 		}

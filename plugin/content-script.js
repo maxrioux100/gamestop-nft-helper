@@ -10,9 +10,6 @@ new MutationObserver(() => {
 }).observe(document, {subtree: true, childList: true});
 
 function updateOffers() {
-	removeOffersHelperPrompt();
-	createOffersChart();
-	
 	let sorted = Object.keys(offers).map(function(key) {
 		return [key, offers[key]];
 	});
@@ -68,15 +65,11 @@ function updateOffers() {
 	}
 	
 	if (preferences['ChartOffers']) {
-		charts['offers'] = new ApexCharts(document.querySelector("#chart_offers"), get_options_future_sellers(new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars, themeMode));
-		charts['offers'].render();
+		charts['offers'].updateOptions(get_options_listed_sellers(themeMode, new_values_eth, new_values_dollars, new_quantities, min_eth, max_eth, min_dollars, max_dollars), animate=false);
 	}
 }
 
 function updateHistory() {
-	removeHistoryHelperPrompt();
-	createHistoryStatsCharts();
-
 	let total_eth = 0;
 	let total_dollars = 0;
 	let values_eth = [transactions.length];
@@ -88,8 +81,8 @@ function updateHistory() {
 	let amounts = [transactions.length];
 
 	for (let i=0; i < transactions.length; i++) {
-		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
-		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
 		labels[transactions.length - 1 - i] = `<b>${Usernames[buyers[transactions.length - 1 - i]]}</b> bought from <b>${Usernames[sellers[transactions.length - 1 - i]]}</b>`;
 		values_eth[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18), 4);;
 		values_dollars[transactions.length - 1 - i] = bestRound(parseFloat(transactions[i]['transaction']['orderA']['amountS'])/Math.pow(10, 18)*ETH_US , 2);;
@@ -110,8 +103,7 @@ function updateHistory() {
 	if (preferences['StatsHistory']) {
 		updateChips(total_eth, values_eth, total_dollars, values_dollars, change);
 	}
-	
-	if (preferences['ChartHistory']) {
+	if (preferences['ChartHistory'] && charts['price_history']) {
 		let profile_sales_index = [];
 		let profile_buys_index = [];
 
@@ -136,12 +128,11 @@ function updateHistory() {
 		let colors = ['#00E396'];
 		if (change < 0) {colors = ["#FF4560"];}
 		else if (change == 0) {colors = ["#008FFB"];}
-		
-		charts['price_history'] = new ApexCharts(document.querySelector("#chart_price_history"), get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, themeMode));
-		charts['price_history'].render();
+    
+		charts['price_history'].updateOptions(get_options_price_history(themeMode, values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index), animate=false);
 	}
 	
-	if (preferences['ChartVolume']) {
+	if (preferences['ChartVolume'] && charts['volume']) {
 		let agos = [];
 		for (timestamp of created_at) {
 			let ago = timeago.format(timestamp);
@@ -150,75 +141,49 @@ function updateHistory() {
 		}
 		
 		let [series_volume, labels_volume, all_data_volume] = get_volume_candle(count(agos));
-		charts['volume']  = new ApexCharts(document.querySelector("#chart_volume"), get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, themeMode));
-		charts['volume'].render();
+    
+		charts['volume'].updateOptions(get_options_volume(themeMode, values_eth, series_volume, labels_volume, all_data_volume), animate=false);
 	}
 }
 
 function updateWhales() {
-	createWhalesChart();
+	if (preferences['ChartRecurrent'] && charts['recurrent']) {
+		let buyers = [transactions.length];
+		let sellers = [transactions.length];
+		let amounts = [transactions.length];
 
-	let buyers = [transactions.length];
-	let sellers = [transactions.length];
-	let amounts = [transactions.length];
-
-	for (let i=0; i < transactions.length; i++) {
-		buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
-		sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
-		amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
-	}
-
-	transactions_splitter(amounts, [sellers, buyers]);
-
-	let listers = [];
-	if (offers) {
-		for (let i=0; i < offers.length; i++) {
-			for (let ii=0 ; ii < offers[i]['amount'] ; ii++) {
-				listers.push(offers[i]['ownerAddress']);
+		for (let i=0; i < transactions.length; i++) {
+			buyers[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['accountAddress'];
+			sellers[transactions.length - 1 - i] = transactions[i]['transaction']['orderB']['accountAddress'];
+			amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
+		}
+		
+		
+		transactions_splitter(amounts, [sellers, buyers]);
+		
+		let listers = [];
+		if (offers) {
+			for (let i=0; i < offers.length; i++) {
+				for (let ii=0 ; ii < offers[i]['amount'] ; ii++) {
+					listers.push(offers[i]['ownerAddress']);
+				}
 			}
 		}
-	}
 
-	let [series_sellers_buyers_listers, labels_sellers_buyers_listers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
-	
-	charts['recurrent']  = new ApexCharts(document.querySelector("#chart_recurrent"), get_options_recurrent(series_sellers_buyers_listers, labels_sellers_buyers_listers, themeMode));
-	charts['recurrent'].render(); 
-	
-	const labels = document.querySelectorAll('.chart_recurrent');
-	for (let label of labels) {
-		let title = label.querySelector('title').textContent;
-		if (title == Usernames[creator]) { label.setAttribute("fill", "#1266F1"); }
-		if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
+		let [series_sellers_buyers_listers, labels_sellers_buyers_listers] = combine_buyers_sellers_listers(count(buyers), count(sellers), count(listers));
+		
+		get_options_recurrent(themeMode, series_sellers_buyers_listers, labels_sellers_buyers_listers)
+		charts['recurrent'].updateOptions(get_options_recurrent(themeMode, series_sellers_buyers_listers, labels_sellers_buyers_listers), animate=false);
+		
+		const labels = document.querySelectorAll('.chart_recurrent');
+		for (let label of labels) {
+			let title = label.querySelector('title').textContent;
+			if (title == Usernames[creator]) { label.setAttribute("fill", "#1266F1"); }
+			if (title == profileName) { label.setAttribute("fill", " #FF5733"); }
+		}
 	}
-
 }
 
-
-let updateNeededHistory = false;
-let updateNeededOffers = false;
-let updateNeededWhales = false;
-
-function updateNeeded() {
-	updateNeededHistory = true;
-	updateNeededOffers = true;
-	updateNeededWhales = true;
-}
-
-
-setInterval(function() {
-	if (updateNeededWhales) {
-		updateNeededWhales = false;
-		updateWhalesWithApiData();
-	}
-	if (updateNeededHistory) {
-		updateNeededHistory = false;
-		updateHistoryWithApiData();
-	}
-	if (updateNeededOffers) {
-		updateNeededOffers = false;
-		updateOffersWithApiData();
-	}
-}, 500);
 
 let rateAndFees = null;
 let ETH_US = null;
@@ -234,6 +199,32 @@ let transactions = null;
 let offers=null;
 let creator=null;
 let all_transactions=false;
+
+
+let updateNeededHistory = false;
+let updateNeededOffers = false;
+let updateNeededWhales = false;
+
+function updateNeeded() {
+	updateNeededHistory = true;
+	updateNeededOffers = true;
+	updateNeededWhales = true;
+}
+
+setInterval(function() {
+	if (updateNeededWhales) {
+		updateNeededWhales = false;
+		updateWhalesWithApiData();
+	}
+	if (updateNeededHistory) {
+		updateNeededHistory = false;
+		updateHistoryWithApiData();
+	}
+	if (updateNeededOffers) {
+		updateNeededOffers = false;
+		updateOffersWithApiData();
+	}
+}, 500);
 
 async function getNFT() {
 	let splitted_url = lastUrl.split('/');
@@ -280,8 +271,6 @@ async function addAddress(address){
 async function updateHistoryWithApiData() {
 	if (transactions && ETH_US){
 		if (transactions.length > 1) {
-			clean_chart('price_history');
-			clean_chart('volume');
 			waitForElement("#history_helper", 1000)
 			.then( () => {
 				updateHistory();
@@ -296,7 +285,6 @@ async function updateOffersWithApiData() {
 	if (offers && ETH_US)
 	{
 		if (offers.length > 1){	
-			clean_chart('offers');
 			waitForElement("#offers_helper", 1000)
 			.then( () => {
 				updateOffers();
@@ -309,7 +297,6 @@ async function updateOffersWithApiData() {
 async function updateWhalesWithApiData() {
 	if ((transactions || offers) && ETH_US)
 	{
-		clean_chart('recurrent');
 		waitForElement("#whales_helper", 1000)
 		.then( () => {
 			updateWhales();
@@ -319,7 +306,6 @@ async function updateWhalesWithApiData() {
 }
 
 if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
-
 async function token_page() {
 	await readPreferences();
 	
@@ -342,6 +328,8 @@ async function token_page() {
 		if (preferences['ChartOffers']) { createOffersHelperContainer(); }
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
+		if (preferences['DarkMode']) { updateDark(); } 
+
 		updateNeeded();
 	});
 }

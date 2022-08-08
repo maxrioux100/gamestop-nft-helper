@@ -4,20 +4,6 @@ charts['offers'] = null;
 charts['volume'] = null;
 charts['recurrent'] = null;
 
-function clean_chart(name){
-	if (charts[name] != null) {
-		charts[name].destroy();
-	}
-}
-
-function clean_charts(){
-	for (const [key, value] of Object.entries(charts)) {
-		if (value != null) {
-			value.destroy();
-		}
-	}
-}
-
 function combine_buyers_sellers_listers(buyers, sellers, listers){		
 	let combined = {};
 	for (let i = 0; i < Object.keys(buyers).length ; i++){
@@ -40,9 +26,8 @@ function combine_buyers_sellers_listers(buyers, sellers, listers){
 		}
 	}
 
-
 	let filtered = Object.keys(combined).reduce(function (filtered, key) {
-		if (combined[key] > 1) filtered[key] = combined[key];
+		if (key != 0) filtered[key] = combined[key];
 		return filtered;
 	}, {});
 
@@ -82,6 +67,8 @@ function combine_buyers_sellers_listers(buyers, sellers, listers){
 		if (items[i][0] in listers) {value = listers[items[i][0]]};
 		data_listers.push(value);
 	}
+	
+	
 
 	let series = [{
 				name: 'Bought',
@@ -160,10 +147,10 @@ function getTickAmount(quantities) {
 	return maxTick;
 }
 
-function get_options_future_sellers(values_eth, values_dollars, quantities, min_eth, max_eth, min_dollars, max_dollars, theme){
-	return {
+function get_options_listed_sellers(theme, values_eth=null, values_dollars=null, quantities=null, min_eth=null, max_eth=null, min_dollars=null, max_dollars=null){
+	let options = {
 		title: {
-			text: "Future offers"
+			text: "Listed offers"
 		},
 		chart: {
 			type: 'area',
@@ -180,13 +167,10 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 				}
 			}
 		},
+		series: [],
 		dataLabels: {
 			enabled: false
 		},
-		series: [{
-			name: 'Ethereum',
-			data: quantities.map(function(e, i) { return [e, values_eth[i]]; })
-		}],
 		stroke: {
 		  curve: 'stepline',
 		  width: 1
@@ -199,7 +183,6 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 			labels: {
 				hideOverlappingLabels: true
 			},
-			tickAmount: getTickAmount(quantities[quantities.length-1]),
 			decimalsInFloat: 0,
 			tooltip: {
 				enabled: false
@@ -210,16 +193,12 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 				title: {
 					text: "Ethereum"
 				},
-				min: min_eth,
-				max: max_eth
 			},
 			{
 				opposite: true,
 				title: {
 					text: "Dollars"
 				},
-				min: min_dollars,
-				max: max_dollars,
 				decimalsInFloat: 2
 			}
 		],
@@ -229,7 +208,16 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 		colors: [
 			"#008FFB"
 		],
-		tooltip: {
+		theme:{
+			mode: theme
+		},
+		noData: {
+			text: 'Need at least 2 listed offers with different price'
+		}
+	}
+	
+	if (values_eth && values_dollars) {
+		options['tooltip'] = {
 			custom: function({ series, seriesIndex, dataPointIndex, w }) {
 				return (
 					'<div class="arrow_box">' +
@@ -239,14 +227,38 @@ function get_options_future_sellers(values_eth, values_dollars, quantities, min_
 					"</div>"
 				);
 			}
-		},
-		theme:{
-			mode: theme
 		}
 	}
+	
+	if (min_eth) { options['yaxis'][0]['min'] = min_eth; }
+	if (max_eth) { options['yaxis'][0]['max'] = max_eth; }
+	if (min_dollars) { options['yaxis'][1]['min'] = min_dollars; }
+	if (max_dollars) { options['yaxis'][1]['max'] = max_dollars; }
+	
+	if ( values_eth && values_dollars && quantities) { 
+		options['series'].push({
+			name: 'Ethereum',
+			data: quantities.map(function(e, i) { return [e, values_eth[i]]; })
+		});
+		options['xaxis']['tickAmount'] = getTickAmount(quantities[quantities.length-1]); 
+		
+		options['tooltip'] = {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				return (
+					'<div class="arrow_box">' +
+						"<span>" +
+							`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
+						"</span>" +
+					"</div>"
+				);
+			}
+		}
+	}
+	
+	return options;
 }
 
-function get_options_price_history(values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index, theme){
+function get_options_price_history(theme, values_eth=null, values_dollars=null, min_eth=null, max_eth=null, min_dollars=null, max_dollars=null, labels=null, colors=null, all_transactions=null, profile_sales_index=null, profile_buys_index=null){
 	
 	let options = {
 		title: {
@@ -267,10 +279,7 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 				}
 			}
 		},
-		series: [{
-			name: 'Ethereum',
-			data: values_eth
-		}],
+		series: [],
 		stroke: {
 		  curve: 'smooth',
 		  width: 1
@@ -288,34 +297,18 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 				title: {
 					text: "Ethereum"
 				},
-				min: min_eth,
-				max: max_eth
 			},
 			{
 				opposite: true,
 				title: {
 					text: "Dollars"
 				},
-				min: min_dollars,
-				max: max_dollars,
 				decimalsInFloat: 2
 			}
 		],
 		labels: labels,
 		legend: {
 			show: false
-		},
-		colors: colors,
-		tooltip: {
-			custom: function({ series, seriesIndex, dataPointIndex, w }) {
-				return (
-					'<div class="arrow_box">' +
-						"<span>" +
-							`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
-						"</span>" +
-					"</div>"
-				);
-			}
 		},
 		dataLabels: {
 			enabled: false
@@ -330,8 +323,36 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 		},
 		theme: {
 			mode: theme
+		},
+		noData: {
+			text: 'Need to have been sold at least 2 times'
 		}
 	}
+
+	if (values_eth && values_dollars) { 
+		options.series.push({
+			name: 'Ethereum',
+			data: values_eth
+		}); 
+		options['tooltip'] = {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				return (
+					'<div class="arrow_box">' +
+						"<span>" +
+							`${values_eth[dataPointIndex]} ETH ($${values_dollars[dataPointIndex]})` +
+						"</span>" +
+					"</div>"
+				);
+			}
+		}
+	}
+	
+	if (min_eth) { options['yaxis'][0]['min'] = min_eth; }
+	if (max_eth) { options['yaxis'][0]['max'] = max_eth; }
+	if (min_dollars) { options['yaxis'][1]['min'] = min_dollars; }
+	if (max_dollars) { options['yaxis'][1]['max'] = max_dollars; }
+	
+	if (colors) { options['colors'] = colors; }
 
 	if (all_transactions) {
 		options.annotations.xaxis.push({
@@ -350,34 +371,38 @@ function get_options_price_history(values_eth, values_dollars, min_eth, max_eth,
 		});
 	}
 	if (profileName) {
-		for (var i = 0; i < profile_sales_index.length; i++) {
-			options.markers.discrete.push({
-				seriesIndex: 0,
-				dataPointIndex: profile_sales_index[i],
-				fillColor: '#000000',
-				strokeColor: '#7c1760',
-				size: 5,
-				shape: "circle"
-			})
+		if (profile_sales_index) {
+			for (var i = 0; i < profile_sales_index.length; i++) {
+				options.markers.discrete.push({
+					seriesIndex: 0,
+					dataPointIndex: profile_sales_index[i],
+					fillColor: '#000000',
+					strokeColor: '#7c1760',
+					size: 5,
+					shape: "circle"
+				})
+			}
 		}
-		for (var i = 0; i < profile_buys_index.length; i++) {
-			options.markers.discrete.push({
-				seriesIndex: 0,
-				dataPointIndex: profile_buys_index[i],
-				fillColor: '#ffffff',
-				strokeColor: '#7c1760',
-				size: 5,
-				shape: "circle"
-			})
+		if (profile_sales_index) {
+			for (var i = 0; i < profile_buys_index.length; i++) {
+				options.markers.discrete.push({
+					seriesIndex: 0,
+					dataPointIndex: profile_buys_index[i],
+					fillColor: '#ffffff',
+					strokeColor: '#7c1760',
+					size: 5,
+					shape: "circle"
+				})
+			}
 		}
 	}
 	return options;
 }
 
-function get_options_volume(values_eth, series_volume, labels_volume, all_data_volume, theme) {
-	return {
+function get_options_volume(theme, values_eth=null, series_volume=null, labels_volume=null, all_data_volume=null) {
+	let options = {
 		title: {
-			text: `Volume (Total : ${values_eth.length})`
+			text: 'Volume'
 		},
 		chart: {
 			stacked: true,
@@ -386,12 +411,24 @@ function get_options_volume(values_eth, series_volume, labels_volume, all_data_v
 				enabled: false
 			}
 		},
-		series: series_volume,
-		labels: labels_volume,
+		series: [],
 		legend: {
 			show: false
 		},
-		tooltip: {
+		theme: {
+			mode: theme,
+			palette: 'palette3'
+		},
+		noData: {
+			text: 'Need to have been sold at least 2 times'
+		}
+	}
+	
+	if (values_eth) { options['title'] = { text: `Volume (Total : ${values_eth.length})` }; }
+	if (series_volume) { options['series'] = series_volume; }
+	if (labels_volume) { options['labels'] = labels_volume; }
+	if (all_data_volume) { 
+		options['tooltip'] = {
 			custom: function({series, seriesIndex, dataPointIndex, w}) {
 				let newSeriesIndex = seriesIndex;
 				if (newSeriesIndex > 0) {newSeriesIndex--;}
@@ -399,16 +436,14 @@ function get_options_volume(values_eth, series_volume, labels_volume, all_data_v
 						'<span>' + all_data_volume[dataPointIndex + newSeriesIndex][0] + ' ago : ' + all_data_volume[dataPointIndex + newSeriesIndex][1] + '</span>' +
 						'</div>'
 			}
-		},
-		theme: {
-			mode: theme,
-			palette: 'palette3'
-		}
+		}; 
 	}
+	
+	return options;
 }
 
-function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, theme){
-	return {
+function get_options_recurrent(theme, series_sellers_buyers_listers=null, labels_sellers_buyers_listers=null){
+	let options = {
 		title: {
 			text: "Recurrent buyers/sellers"
 		},
@@ -424,8 +459,7 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, the
 				horizontal: true
 			}
 		},
-		series: series_sellers_buyers,
-		labels: labels_sellers_buyers,
+		series: [],
 		colors: ['#00E396', '#FF4560', '#A300D6'],
 		xaxis: {
 			decimalsInFloat: 0
@@ -436,9 +470,16 @@ function get_options_recurrent(series_sellers_buyers, labels_sellers_buyers, the
 					cssClass: 'chart_recurrent'
 				}
 			}
-    },
+		},
 		theme: {
 			mode:theme
+		},
+		noData: {
+			text: 'Need to have been sold or listed at least once'
 		}
 	}
+	if (labels_sellers_buyers_listers) { options['labels'] = labels_sellers_buyers_listers; }
+	if (series_sellers_buyers_listers) { options['series'] = series_sellers_buyers_listers; }
+	
+	return options;
 }

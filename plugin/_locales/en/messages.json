@@ -1,10 +1,2 @@
 {
-	"offershelperprompt": {
-		"message": "Chart should appears automatically if there is at least 2 listings",
-		"description": "Inform the user of the condition for the chart to appears"
-	},
-	"historyhelperprompt": {
-		"message": "Stats and charts should appears automatically if there is at least 2 previous selling",
-		"description": "Inform the user of the condition for the stats and charts to appears"
-	}
 }
