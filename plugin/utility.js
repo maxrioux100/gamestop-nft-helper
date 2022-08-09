@@ -171,7 +171,8 @@ function stickThings(){
 	}, 50)
 }
 
-async function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
+
+async function moveThing(from, to, buttons=null, where='start', paddingTop = null, split=null) {
 	await waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
@@ -194,17 +195,18 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 			
 			if (buttons) {
 				buttons.forEach(btn => {
-					waitForElement(`.${to} .${from} ${btn}`, 1000)
-					.then(() => {
-						let new_btn = document.querySelector(`.${to} .${from} ${btn[0]}`);
-						let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[0]}`);
+
+					let new_btn = document.querySelector(`.${to} .${from} ${btn[0]}`);
+					let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[0]}`);
+					if (new_btn) {
 						new_btn.addEventListener("click", (e) => {
 							old_btn.click();
 							if (btn.length > 1) {
 								document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[1]}`).click();
 							}
 						});
-					});
+					}
+
 				});
 			}
 		} );
@@ -234,16 +236,36 @@ async function moveThings(){
 			report.src = '/12109559ab4919bdf23807e89e160f32.svg'; 
 		}
 		
-		if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
-																																['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
-																																['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
-																															   ], where='end', paddingTop=20); }
+		if (preferences['MovePrice']) { 
+			moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
+																									['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
+																									['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
+																								   ], where='end', paddingTop=20); 
+			waitForElement('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0', 1000)
+			.then(() => {																			   
+				let actions = document.querySelectorAll('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0');
+				for (let i = 0 ; i < actions.length ; i++){
+					actions[i].outerHTML = `<div class="MultiButtonRow-sc-11cpe2k-5 kUYqZZ">` +
+												`<div class="ButtonHoverWrapper-sc-11cpe2k-4 fUzcEq">` +
+													`<button aria-label="Buy Now" class="sc-dkPtRN jhCfFf">` +
+														`<span class="sc-gsDKAQ ftCHgs">Buy Now</span>` +
+													`</button>` +
+												`</div>` +
+											`<div class="ButtonHoverWrapper-sc-11cpe2k-4 fUzcEq">` +
+												`<button aria-label="X Editions" class="sc-dkPtRN vygPD">` + 
+													`<span class="sc-gsDKAQ ftCHgs">X Editions</span>` +
+												`</button>` +
+											`</div>` +
+										  `</div>`;
+				}
+			}, () => {});
+		}
 	}
 	if (preferences['DarkMode']) { updateDark(); } 
 }
 
 
-setInterval(() => { moveThings(); }, 3000);
+//setInterval(() => { moveThings(); }, 3000);
 
 
 let lastMoved = null
