@@ -111,6 +111,7 @@ function updateDark() {
 	if (preferences['MovePrice']) {
 		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundColor = '#FBFBFB'
 		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundClip = 'content-box';
+		document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none';
 	}
 	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
 	for (_element of whitefont){
