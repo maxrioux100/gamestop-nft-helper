@@ -194,12 +194,15 @@ function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
 			
 			if (buttons) {
 				buttons.forEach(btn => {
-					waitForElement(`.${to} .${from} .${btn}`, 1000)
+					waitForElement(`.${to} .${from} ${btn}`, 1000)
 					.then(() => {
-						let new_btn = document.querySelector(`.${to} .${from} .${btn}`);
-						let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} .${btn}`);
+						let new_btn = document.querySelector(`.${to} .${from} ${btn[0]}`);
+						let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[0]}`);
 						new_btn.addEventListener("click", (e) => {
 							old_btn.click();
+							if (Array.isArray(btn)) {
+								document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[1]}`).click();
+							}
 						});
 					});
 				});
@@ -211,7 +214,10 @@ function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
 function moveThings(){
 	setTimeout(() => {
 		if (window.innerWidth >= 1281) {
-			if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2', buttons=['ActionBack-sc-kdlg0e-2']); }
+			if (preferences['MoveTools']) { moveThing('Actions-sc-kdlg0e-0', 'MediaContainer-sc-1p3n06p-2', buttons=[['.ActionBack-sc-kdlg0e-2'], 
+																													 ['.ActionMedia-sc-kdlg0e-1 .Button-sc-18j7gm-0'],
+																													 ['.ActionMedia-sc-kdlg0e-1 .ActionLike-sc-kdlg0e-3 .sc-lbhJGD'],
+																													 ['.ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-dkPtRN', '.ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-iCfMLu .sc-furwcr']]); }
 			
 			if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = null, where='end', paddingTop=20); }
 		}
