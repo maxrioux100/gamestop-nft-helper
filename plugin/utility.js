@@ -172,7 +172,7 @@ function stickThings(){
 }
 
 
-async function moveThing(from, to, buttons=null, where='start', paddingTop = null, split=null) {
+async function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
 	await waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
@@ -195,7 +195,6 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 			
 			if (buttons) {
 				buttons.forEach(btn => {
-
 					let new_btn = document.querySelector(`.${to} .${from} ${btn[0]}`);
 					let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[0]}`);
 					if (new_btn) {
@@ -206,7 +205,6 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 							}
 						});
 					}
-
 				});
 			}
 		} );
@@ -245,18 +243,43 @@ async function moveThings(){
 			.then(() => {																			   
 				let actions = document.querySelectorAll('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0');
 				for (let i = 0 ; i < actions.length ; i++){
+					let nbEditions = '';
+					if (offers) {
+						nbEditions = offers.reduce( (previous, current) => previous + parseInt(current['amount']), 0);
+					}
+					
+					
 					actions[i].outerHTML = `<div class="MultiButtonRow-sc-11cpe2k-5 kUYqZZ">` +
 												`<div class="ButtonHoverWrapper-sc-11cpe2k-4 fUzcEq">` +
-													`<button aria-label="Buy Now" class="sc-dkPtRN jhCfFf">` +
-														`<span class="sc-gsDKAQ ftCHgs">Buy Now</span>` +
+													`<button aria-label="Manage NFT" class="sc-dkPtRN jhCfFf">` +
+														`<span class="sc-gsDKAQ ftCHgs">Manage NFT</span>` +
 													`</button>` +
 												`</div>` +
 											`<div class="ButtonHoverWrapper-sc-11cpe2k-4 fUzcEq">` +
-												`<button aria-label="X Editions" class="sc-dkPtRN vygPD">` + 
-													`<span class="sc-gsDKAQ ftCHgs">X Editions</span>` +
+												`<button aria-label="${nbEditions} Editions" class="sc-dkPtRN vygPD">` + 
+													`<span class="sc-gsDKAQ ftCHgs">${nbEditions} Editions</span>` +
 												`</button>` +
 											`</div>` +
 										  `</div>`;
+										  
+					let action_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-dkPtRN`);
+					let manage_btn = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf`);
+					if (manage_btn) {
+						manage_btn.addEventListener("click", (e) => {
+							action_btn.click();
+							let manage_menu = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-iCfMLu`);
+							manage_menu.children[1].click();
+						});
+					}
+					
+					let editions_btn = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD`);
+					if (editions_btn) {
+						editions_btn.addEventListener("click", (e) => {
+							action_btn.click();
+							let manage_menu = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-iCfMLu`);
+							manage_menu.children[0].click();
+						});
+					}
 				}
 			}, () => {});
 		}
@@ -264,9 +287,7 @@ async function moveThings(){
 	if (preferences['DarkMode']) { updateDark(); } 
 }
 
-
-//setInterval(() => { moveThings(); }, 3000);
-
+setInterval(() => { moveThings(); }, 3000);
 
 let lastMoved = null
 let intervalResizing = null;
