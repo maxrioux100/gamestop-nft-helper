@@ -236,17 +236,13 @@ async function moveThings(){
 		
 		if (preferences['MovePrice']) { 
 			moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
-																									['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
-																									['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
+																									['div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
+																									['div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
 																								   ], where='end', paddingTop=20); 																					   
-			waitForElement('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0, .MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-bttaWv .sc-kNzDjo .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0', 1000)
+			waitForElement('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0', 1000)
 			.then(() => {	
-				let actions = document.querySelectorAll('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0');
-				let shortcut = '.sc-JEhMO .sc-gHjyzD';
-				if (actions.length == 0 ) {
-					actions = document.querySelectorAll('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 .sc-bttaWv .sc-kNzDjo .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0');
-					shortcut = '.sc-bttaWv .sc-kNzDjo';
-				}
+
+				let actions = document.querySelectorAll('.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0');
 				
 				for (let i = 0 ; i < actions.length ; i++){
 					let nbEditions = '';
@@ -268,25 +264,26 @@ async function moveThings(){
 											`</div>` +
 										  `</div>`;
 										  
-					let action_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 ${shortcut} .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-dkPtRN`);
-					let manage_btn = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 ${shortcut} .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf`);
+					let action_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-dkPtRN`);
+					let manage_btn = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf`);
 					if (manage_btn) {
 						manage_btn.addEventListener("click", (e) => {
 							action_btn.click();
-							let manage_menu = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 ${shortcut} .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-iCfMLu`);
+							let manage_menu = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-iCfMLu`);
 							manage_menu.children[1].click();
 						});
 					}
 					
-					let editions_btn = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 ${shortcut} .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD`);
+					let editions_btn = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD`);
 					if (editions_btn) {
 						editions_btn.addEventListener("click", (e) => {
 							action_btn.click();
-							let manage_menu = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 ${shortcut} .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-iCfMLu`);
+							let manage_menu = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .PurchaseInfoWrapper-sc-11cpe2k-0 div div .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0 .sc-eCImPb .sc-iCfMLu`);
 							manage_menu.children[0].click();
 						});
 					}
 				}
+
 			}, () => {});
 		}
 	}
