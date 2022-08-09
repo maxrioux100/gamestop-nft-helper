@@ -234,7 +234,10 @@ async function moveThings(){
 			report.src = '/12109559ab4919bdf23807e89e160f32.svg'; 
 		}
 		
-		if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = null, where='end', paddingTop=20); }
+		if (preferences['MovePrice']) { moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
+																																['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
+																																['.sc-JEhMO .sc-gHjyzD .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
+																															   ], where='end', paddingTop=20); }
 	}
 	if (preferences['DarkMode']) { updateDark(); } 
 }
