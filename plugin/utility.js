@@ -108,8 +108,10 @@ function updateDark() {
 	document.body.style.backgroundColor = '#424242';
 	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
 	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
-	document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundColor = '#FBFBFB'
-
+	if (preferences['MovePrice']) {
+		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundColor = '#FBFBFB'
+		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundClip = 'content-box';
+	}
 	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
