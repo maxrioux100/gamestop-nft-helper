@@ -311,8 +311,6 @@ async function token_page() {
 	
 	getNFT();
 	
-	if (preferences['DarkMode']) { updateDark(); } 
-	
 	moveThings(); 
 	stickThings();
 
