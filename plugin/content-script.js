@@ -311,17 +311,8 @@ async function token_page() {
 	
 	getNFT();
 	
-	if (preferences['DarkMode']) { updateDark(); } 
-	
-	if (preferences['StickMenu']) { stickThing('bar', 'sc-FNXRL', {stickyDirection : 'both',stickyMedia: 1281, stickyDelay: 20}, activate=true); }
-
-	if (window.innerWidth >= 1281){ 
-		moveThings(); 
-		if (preferences['StickNFT']) {
-			if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true, dontReactivate=true); }
-			else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true, dontReactivate=true); }
-		}
-	}
+	moveThings(); 
+	stickThings();
 
 	waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 	.then( () => {
