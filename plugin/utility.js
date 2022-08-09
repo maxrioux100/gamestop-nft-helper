@@ -200,7 +200,7 @@ function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
 						let old_btn = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[0]}`);
 						new_btn.addEventListener("click", (e) => {
 							old_btn.click();
-							if (Array.isArray(btn)) {
+							if (btn.length > 1) {
 								document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from} ${btn[1]}`).click();
 							}
 						});
