@@ -31,6 +31,11 @@ function waitForElement(querySelector, timeout){
 	});
 }
 
+async function setIntervalImmediately(func, interval) {
+	func();
+	return setInterval(func, interval);
+}
+
 function writeCheck(key, container){
 	let container_elem = document.getElementById(container);
 	let div = document.createElement('div');

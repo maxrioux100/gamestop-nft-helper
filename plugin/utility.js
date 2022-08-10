@@ -109,7 +109,7 @@ function updateDark() {
 	let logos = document.querySelectorAll('.sc-lkgTHX')
 	for (let i=0 ; i<logos.length ; i++) { logos[i].src='https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg'; }
 	
-	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img,.ModalCard-sc-ljh7cw-2 *)');
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img,.sc-iCfMLu *,.ModalCard-sc-ljh7cw-2 *)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
@@ -134,7 +134,7 @@ function updateDark() {
 		if (_element.style) { _element.style.backgroundColor = '#262626'; }
 	}
 	
-	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"],img[src="/0f655dbe35439e127dd99dd383d06350.svg"],img[src="/12109559ab4919bdf23807e89e160f32.svg"],img[src="/5ec5b0a33d01121a9b74f1cdf6022c3d.svg"],img[src="/5eb42a1b2c3a480c09463284653b3023.svg"]');
+	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"],img[src="/0f655dbe35439e127dd99dd383d06350.svg"],img[src="/12109559ab4919bdf23807e89e160f32.svg"]:not(.sc-iCfMLu *),img[src="/5ec5b0a33d01121a9b74f1cdf6022c3d.svg"],img[src="/5eb42a1b2c3a480c09463284653b3023.svg"]');
 	for (_element of imgs ){
 		if (_element) { 
 			let splitted_url = _element.src.split('/');
