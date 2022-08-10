@@ -143,7 +143,7 @@ function updateDark() {
 			infoboxes[i].style.backgroundColor = '#FBFBFB'
 			infoboxes[i].style.backgroundClip = 'content-box';
 		}
-		document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none';
+		if (window.innerWidth >= 1281) { document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none'; }
 	}
 }
 
@@ -185,6 +185,14 @@ function stickThings(){
 	}, 50)
 }
 
+
+async function unmoveThing(thing, from, to){
+	document.querySelector(`.${from} .${thing}`).style.display = null;
+	let oldies = document.querySelectorAll(`.${to} .${thing}`);
+	for (let i=0 ; i<oldies.length;i++){
+		oldies[i].parentElement.removeChild(oldies[i]);
+	}
+}
 
 async function moveThing(from, to, buttons=null, where='start', paddingTop = null, height=null) {
 	await waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
@@ -302,6 +310,9 @@ async function moveThings(){
 
 			}, () => {});
 		}
+	} else {
+		if (preferences['MoveTools']) { unmoveThing('Actions-sc-kdlg0e-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
+		if (preferences['MovePrice']) { unmoveThing('InfoBoxInnerWrapper-sc-11cpe2k-2', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
 	}
 	if (preferences['DarkMode']) { updateDark(); } 
 }
