@@ -109,7 +109,7 @@ function updateDark() {
 	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242';
 	document.querySelector('.MediaContainer-sc-1p3n06p-2').style.backgroundColor = '#424242'; 
 	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
-	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img,.ModalCard-sc-ljh7cw-2 *)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
