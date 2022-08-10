@@ -174,7 +174,7 @@ function stickThings(){
 	setTimeout(() => {
 		if (window.innerWidth >= 1281) {
 			if (preferences['StickNFT']) {
-				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true); }
+				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 100, stickyDelay: 70}, activate=true); }
 				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true); }
 			}
 		}
@@ -186,7 +186,7 @@ function stickThings(){
 }
 
 
-async function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
+async function moveThing(from, to, buttons=null, where='start', paddingTop = null, height=null) {
 	await waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
@@ -206,6 +206,8 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 				if (where == 'end') { dests[i].appendChild(clone); }
 			}
 			if (paddingTop) { clone.style.paddingTop = `${paddingTop}px`; }
+
+			if (height) { clone.style.height = `${height}px`; }
 			
 			if (buttons) {
 				buttons.forEach(btn => {
@@ -241,7 +243,7 @@ async function moveThings(){
 																					 ['.ActionMedia-sc-kdlg0e-1 .Button-sc-18j7gm-0'],
 																					 ['.ActionMedia-sc-kdlg0e-1 .ActionLike-sc-kdlg0e-3 .sc-lbhJGD'],
 																					 ['.ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-dkPtRN', '.ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-iCfMLu .sc-furwcr']
-																					]); 
+																					], where='start', paddingTop=0, height=10); 
 			let more = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .Actions-sc-kdlg0e-0 .ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-dkPtRN`).children[0];
 			more.innerHTML = more.innerHTML.replaceAll('More', 'Report');
 			let report = more.children[0];
