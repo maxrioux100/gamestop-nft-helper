@@ -322,8 +322,6 @@ async function moveThings(){
 	if (preferences['DarkMode']) { updateDark(); } 
 }
 
-setInterval(() => { moveThings(); }, 1000);
-
 let lastMoved = null
 let intervalResizing = null;
 function sticker() {
