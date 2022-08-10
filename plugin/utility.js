@@ -124,7 +124,7 @@ function updateDark() {
 		if (_element.style) { _element.style.color = '#9FA6B2'; }
 	}
 	
-	let darkbackground = document.querySelectorAll('body,.FooterOuterWrapper-sc-n1m1px-6,.MediaContainer-sc-1p3n06p-2,.SidebarWrapper-sc-d2ie7h-0');
+	let darkbackground = document.querySelectorAll('body,.FooterOuterWrapper-sc-n1m1px-6,.MediaContainer-sc-1p3n06p-2,.SidebarWrapper-sc-d2ie7h-0,.sc-hZpJaK');
 	for (_element of darkbackground ){
 		if (_element.style) { _element.style.backgroundColor = '#424242'; }
 	}
