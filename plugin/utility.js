@@ -114,7 +114,7 @@ function updateDark() {
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
 	
-	let blackfont = document.querySelectorAll('.dGszyt,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK,.EditionsItemHead-sc-11cpe2k-8 .bYYTOP');
+	let blackfont = document.querySelectorAll('.dGszyt,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK,.EditionsItemHead-sc-11cpe2k-8 .bYYTOP,.TableHead-sc-qyvkk9-3 .TableHeaderCell-sc-qyvkk9-5');
 	for (_element of blackfont){
 		if (_element.style) { _element.style.color = '#262626'; }
 	}
@@ -124,7 +124,7 @@ function updateDark() {
 		if (_element.style) { _element.style.color = '#9FA6B2'; }
 	}
 	
-	let darkbackground = document.querySelectorAll('body,.FooterOuterWrapper-sc-n1m1px-6,.MediaContainer-sc-1p3n06p-2,.SidebarWrapper-sc-d2ie7h-0,.sc-hZpJaK');
+	let darkbackground = document.querySelectorAll('body,.FooterOuterWrapper-sc-n1m1px-6,.MediaContainer-sc-1p3n06p-2,.SidebarWrapper-sc-d2ie7h-0,.sc-hZpJaK,.NftContainer-sc-e23qc5-2,.ManageSidebar-sc-e23qc5-4');
 	for (_element of darkbackground ){
 		if (_element.style) { _element.style.backgroundColor = '#424242'; }
 	}
