@@ -106,13 +106,9 @@ let themeMode = 'light';
 function updateDark() {
 	themeMode = 'dark'
 	document.body.style.backgroundColor = '#424242';
-	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
+	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242';
+	document.querySelector('.MediaContainer-sc-1p3n06p-2').style.backgroundColor = '#424242'; 
 	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
-	if (preferences['MovePrice']) {
-		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundColor = '#FBFBFB'
-		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundClip = 'content-box';
-		document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none';
-	}
 	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
@@ -139,6 +135,15 @@ function updateDark() {
 			let splitted_url = _element.src.split('/');
 			_element.src = chrome.runtime.getURL('images/' + splitted_url[splitted_url.length-1]); 
 		}
+	}
+	
+	if (preferences['MovePrice']) {
+		let infoboxes = document.querySelectorAll('.InfoBoxInnerWrapper-sc-11cpe2k-2');
+		for (let i=0 ; i < infoboxes.length ; i++){
+			infoboxes[i].style.backgroundColor = '#FBFBFB'
+			infoboxes[i].style.backgroundClip = 'content-box';
+		}
+		document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none';
 	}
 }
 
