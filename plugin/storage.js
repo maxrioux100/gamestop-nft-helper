@@ -10,6 +10,10 @@ preferences['ChartHistory'] = null;
 preferences['StatsHistory'] = null;
 preferences['DarkMode'] = null;
 preferences['RealVendorName'] = null;
+preferences['HideHistory'] = null;
+preferences['HideDetails'] = null;
+preferences['ShowRoyalties'] = null;
+
 
 function persistPreferences(name, value) {
 	let dict = {};
