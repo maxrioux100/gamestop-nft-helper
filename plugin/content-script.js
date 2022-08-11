@@ -318,11 +318,15 @@ async function token_page() {
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
 		if (preferences['DarkMode']) { updateDark(); } 
-		if (preferences['HideHistory']) { addHideBtn(); }
 		updateNeeded();
 		
 		//Remove it when listening instead of fetching
 		setInterval(() => { moveThings(); }, 1000);
+	});
+	
+	waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
+	.then( () => {
+		if (preferences['HideHistory']) { addHideBtn(document.querySelector('.HistoryListContainer-sc-13gqei4-1')); }
 	});
 }
 

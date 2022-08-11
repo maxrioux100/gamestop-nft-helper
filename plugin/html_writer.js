@@ -90,32 +90,37 @@ function createWhalesHelperContainer() {
 	});
 }
 
-function addHideBtn() {
+function addHideBtn(toHide) {
 	let btnHide = document.createElement('button');
+	btnHide.style.backgroundColor = 'transparent';
+	btnHide.style.borderColor = 'transparent';
 	btnHide.setAttribute('class', 'sc-dcgwPl');
-	btnHide.setAttribute('class', 'cYJSJB')
+	btnHide.setAttribute('class', 'cYJSJB');
 	btnHide.innerText = '...less';
 	btnHide.style.display = 'none';
 	let btnShow = document.createElement('button');
+	btnShow.style.backgroundColor = 'transparent';
+	btnShow.style.borderColor = 'transparent';
 	btnShow.setAttribute('class', 'sc-dcgwPl');
 	btnShow.setAttribute('class', 'cYJSJB');
 	btnShow.innerText = '...more';
 	
 	btnHide.addEventListener("click", (e) => {
-		document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = 'none';
+		toHide.style.display = 'none';
 		btnHide.style.display = 'none';
 		btnShow.style.display = null;
 		
 	});
 	btnShow.addEventListener("click", (e) => {
-		document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = null;
+		toHide.style.display = null;
 		btnShow.style.display = 'none';
 		btnHide.style.display = null;
 		
 	});
 	
-	document.querySelector('.hiQCYL .sc-bkkeKt').parentElement.appendChild(btnHide);
-	document.querySelector('.hiQCYL .sc-bkkeKt').parentElement.appendChild(btnShow);
 	
-	document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = 'none';
+	toHide.parentElement.children[0].appendChild(btnHide);
+	toHide.parentElement.children[0].appendChild(btnShow);
+	
+	toHide.style.display = 'none';
 }
