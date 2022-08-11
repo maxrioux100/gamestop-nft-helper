@@ -94,15 +94,13 @@ function addHideBtn(toHide) {
 	let btnHide = document.createElement('button');
 	btnHide.style.backgroundColor = 'transparent';
 	btnHide.style.borderColor = 'transparent';
-	btnHide.setAttribute('class', 'sc-dcgwPl');
-	btnHide.setAttribute('class', 'cYJSJB');
+	btnHide.setAttribute('class', 'sc-dcgwPl cYJSJB ms-auto');
 	btnHide.innerText = '...less';
 	btnHide.style.display = 'none';
 	let btnShow = document.createElement('button');
 	btnShow.style.backgroundColor = 'transparent';
 	btnShow.style.borderColor = 'transparent';
-	btnShow.setAttribute('class', 'sc-dcgwPl');
-	btnShow.setAttribute('class', 'cYJSJB');
+	btnShow.setAttribute('class', 'sc-dcgwPl cYJSJB ms-auto');
 	btnShow.innerText = '...more';
 	
 	btnHide.addEventListener("click", (e) => {
@@ -119,8 +117,10 @@ function addHideBtn(toHide) {
 	});
 	
 	
-	toHide.parentElement.children[0].appendChild(btnHide);
-	toHide.parentElement.children[0].appendChild(btnShow);
+	toHide.previousSibling.appendChild(btnHide);
+	toHide.previousSibling.appendChild(btnShow);
+	toHide.previousSibling.setAttribute('class', 'd-flex');
+	toHide.previousSibling.style.paddingTop = '20px';
 	
 	toHide.style.display = 'none';
 }

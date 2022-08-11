@@ -328,6 +328,11 @@ async function token_page() {
 	.then( () => {
 		if (preferences['HideHistory']) { addHideBtn(document.querySelector('.HistoryListContainer-sc-13gqei4-1')); }
 	});
+	
+	waitForElement(".Details-sc-asex48-0", 10000)
+	.then( () => {
+		if (preferences['HideDetails']) { addHideBtn(document.querySelector('.Details-sc-asex48-0')); }
+	});
 }
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
