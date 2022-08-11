@@ -1,5 +1,6 @@
 var watchers = {};
 watchers['profileName'] = null;
+watchers['editionsPage'] = null;
 
 function clean_watcher(name){
 	if (watchers[name] != null) {
