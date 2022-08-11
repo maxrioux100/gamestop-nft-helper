@@ -114,7 +114,7 @@ function updateDark() {
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
 	
-	let blackfont = document.querySelectorAll('.dGszyt,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK,.EditionsItemHead-sc-11cpe2k-8 .bYYTOP,.TableHead-sc-qyvkk9-3 .TableHeaderCell-sc-qyvkk9-5');
+	let blackfont = document.querySelectorAll('.dGszyt,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.NotForSale-sc-p4b8va-0,.sc-fIosxK,.EditionsItemHead-sc-11cpe2k-8 .bYYTOP,.TableHead-sc-qyvkk9-3 .TableHeaderCell-sc-qyvkk9-5');
 	for (_element of blackfont){
 		if (_element.style) { _element.style.color = '#262626'; }
 	}
