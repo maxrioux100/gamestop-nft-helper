@@ -199,6 +199,8 @@ function get_options_listed_sellers(theme, values_eth=null, values_dollars=null,
 				title: {
 					text: "Dollars"
 				},
+				min: min_dollars,
+				max: max_dollars,
 				decimalsInFloat: 2
 			}
 		],
@@ -232,8 +234,6 @@ function get_options_listed_sellers(theme, values_eth=null, values_dollars=null,
 	
 	if (min_eth) { options['yaxis'][0]['min'] = min_eth; }
 	if (max_eth) { options['yaxis'][0]['max'] = max_eth; }
-	if (min_dollars) { options['yaxis'][1]['min'] = min_dollars; }
-	if (max_dollars) { options['yaxis'][1]['max'] = max_dollars; }
 	
 	if ( values_eth && values_dollars && quantities) { 
 		options['series'].push({
@@ -303,6 +303,8 @@ function get_options_price_history(theme, values_eth=null, values_dollars=null, 
 				title: {
 					text: "Dollars"
 				},
+				min:min_dollars,
+				max:max_dollars,
 				decimalsInFloat: 2
 			}
 		],
@@ -349,8 +351,6 @@ function get_options_price_history(theme, values_eth=null, values_dollars=null, 
 	
 	if (min_eth) { options['yaxis'][0]['min'] = min_eth; }
 	if (max_eth) { options['yaxis'][0]['max'] = max_eth; }
-	if (min_dollars) { options['yaxis'][1]['min'] = min_dollars; }
-	if (max_dollars) { options['yaxis'][1]['max'] = max_dollars; }
 	
 	if (colors) { options['colors'] = colors; }
 
