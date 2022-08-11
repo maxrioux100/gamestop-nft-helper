@@ -339,17 +339,15 @@ async function token_page() {
 	}
 	
 	if (preferences['ShowRoyalties']) {
-		waitForElement(".InnerButtonWrapper-sc-11cpe2k-3", 10000)
+		waitForElement(".ContentContainer-sc-1p3n06p-4 .InnerButtonWrapper-sc-11cpe2k-3", 10000)
 		.then( () => {
-			//must clean that
-			let intervalcaca = setIntervalImmediately(async function() {
+			setTimeout(() => {
 				if (nft) {
-					let box = document.querySelector('.InnerButtonWrapper-sc-11cpe2k-3');
+					let box = document.querySelector('.ContentContainer-sc-1p3n06p-4 .InnerButtonWrapper-sc-11cpe2k-3');
 					let pill = document.createElement('span');
 					pill.setAttribute('class', 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning');
-					pill.innerHTML = 	`${nft['royaltyFeeBips']}%` ;
+					pill.innerHTML = `${nft['royaltyFeeBips']}%` ;
 					box.appendChild(pill);
-					clearInterval(intervalcaca);
 				}
 			}, 500);
 		});
