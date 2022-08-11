@@ -183,8 +183,12 @@ function stickThings(){
 }
 
 
-async function unmoveThing(thing, from, to){
-	document.querySelector(`.${from} .${thing}`).style.display = null;
+async function unmoveThing(thing, from, to, removeChild=null){
+	if (removeChild) {
+		document.querySelector(`.${from} .${thing}`).firstChild.style.display = null;
+	} else {
+		document.querySelector(`.${from} .${thing}`).style.display = null;
+	}
 	let oldies = document.querySelectorAll(`.${to} .${thing}`);
 	for (let i=0 ; i<oldies.length;i++){
 		oldies[i].parentElement.removeChild(oldies[i]);
@@ -318,7 +322,7 @@ async function moveThings(){
 		}
 	} else {
 		if (preferences['MoveTools']) { unmoveThing('Actions-sc-kdlg0e-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
-		if (preferences['MovePrice']) { unmoveThing('InfoBoxInnerWrapper-sc-11cpe2k-2', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
+		if (preferences['MovePrice']) { unmoveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2', removeChild=true); }
 	}
 	if (preferences['DarkMode']) { updateDark(); } 
 }
