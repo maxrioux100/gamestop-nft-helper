@@ -3,7 +3,10 @@ let lastUrl = location.href;
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
-		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { location.reload(); }
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
+			clean_charts();
+			location.reload(); 
+		}
 		lastUrl = url;
 		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 	}
