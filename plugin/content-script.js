@@ -26,7 +26,7 @@ function updateOffers() {
 	for (let i=0; i < offers.length; i++) {
 		values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
 		values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*ETH_US, 2);
-		quantities[i] = parseInt(sorted[i][1]['amount']);
+		quantities[i] = parseInt(sorted[i][1]['amount']-sorted[i][1]['fulfilledAmount']);
 	}
 
 	let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
@@ -91,7 +91,6 @@ function updateHistory() {
 		created_at[transactions.length - 1 - i] = transactions[i]['createdAt'];
 		amounts[transactions.length - 1 - i] = transactions[i]['transaction']['orderA']['amountB'];
 	}
-
 	transactions_splitter(amounts, [sellers, buyers, labels, created_at], values_eth=values_eth, values_dollars=values_dollars);
 
 	let min_eth = Math.min(...values_eth);
@@ -128,7 +127,6 @@ function updateHistory() {
 		let colors = ['#00E396'];
 		if (change < 0) {colors = ["#FF4560"];}
 		else if (change == 0) {colors = ["#008FFB"];}
-    
 		charts['price_history'].updateOptions(get_options_price_history(themeMode, values_eth, values_dollars, min_eth, max_eth, min_dollars, max_dollars, labels, colors, all_transactions, profile_sales_index, profile_buys_index), animate=false);
 	}
 	
@@ -164,7 +162,7 @@ function updateWhales() {
 		let listers = [];
 		if (offers) {
 			for (let i=0; i < offers.length; i++) {
-				for (let ii=0 ; ii < offers[i]['amount'] ; ii++) {
+				for (let ii=0 ; ii < (offers[i]['amount']-offers[i]['fulfilledAmount']) ; ii++) {
 					listers.push(offers[i]['ownerAddress']);
 				}
 			}
