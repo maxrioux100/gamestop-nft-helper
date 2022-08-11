@@ -114,8 +114,8 @@ function addHideBtn() {
 		
 	});
 	
-	document.querySelector('.hiQCYL').appendChild(btnHide);
-	document.querySelector('.hiQCYL').appendChild(btnShow);
+	document.querySelector('.hiQCYL .sc-bkkeKt').parentElement.appendChild(btnHide);
+	document.querySelector('.hiQCYL .sc-bkkeKt').parentElement.appendChild(btnShow);
 	
 	document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = 'none';
 }

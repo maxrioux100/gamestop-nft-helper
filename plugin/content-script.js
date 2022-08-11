@@ -318,7 +318,7 @@ async function token_page() {
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
 		if (preferences['DarkMode']) { updateDark(); } 
-		addHideBtn();
+		if (preferences['HideHistory']) { addHideBtn(); }
 		updateNeeded();
 		
 		//Remove it when listening instead of fetching
