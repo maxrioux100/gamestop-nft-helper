@@ -268,7 +268,7 @@ async function moveThings(){
 			moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
 																									['.InnerButtonWrapper-sc-11cpe2k-3 .jhCfFf'],
 																									['.InnerButtonWrapper-sc-11cpe2k-3 .vygPD']
-																								   ], where='end', paddingTop=20, height=null, removeChild='SidebarWrapper-sc-d2ie7h-0'); 																					   
+																								   ], where='end', paddingTop=10, height=null, removeChild='SidebarWrapper-sc-d2ie7h-0'); 																					   
 			waitForElement('.MediaContainer-sc-1p3n06p-2 .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0', 1000)
 			.then(() => {	
 
