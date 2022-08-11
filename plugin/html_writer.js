@@ -92,10 +92,14 @@ function createWhalesHelperContainer() {
 
 function addHideBtn() {
 	let btnHide = document.createElement('button');
-	btnHide.innerText = 'Hide';
+	btnHide.setAttribute('class', 'sc-dcgwPl');
+	btnHide.setAttribute('class', 'cYJSJB')
+	btnHide.innerText = '...less';
+	btnHide.style.display = 'none';
 	let btnShow = document.createElement('button');
-	btnShow.innerText = 'Show';
-	btnShow.style.display = 'none';
+	btnShow.setAttribute('class', 'sc-dcgwPl');
+	btnShow.setAttribute('class', 'cYJSJB');
+	btnShow.innerText = '...more';
 	
 	btnHide.addEventListener("click", (e) => {
 		document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = 'none';
@@ -112,4 +116,6 @@ function addHideBtn() {
 	
 	document.querySelector('.hiQCYL').appendChild(btnHide);
 	document.querySelector('.hiQCYL').appendChild(btnShow);
+	
+	document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = 'none';
 }
