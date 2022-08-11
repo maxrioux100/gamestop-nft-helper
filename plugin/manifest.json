@@ -7,7 +7,7 @@
 				"48": "icon48.png",
 				"128": "icon128.png" },
 	"action": {
-		"default_popup": "menu/menu.html"
+		"default_popup": "menu.html"
 	},
 	"content_scripts": [
 		{
@@ -15,7 +15,6 @@
 			"js": [
 				"mdb.min.js",
 				"sticky.min.js",
-				"font-awesome.js",
 				"apexcharts.js",
 				"timeago.min.js",
 				"storage.js",
