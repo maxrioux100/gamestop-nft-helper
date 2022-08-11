@@ -327,17 +327,19 @@ async function token_page() {
 		setInterval(() => { moveThings(); }, 1000);
 	});
 	
-	watchers['editionsPage'] = setIntervalImmediately(function() {
-		waitForElement(".Editions-sc-11cpe2k-6", 3000)
-		.then( () => {
-			let owners = document.querySelectorAll('.EditionsItem-sc-11cpe2k-7:not(.EditionsItemHead-sc-11cpe2k-8) .EditionsOwner-sc-11cpe2k-10');
-			for (let i=0 ; i < owners.length ; i++){
-				if (Usernames[offers[i]['ownerAddress']].length <= 20) {
-					owners[i].innerText = Usernames[offers[i]['ownerAddress']];
+	if (preferences['RealVendorName']) {
+		watchers['editionsPage'] = setIntervalImmediately(function() {
+			waitForElement(".Editions-sc-11cpe2k-6", 3000)
+			.then( () => {
+				let owners = document.querySelectorAll('.EditionsItem-sc-11cpe2k-7:not(.EditionsItemHead-sc-11cpe2k-8) .EditionsOwner-sc-11cpe2k-10');
+				for (let i=0 ; i < owners.length ; i++){
+					if (Usernames[offers[i]['ownerAddress']].length <= 20) {
+						owners[i].innerText = Usernames[offers[i]['ownerAddress']];
+					}
 				}
-			}
-		}, () => {});	
-	}, 3000);
+			}, () => {});	
+		}, 3000);
+	}
 }
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {

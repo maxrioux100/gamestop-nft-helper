@@ -9,6 +9,7 @@ preferences['ChartVolume'] = null;
 preferences['ChartHistory'] = null;
 preferences['StatsHistory'] = null;
 preferences['DarkMode'] = null;
+preferences['RealVendorName'] = null;
 
 function persistPreferences(name, value) {
 	let dict = {};
