@@ -318,11 +318,40 @@ async function token_page() {
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
 		if (preferences['DarkMode']) { updateDark(); } 
-
 		updateNeeded();
 		
+		//Remove it when listening instead of fetching
 		setInterval(() => { moveThings(); }, 1000);
 	});
+	
+	if (preferences['HideHistory']) {
+		waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
+		.then( () => {
+			 addHideBtn(document.querySelector('.HistoryListContainer-sc-13gqei4-1'));
+		});
+	}
+	
+	if (preferences['HideDetails']) {
+		waitForElement(".Details-sc-asex48-0", 10000)
+		.then( () => {
+			 addHideBtn(document.querySelector('.Details-sc-asex48-0')); 
+		});
+	}
+	
+	if (preferences['ShowRoyalties']) {
+		waitForElement(".ContentContainer-sc-1p3n06p-4 .InnerButtonWrapper-sc-11cpe2k-3", 10000)
+		.then( () => {
+			setTimeout(() => {
+				if (nft) {
+					let box = document.querySelector('.ContentContainer-sc-1p3n06p-4 .InnerButtonWrapper-sc-11cpe2k-3');
+					let pill = document.createElement('span');
+					pill.setAttribute('class', 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning');
+					pill.innerHTML = `${nft['royaltyFeeBips']}%` ;
+					box.appendChild(pill);
+				}
+			}, 500);
+		});
+	}
 }
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
