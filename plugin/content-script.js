@@ -3,7 +3,10 @@ let lastUrl = location.href;
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
-		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { location.reload(); }
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
+			clean_watchers();
+			location.reload(); 
+		}
 		lastUrl = url;
 		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 	}
@@ -324,6 +327,18 @@ async function token_page() {
 		setInterval(() => { moveThings(); }, 1000);
 	});
 	
+	if (preferences['RealVendorName']) {
+		watchers['editionsPage'] = setIntervalImmediately(function() {
+			waitForElement(".Editions-sc-11cpe2k-6", 3000)
+			.then( () => {
+				let owners = document.querySelectorAll('.EditionsItem-sc-11cpe2k-7:not(.EditionsItemHead-sc-11cpe2k-8) .EditionsOwner-sc-11cpe2k-10');
+				for (let i=0 ; i < owners.length ; i++){
+					if (Usernames[offers[i]['ownerAddress']].length <= 20) {
+						owners[i].innerText = Usernames[offers[i]['ownerAddress']];
+					}
+				}
+			}, () => {});	
+		}, 3000);
 	if (preferences['HideHistory']) {
 		waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
 		.then( () => {
