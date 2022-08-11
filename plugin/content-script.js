@@ -303,6 +303,31 @@ async function updateWhalesWithApiData() {
 	}
 }
 
+
+function hideThings() {
+	let btnHide = document.createElement('button');
+	btnHide.innerText = 'Hide';
+	let btnShow = document.createElement('button');
+	btnShow.innerText = 'Show';
+	btnShow.style.display = 'none';
+	
+	btnHide.addEventListener("click", (e) => {
+		document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = 'none';
+		btnHide.style.display = 'none';
+		btnShow.style.display = null;
+		
+	});
+	btnShow.addEventListener("click", (e) => {
+		document.querySelector('.HistoryListContainer-sc-13gqei4-1').style.display = null;
+		btnShow.style.display = 'none';
+		btnHide.style.display = null;
+		
+	});
+	
+	document.querySelector('.hiQCYL').appendChild(btnHide);
+	document.querySelector('.hiQCYL').appendChild(btnShow);
+}
+
 if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 async function token_page() {
 	await readPreferences();
@@ -314,6 +339,7 @@ async function token_page() {
 
 	waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 	.then( () => {
+		hideThings();
 		if (preferences['ChartOffers']) { createOffersHelperContainer(); }
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
