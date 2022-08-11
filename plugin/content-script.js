@@ -3,7 +3,11 @@ let lastUrl = location.href;
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
-		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { location.reload(); }
+		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
+			clean_charts();
+			clean_watchers();
+			location.reload(); 
+		}
 		lastUrl = url;
 		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 	}
@@ -318,11 +322,52 @@ async function token_page() {
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
 		if (preferences['DarkMode']) { updateDark(); } 
-
 		updateNeeded();
 		
+		//Remove it when listening instead of fetching
 		setInterval(() => { moveThings(); }, 1000);
 	});
+	
+	if (preferences['RealVendorName']) {
+		watchers['editionsPage'] = setIntervalImmediately(function() {
+			waitForElement(".Editions-sc-11cpe2k-6", 3000)
+			.then( () => {
+				let owners = document.querySelectorAll('.EditionsItem-sc-11cpe2k-7:not(.EditionsItemHead-sc-11cpe2k-8) .EditionsOwner-sc-11cpe2k-10');
+				for (let i=0 ; i < owners.length ; i++){
+					if (Usernames[offers[i]['ownerAddress']].length <= 20) {
+						owners[i].innerText = Usernames[offers[i]['ownerAddress']];
+					}
+				}
+			}, () => {});	
+		}, 3000);
+	if (preferences['HideHistory']) {
+		waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
+		.then( () => {
+			 addHideBtn(document.querySelector('.HistoryListContainer-sc-13gqei4-1'));
+		});
+	}
+	
+	if (preferences['HideDetails']) {
+		waitForElement(".Details-sc-asex48-0", 10000)
+		.then( () => {
+			 addHideBtn(document.querySelector('.Details-sc-asex48-0')); 
+		});
+	}
+	
+	if (preferences['ShowRoyalties']) {
+		waitForElement(".ContentContainer-sc-1p3n06p-4 .InnerButtonWrapper-sc-11cpe2k-3", 10000)
+		.then( () => {
+			setTimeout(() => {
+				if (nft) {
+					let box = document.querySelector('.ContentContainer-sc-1p3n06p-4 .InnerButtonWrapper-sc-11cpe2k-3');
+					let pill = document.createElement('span');
+					pill.setAttribute('class', 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning');
+					pill.innerHTML = `${nft['royaltyFeeBips']}%` ;
+					box.appendChild(pill);
+				}
+			}, 500);
+		});
+	}
 }
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {

@@ -89,3 +89,38 @@ function createWhalesHelperContainer() {
 		charts['recurrent'].render();
 	});
 }
+
+function addHideBtn(toHide) {
+	let btnHide = document.createElement('button');
+	btnHide.style.backgroundColor = 'transparent';
+	btnHide.style.borderColor = 'transparent';
+	btnHide.setAttribute('class', 'sc-dcgwPl cYJSJB ms-auto');
+	btnHide.innerText = '...less';
+	btnHide.style.display = 'none';
+	let btnShow = document.createElement('button');
+	btnShow.style.backgroundColor = 'transparent';
+	btnShow.style.borderColor = 'transparent';
+	btnShow.setAttribute('class', 'sc-dcgwPl cYJSJB ms-auto');
+	btnShow.innerText = '...more';
+	
+	btnHide.addEventListener("click", (e) => {
+		toHide.style.display = 'none';
+		btnHide.style.display = 'none';
+		btnShow.style.display = null;
+		
+	});
+	btnShow.addEventListener("click", (e) => {
+		toHide.style.display = null;
+		btnShow.style.display = 'none';
+		btnHide.style.display = null;
+		
+	});
+	
+	
+	toHide.previousSibling.appendChild(btnHide);
+	toHide.previousSibling.appendChild(btnShow);
+	toHide.previousSibling.setAttribute('class', 'd-flex');
+	toHide.previousSibling.style.paddingTop = '20px';
+	
+	toHide.style.display = 'none';
+}

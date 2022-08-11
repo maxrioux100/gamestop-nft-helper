@@ -9,6 +9,10 @@ menu['ChartVolume'] = '<i class="fas fa-chart-line"></i> Chart of the last volum
 menu['ChartHistory'] = '<i class="fas fa-chart-line"></i> Chart on the previous sales';
 menu['StatsHistory'] = '<i class="fas fa-table"></i> Stats on the previous sales';
 menu['DarkMode'] = '<i class="fas fa-lightbulb"></i> Dark mode';
+menu['RealVendorName'] = '<i class="fas fa-tag"></i> Show names instead of address';
+menu['HideHistory'] = '<i class="fas fa-eye-slash"></i> Hide the history section';
+menu['HideDetails'] = '<i class="fas fa-eye-slash"></i> Hide the details section';
+menu['ShowRoyalties'] = '<i class="fas fa-crown"></i> Show royalties in the purchase box';
 
 function waitForElement(querySelector, timeout){
 	return new Promise((resolve, reject)=>{
@@ -50,8 +54,12 @@ function writeCheck(key, container){
 writeCheck('DarkMode', 'container_NFT_interface');
 writeCheck('StickNFT', 'container_NFT_interface');
 writeCheck('StickMenu', 'container_NFT_interface');
+writeCheck('RealVendorName', 'container_NFT_interface');
 writeCheck('MovePrice', 'container_NFT_interface');
 writeCheck('MoveTools', 'container_NFT_interface');
+writeCheck('HideHistory', 'container_NFT_interface');
+writeCheck('HideDetails', 'container_NFT_interface');
+writeCheck('ShowRoyalties', 'container_NFT_interface');
 writeCheck('ChartOffers', 'container_NFT_offers');
 writeCheck('StatsHistory', 'container_NFT_history');
 writeCheck('ChartHistory', 'container_NFT_history');
