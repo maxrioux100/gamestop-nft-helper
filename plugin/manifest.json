@@ -23,6 +23,9 @@
 				"charts.js",
 				"html_writer.js",
 				"content-script.js"
+			],
+			"css": [
+				"mdb.min.css"
 			]
 		}
 	],

@@ -1,5 +1,6 @@
 var watchers = {};
 watchers['profileName'] = null;
+watchers['editionsPage'] = null;
 
 function clean_watcher(name){
 	if (watchers[name] != null) {
@@ -141,15 +142,6 @@ function updateDark() {
 			_element.src = chrome.runtime.getURL('images/' + splitted_url[splitted_url.length-1]); 
 		}
 	}
-	
-	if (preferences['MovePrice']) {
-		let infoboxes = document.querySelectorAll('.InfoBoxInnerWrapper-sc-11cpe2k-2');
-		for (let i=0 ; i < infoboxes.length ; i++){
-			infoboxes[i].style.backgroundColor = '#FBFBFB'
-			infoboxes[i].style.backgroundClip = 'content-box';
-		}
-		if (window.innerWidth >= 1281) { document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none'; }
-	}
 }
 
 let stickies = {};
@@ -199,7 +191,7 @@ async function unmoveThing(thing, from, to){
 	}
 }
 
-async function moveThing(from, to, buttons=null, where='start', paddingTop = null, height=null) {
+async function moveThing(from, to, buttons=null, where='start', paddingTop = null, height=null, removeChild=null) {
 	await waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
@@ -210,9 +202,18 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 			}
 			
 			let source = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`);
-			source.style.display = 'none';
 			let clone = source.cloneNode(true);
-			clone.style.display = null;
+			
+			
+			if (removeChild) { 
+				clone.removeChild(clone.lastChild);
+				source.firstChild.style.display = 'none';
+				clone.firstChild.style.display = null;
+			} else {
+				source.style.display = 'none';
+				clone.style.display = null;
+			}
+			
 			let dests = document.querySelectorAll(`.${to}`);
 			for (let i=0 ; i < dests.length ; i++) {
 				if (where == 'start') { dests[i].insertBefore(clone, dests[i].firstChild); }
@@ -264,10 +265,10 @@ async function moveThings(){
 		}
 		
 		if (preferences['MovePrice']) { 
-			moveThing('InfoBoxInnerWrapper-sc-11cpe2k-2', 'MediaContainer-sc-1p3n06p-2', buttons = [
-																									['.InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
-																									['.InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
-																								   ], where='end', paddingTop=20); 																					   
+			moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
+																									['.InnerButtonWrapper-sc-11cpe2k-3 .jhCfFf'],
+																									['.InnerButtonWrapper-sc-11cpe2k-3 .vygPD']
+																								   ], where='end', paddingTop=20, height=null, removeChild='SidebarWrapper-sc-d2ie7h-0'); 																					   
 			waitForElement('.MediaContainer-sc-1p3n06p-2 .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0', 1000)
 			.then(() => {	
 
