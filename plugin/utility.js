@@ -201,12 +201,16 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 			}
 			
 			let source = document.querySelector(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`);
-			source.style.display = 'none';
 			let clone = source.cloneNode(true);
-			clone.style.display = null;
+			
 			
 			if (removeChild) { 
 				clone.removeChild(clone.lastChild);
+				source.firstChild.style.display = 'none';
+				clone.firstChild.style.display = null;
+			} else {
+				source.style.display = 'none';
+				clone.style.display = null;
 			}
 			
 			let dests = document.querySelectorAll(`.${to}`);
@@ -261,8 +265,8 @@ async function moveThings(){
 		
 		if (preferences['MovePrice']) { 
 			moveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'MediaContainer-sc-1p3n06p-2', buttons = [
-																									['.InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .jhCfFf'],
-																									['.InnerButtonWrapper-sc-11cpe2k-3 .MultiButtonRow-sc-11cpe2k-5 .ButtonHoverWrapper-sc-11cpe2k-4 .vygPD']
+																									['.InnerButtonWrapper-sc-11cpe2k-3 .jhCfFf'],
+																									['.InnerButtonWrapper-sc-11cpe2k-3 .vygPD']
 																								   ], where='end', paddingTop=20, height=null, removeChild='SidebarWrapper-sc-d2ie7h-0'); 																					   
 			waitForElement('.MediaContainer-sc-1p3n06p-2 .InfoBoxInnerWrapper-sc-11cpe2k-2 .InnerButtonWrapper-sc-11cpe2k-3 .ActionButtonAlignRight-sc-1jv4yz7-0', 1000)
 			.then(() => {	
