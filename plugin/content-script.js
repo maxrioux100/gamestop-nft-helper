@@ -1,15 +1,16 @@
-let lastUrl = location.href;
+let lastUrl = null;
 
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
-		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
+		if (lastUrl && lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
 			clean_charts();
 			clean_watchers();
 			location.reload(); 
 		}
 		lastUrl = url;
 		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
+		if (lastUrl.startsWith("https://nft.gamestop.com/profile")) { profile_page(); }
 	}
 }).observe(document, {subtree: true, childList: true});
 
@@ -186,16 +187,6 @@ function updateWhales() {
 	}
 }
 
-
-let rateAndFees = null;
-let ETH_US = null;
-setIntervalImmediately(async function() {
-	rateAndFees = await makeApiCall('ratesAndFees');
-	//Add a verification to be sure it's ETH_US
-	ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
-	updateNeeded();
-}, 30000);
-
 let nft=null;
 let transactions = null;
 let offers=null;
@@ -307,9 +298,25 @@ async function updateWhalesWithApiData() {
 	}
 }
 
-if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
+
+let rateAndFees = null;
+let ETH_US = null;
+
 async function token_page() {
 	await readPreferences();
+	
+	let link = document.createElement("link");
+	link.href = chrome.runtime.getURL('mdb.min.css'); 
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.getElementsByTagName("head")[0].appendChild(link);
+	
+	setIntervalImmediately(async function() {
+		rateAndFees = await makeApiCall('ratesAndFees');
+		//Add a verification to be sure it's ETH_US
+		ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
+		updateNeeded();
+	}, 30000);
 	
 	getNFT();
 	
@@ -340,6 +347,7 @@ async function token_page() {
 				}
 			}, () => {});	
 		}, 3000);
+	}
 	if (preferences['HideHistory']) {
 		waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
 		.then( () => {
@@ -370,7 +378,7 @@ async function token_page() {
 	}
 }
 
-if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+async function profile_page() {
 	watchers['profileName'] = setIntervalImmediately(function() {
 		waitForElement(".sc-hBUSln", 3000)
 		.then( () => {
