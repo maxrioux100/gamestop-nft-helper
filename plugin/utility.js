@@ -109,7 +109,7 @@ function updateDark() {
 	let logos = document.querySelectorAll('.sc-lkgTHX')
 	for (let i=0 ; i<logos.length ; i++) { logos[i].src='https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg'; }
 	
-	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img,.sc-iCfMLu *,.ModalCard-sc-ljh7cw-2 *,.sc-pVTFL *)');
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img,.sc-iCfMLu *,.ModalCard-sc-ljh7cw-2 *,.sc-pVTFL *,.hideBtn)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}

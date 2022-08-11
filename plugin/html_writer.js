@@ -91,8 +91,12 @@ function createWhalesHelperContainer() {
 }
 
 function addHideBtn() {
-	let btnHide = document.createElement('button');
-	btnHide.innerText = 'Hide';
+
+	let btnHide = document.createElement('span');
+	
+	btnHide.innerHTML = `<a style="color: #3b5998;" role="button" class='hideBtn'>` +
+							`<i class="fab fa-accessible-icon"></i>TEST` +
+						`</a>`;
 	let btnShow = document.createElement('button');
 	btnShow.innerText = 'Show';
 	btnShow.style.display = 'none';
@@ -110,6 +114,7 @@ function addHideBtn() {
 		
 	});
 	
-	document.querySelector('.hiQCYL').appendChild(btnHide);
-	document.querySelector('.hiQCYL').appendChild(btnShow);
+	document.querySelector('.hiQCYL > .sc-bkkeKt').parentElement.appendChild(btnHide);
+	document.querySelector('.hiQCYL > .sc-bkkeKt').parentElement.appendChild(btnShow);
+
 }

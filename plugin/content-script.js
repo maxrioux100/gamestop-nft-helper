@@ -314,15 +314,21 @@ async function token_page() {
 
 	waitForElement(".ContentContainer-sc-1p3n06p-4", 10000)
 	.then( () => {
+		//should all be async
 		if (preferences['ChartOffers']) { createOffersHelperContainer(); }
 		if (preferences['StatsHistory'] || preferences['ChartHistory'] || preferences['ChartVolume']) { createHistoryHelperContainer(); }
 		if (preferences['ChartRecurrent']) { createWhalesHelperContainer(); }
-		if (preferences['DarkMode']) { updateDark(); } 
-		addHideBtn();
+		if (preferences['DarkMode']) { updateDark(); }
 		updateNeeded();
 		
+
 		//Remove it when listening instead of fetching
 		setInterval(() => { moveThings(); }, 1000);
+	});
+	
+	waitForElement(".hiQCYL > .sc-bkkeKt", 10000)
+	.then(() => {
+		addHideBtn();
 	});
 }
 
