@@ -324,15 +324,36 @@ async function token_page() {
 		setInterval(() => { moveThings(); }, 1000);
 	});
 	
-	waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
-	.then( () => {
-		if (preferences['HideHistory']) { addHideBtn(document.querySelector('.HistoryListContainer-sc-13gqei4-1')); }
-	});
+	if (preferences['HideHistory']) {
+		waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
+		.then( () => {
+			 addHideBtn(document.querySelector('.HistoryListContainer-sc-13gqei4-1'));
+		});
+	}
 	
-	waitForElement(".Details-sc-asex48-0", 10000)
-	.then( () => {
-		if (preferences['HideDetails']) { addHideBtn(document.querySelector('.Details-sc-asex48-0')); }
-	});
+	if (preferences['HideDetails']) {
+		waitForElement(".Details-sc-asex48-0", 10000)
+		.then( () => {
+			 addHideBtn(document.querySelector('.Details-sc-asex48-0')); 
+		});
+	}
+	
+	if (preferences['ShowRoyalties']) {
+		waitForElement(".InnerButtonWrapper-sc-11cpe2k-3", 10000)
+		.then( () => {
+			//must clean that
+			let intervalcaca = setIntervalImmediately(async function() {
+				if (nft) {
+					let box = document.querySelector('.InnerButtonWrapper-sc-11cpe2k-3');
+					let pill = document.createElement('span');
+					pill.setAttribute('class', 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning');
+					pill.innerHTML = 	`${nft['royaltyFeeBips']}%` ;
+					box.appendChild(pill);
+					clearInterval(intervalcaca);
+				}
+			}, 500);
+		});
+	}
 }
 
 if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
