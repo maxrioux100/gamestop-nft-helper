@@ -320,6 +320,8 @@ async function token_page() {
 		if (preferences['DarkMode']) { updateDark(); } 
 
 		updateNeeded();
+		
+		setInterval(() => { moveThings(); }, 1000);
 	});
 }
 

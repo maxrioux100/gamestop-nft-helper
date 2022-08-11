@@ -10,6 +10,32 @@ menu['ChartHistory'] = '<i class="fas fa-chart-line"></i> Chart on the previous 
 menu['StatsHistory'] = '<i class="fas fa-table"></i> Stats on the previous sales';
 menu['DarkMode'] = '<i class="fas fa-lightbulb"></i> Dark mode';
 
+function waitForElement(querySelector, timeout){
+	return new Promise((resolve, reject)=>{
+		var timer = false;
+		if(document.querySelectorAll(querySelector).length) return resolve();
+		const observer = new MutationObserver(()=>{
+		if(document.querySelectorAll(querySelector).length){
+			observer.disconnect();
+			if(timer !== false) clearTimeout(timer);
+			return resolve();
+		}});
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true
+		});
+		if(timeout) timer = setTimeout(()=>{
+			observer.disconnect();
+			reject();
+		}, timeout);
+	});
+}
+
+async function setIntervalImmediately(func, interval) {
+	func();
+	return setInterval(func, interval);
+}
+
 function writeCheck(key, container){
 	let container_elem = document.getElementById(container);
 	let div = document.createElement('div');

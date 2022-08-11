@@ -105,35 +105,50 @@ async function makeApiCall(apiMethod, urlParameter, urlParameterValue){
 let themeMode = 'light';
 function updateDark() {
 	themeMode = 'dark'
-	document.body.style.backgroundColor = '#424242';
-	document.querySelector('.FooterOuterWrapper-sc-n1m1px-6').style.backgroundColor = '#424242'; 
-	document.querySelector('.sc-lkgTHX').src = 'https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg';
-	if (preferences['MovePrice']) {
-		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundColor = '#FBFBFB'
-		document.querySelector('.InfoBoxInnerWrapper-sc-11cpe2k-2').style.backgroundClip = 'content-box';
-		document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none';
-	}
-	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img)');
+	
+	let logos = document.querySelectorAll('.sc-lkgTHX')
+	for (let i=0 ; i<logos.length ; i++) { logos[i].src='https://nft.gamestop.com/7c4d1a56a3e70a618ca864a2feb58fcd.svg'; }
+	
+	let whitefont = document.querySelectorAll('*:not(.sc-gsDKAQ,.sc-dkPtRN.vygPD,.mask,img,.sc-iCfMLu *,.ModalCard-sc-ljh7cw-2 *,.sc-pVTFL *)');
 	for (_element of whitefont){
 		if (_element.style) { _element.style.color = '#FBFBFB'; }
 	}
 	
-	let blackfont = document.querySelectorAll('.EthPriceLabel-sc-1c1tt50-1,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK');
+	let blackfont = document.querySelectorAll('.dGszyt,.UsdPriceLabel-sc-1c1tt50-2,.NotForSale-sc-11cpe2k-14,.sc-fIosxK,.EditionsItemHead-sc-11cpe2k-8 .bYYTOP,.TableHead-sc-qyvkk9-3 .TableHeaderCell-sc-qyvkk9-5');
 	for (_element of blackfont){
 		if (_element.style) { _element.style.color = '#262626'; }
 	}
 	
-	let darkbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0,DetailsItem-sc-asex48-1');
+	let grayfont = document.querySelectorAll('.UsdPriceLabel-sc-1c1tt50-2');
+	for (_element of grayfont){
+		if (_element.style) { _element.style.color = '#9FA6B2'; }
+	}
+	
+	let darkbackground = document.querySelectorAll('body,.FooterOuterWrapper-sc-n1m1px-6,.MediaContainer-sc-1p3n06p-2,.SidebarWrapper-sc-d2ie7h-0,.sc-hZpJaK,.NftContainer-sc-e23qc5-2,.ManageSidebar-sc-e23qc5-4');
 	for (_element of darkbackground ){
+		if (_element.style) { _element.style.backgroundColor = '#424242'; }
+	}
+	
+	let blackbackground = document.querySelectorAll('.EditionsInfoWrapper-sc-11cpe2k-16,.sc-jcFjpl:not(.hIESFk),.HistoryItemWrapper-sc-13gqei4-0,DetailsItem-sc-asex48-1');
+	for (_element of blackbackground ){
 		if (_element.style) { _element.style.backgroundColor = '#262626'; }
 	}
 	
-	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"],img[src="/0f655dbe35439e127dd99dd383d06350.svg"],img[src="/12109559ab4919bdf23807e89e160f32.svg"]');
+	let imgs = document.querySelectorAll('img[src="/31ff16eef888637505a9c58ca047dd60.svg"],img[src="/e33e04602d2c85d6edb3008d7823158e.svg"],img[src="/0633293a9820d3f8c71e277f337a9f34.svg"],img[src="/0f655dbe35439e127dd99dd383d06350.svg"],img[src="/12109559ab4919bdf23807e89e160f32.svg"]:not(.sc-iCfMLu *),img[src="/5ec5b0a33d01121a9b74f1cdf6022c3d.svg"],img[src="/5eb42a1b2c3a480c09463284653b3023.svg"]');
 	for (_element of imgs ){
 		if (_element) { 
 			let splitted_url = _element.src.split('/');
 			_element.src = chrome.runtime.getURL('images/' + splitted_url[splitted_url.length-1]); 
 		}
+	}
+	
+	if (preferences['MovePrice']) {
+		let infoboxes = document.querySelectorAll('.InfoBoxInnerWrapper-sc-11cpe2k-2');
+		for (let i=0 ; i < infoboxes.length ; i++){
+			infoboxes[i].style.backgroundColor = '#FBFBFB'
+			infoboxes[i].style.backgroundClip = 'content-box';
+		}
+		if (window.innerWidth >= 1281) { document.querySelector('.PurchaseInfoWrapper-sc-11cpe2k-0').firstChild.style.display = 'none'; }
 	}
 }
 
@@ -164,7 +179,7 @@ function stickThings(){
 	setTimeout(() => {
 		if (window.innerWidth >= 1281) {
 			if (preferences['StickNFT']) {
-				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 80, stickyDelay: 70}, activate=true); }
+				if (preferences['MoveTools']) { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 100, stickyDelay: 70}, activate=true); }
 				else { stickThing('nft', 'MediaContainer-sc-1p3n06p-2', {stickyDirection: 'both', stickyMedia: 1281, stickyOffset: 160, stickyDelay: 70}, activate=true); }
 			}
 		}
@@ -176,7 +191,15 @@ function stickThings(){
 }
 
 
-async function moveThing(from, to, buttons=null, where='start', paddingTop = null) {
+async function unmoveThing(thing, from, to){
+	document.querySelector(`.${from} .${thing}`).style.display = null;
+	let oldies = document.querySelectorAll(`.${to} .${thing}`);
+	for (let i=0 ; i<oldies.length;i++){
+		oldies[i].parentElement.removeChild(oldies[i]);
+	}
+}
+
+async function moveThing(from, to, buttons=null, where='start', paddingTop = null, height=null) {
 	await waitForElement(`.ContentContainerDesktop-sc-1p3n06p-5 .${from}`, 1000)
 	.then(() => {
 		waitForElement(`.${to}`, 1000)
@@ -196,6 +219,8 @@ async function moveThing(from, to, buttons=null, where='start', paddingTop = nul
 				if (where == 'end') { dests[i].appendChild(clone); }
 			}
 			if (paddingTop) { clone.style.paddingTop = `${paddingTop}px`; }
+
+			if (height) { clone.style.height = `${height}px`; }
 			
 			if (buttons) {
 				buttons.forEach(btn => {
@@ -231,7 +256,7 @@ async function moveThings(){
 																					 ['.ActionMedia-sc-kdlg0e-1 .Button-sc-18j7gm-0'],
 																					 ['.ActionMedia-sc-kdlg0e-1 .ActionLike-sc-kdlg0e-3 .sc-lbhJGD'],
 																					 ['.ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-dkPtRN', '.ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-iCfMLu .sc-furwcr']
-																					]); 
+																					], where='start', paddingTop=0, height=10); 
 			let more = document.querySelector(`.MediaContainer-sc-1p3n06p-2 .Actions-sc-kdlg0e-0 .ActionMedia-sc-kdlg0e-1 .StyledPopupMenu-sc-18j7gm-4 .sc-eCImPb .sc-dkPtRN`).children[0];
 			more.innerHTML = more.innerHTML.replaceAll('More', 'Report');
 			let report = more.children[0];
@@ -290,11 +315,12 @@ async function moveThings(){
 
 			}, () => {});
 		}
+	} else {
+		if (preferences['MoveTools']) { unmoveThing('Actions-sc-kdlg0e-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
+		if (preferences['MovePrice']) { unmoveThing('InfoBoxInnerWrapper-sc-11cpe2k-2', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
 	}
 	if (preferences['DarkMode']) { updateDark(); } 
 }
-
-setInterval(() => { moveThings(); }, 3000);
 
 let lastMoved = null
 let intervalResizing = null;
