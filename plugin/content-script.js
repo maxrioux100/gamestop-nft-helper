@@ -26,7 +26,7 @@ function updateOffers() {
 	for (let i=0; i < offers.length; i++) {
 		values_eth[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18), 4);
 		values_dollars[i] = bestRound(parseFloat(sorted[i][1]['pricePerNft'])/Math.pow(10, 18)*ETH_US, 2);
-		quantities[i] = parseInt(sorted[i][1]['amount']);
+		quantities[i] = parseInt(sorted[i][1]['amount']-sorted[i][1]['fulfilledAmount']);
 	}
 
 	let noOutliers = getNumberOfNonOutliers(values_eth, quantities);
@@ -164,7 +164,7 @@ function updateWhales() {
 		let listers = [];
 		if (offers) {
 			for (let i=0; i < offers.length; i++) {
-				for (let ii=0 ; ii < offers[i]['amount'] ; ii++) {
+				for (let ii=0 ; ii < (offers[i]['amount']-offers[i]['fulfilledAmount']) ; ii++) {
 					listers.push(offers[i]['ownerAddress']);
 				}
 			}
