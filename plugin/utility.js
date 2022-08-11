@@ -322,7 +322,7 @@ async function moveThings(){
 		}
 	} else {
 		if (preferences['MoveTools']) { unmoveThing('Actions-sc-kdlg0e-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
-		if (preferences['MovePrice']) { unmoveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2'); }
+		if (preferences['MovePrice']) { unmoveThing('PurchaseInfoWrapper-sc-11cpe2k-0', 'ContentContainerDesktop-sc-1p3n06p-5', 'MediaContainer-sc-1p3n06p-2', removeChild=true); }
 	}
 	if (preferences['DarkMode']) { updateDark(); } 
 }
