@@ -1,15 +1,16 @@
-let lastUrl = location.href;
+let lastUrl = null;
 
 new MutationObserver(() => {
 	const url = location.href;
 	if (url !== lastUrl) {
-		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
+		if (lastUrl && lastUrl.startsWith('https://nft.gamestop.com/token/')) { 
 			clean_charts();
 			clean_watchers();
 			location.reload(); 
 		}
 		lastUrl = url;
 		if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
+		if (lastUrl.startsWith("https://nft.gamestop.com/profile")) { profile_page(); }
 	}
 }).observe(document, {subtree: true, childList: true});
 
@@ -307,7 +308,7 @@ async function updateWhalesWithApiData() {
 	}
 }
 
-if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
+//if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
 async function token_page() {
 	await readPreferences();
 	
@@ -340,6 +341,7 @@ async function token_page() {
 				}
 			}, () => {});	
 		}, 3000);
+	}
 	if (preferences['HideHistory']) {
 		waitForElement(".HistoryListContainer-sc-13gqei4-1", 10000)
 		.then( () => {
@@ -370,7 +372,7 @@ async function token_page() {
 	}
 }
 
-if (lastUrl.startsWith("https://nft.gamestop.com/profile")) {
+async function profile_page() {
 	watchers['profileName'] = setIntervalImmediately(function() {
 		waitForElement(".sc-hBUSln", 3000)
 		.then( () => {
