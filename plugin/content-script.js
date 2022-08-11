@@ -187,16 +187,6 @@ function updateWhales() {
 	}
 }
 
-
-let rateAndFees = null;
-let ETH_US = null;
-setIntervalImmediately(async function() {
-	rateAndFees = await makeApiCall('ratesAndFees');
-	//Add a verification to be sure it's ETH_US
-	ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
-	updateNeeded();
-}, 30000);
-
 let nft=null;
 let transactions = null;
 let offers=null;
@@ -308,9 +298,25 @@ async function updateWhalesWithApiData() {
 	}
 }
 
-//if (lastUrl.startsWith('https://nft.gamestop.com/token/')) { token_page(); }
+
+let rateAndFees = null;
+let ETH_US = null;
+
 async function token_page() {
 	await readPreferences();
+	
+	let link = document.createElement("link");
+	link.href = chrome.runtime.getURL('mdb.min.css'); 
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.getElementsByTagName("head")[0].appendChild(link);
+	
+	setIntervalImmediately(async function() {
+		rateAndFees = await makeApiCall('ratesAndFees');
+		//Add a verification to be sure it's ETH_US
+		ETH_US = rateAndFees['rates'][0]['quotes'][0]['rate'];
+		updateNeeded();
+	}, 30000);
 	
 	getNFT();
 	

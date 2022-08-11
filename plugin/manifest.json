@@ -23,9 +23,6 @@
 				"charts.js",
 				"html_writer.js",
 				"content-script.js"
-			],
-			"css": [
-				"mdb.min.css"
 			]
 		}
 	],
@@ -39,6 +36,7 @@
     ],
 	"web_accessible_resources": [{
 		"resources": [ 
+			"mdb.min.css",
 			"mdb.min.js.map",
 			"sticky.min.js.map",
 			"images/31ff16eef888637505a9c58ca047dd60.svg",
