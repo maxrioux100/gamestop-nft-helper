@@ -3,7 +3,7 @@ Add additional information to the NFT pages.
 
 ## Description
 Anyone who like to reflect on their choice before buying something will like this extension
-This extenion add some information about the previous sale of an NFT. This information includes:
+This extension add some information about the previous sale of an NFT. This information includes:
 - median
 - average
 - standard deviation
@@ -13,9 +13,18 @@ This extenion add some information about the previous sale of an NFT. This infor
 - chart of the recurrent buyers and sellers
 This extension adds some information about the current available copy of this NFT. This information includes:
 - chart of the price relative to the number of copies bought
+This extension also allow to change the page. This page can be changed in those way:
+- Dark mode skin
+- Purchase box moved to the left
+- Toolbar moved to the left
+- Menu stickied to the page
+- NFT stickied to the page
+- Address replaced by real usernames
+- Hide details
+- Hide the legacy history
 
 ## Demonstration
-You can see a short [video demontration](https://youtu.be/T6pE9THfyNU) of this extension in action
+You can see a short [video demontration](https://youtu.be/fkOG3toBeYc) of this extension in action
 
 ## Installation
 The plugin is available on the Chrome store here:
@@ -53,7 +62,7 @@ If you would like to contribute to the plugin, please create a fork of this
 repository, work on the issue or feature request that you are interested in, then
 submit a pull request upstream.
 
-## Wiki
+## Wiki (In construction)
 There is a [wiki page](https://github.com/maxrioux100/gamestop-nft-helper/wiki) with help relating to the code of this extension.
 
 ## Attribution
