@@ -15,7 +15,7 @@ This extension adds some information about the current available copy of this NF
 - chart of the price relative to the number of copies bought
 
 ## Demonstration
-You can see a short [video demontration](https://youtu.be/T6pE9THfyNU) of this extension in action
+You can see a short [video demontration](https://youtu.be/fkOG3toBeYc) of this extension in action
 
 ## Installation
 The plugin is available on the Chrome store here:
