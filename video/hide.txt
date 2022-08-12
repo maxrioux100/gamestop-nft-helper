@@ -1,0 +1,1 @@
+To hide some less needed elements and show the royalties in a better way.
