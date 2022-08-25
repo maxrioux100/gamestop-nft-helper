@@ -6,6 +6,6 @@ chrome.webRequest.onCompleted.addListener(
 			chrome.tabs.sendMessage(tabs[0].id, {greeting: details.url});
 		});
 	},
-	{ urls: ["https://api.nft.gamestop.com/nft-svc-marketplace/*", "https://nft.gamestop.com/*"] }
+	{ urls: ["https://api.nft.gamestop.com/nft-svc-marketplace/*"] }
 );
 
