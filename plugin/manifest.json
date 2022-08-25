@@ -32,10 +32,12 @@
 	"default_locale": "en",
 	"permissions": [
 		"storage",
-		"tabs" 
+		"tabs",
+		"webRequest"
 	],
 	"host_permissions": [
-        "https://api.nft.gamestop.com/*"
+        "https://api.nft.gamestop.com/nft-svc-marketplace/*",
+		"https://nft.gamestop.com/*"
     ],
 	"web_accessible_resources": [{
 		"resources": [ 
