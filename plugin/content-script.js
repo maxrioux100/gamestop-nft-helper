@@ -393,6 +393,6 @@ async function profile_page() {
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
-		console.log(request.data );
+		console.log(request.greeting );
 	}
 );
