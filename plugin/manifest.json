@@ -9,6 +9,9 @@
 	"action": {
 		"default_popup": "menu.html"
 	},
+	"background": {
+		"service_worker": "background.js"
+	},
 	"content_scripts": [
 		{
 			"matches": ["https://nft.gamestop.com/*"],
